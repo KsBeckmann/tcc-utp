@@ -174,7 +174,7 @@ das máquinas formais descritas teoricamente em sala de aula.
 
 As ferramentas disponíveis atualmente para apoiar esse aprendizado, como o JFLAP
 \cite{rodger2006jflap}, adotam uma abordagem exclusivamente visual baseada em arrastar e soltar,
-na qual o usuário constrói o autômato posicionando estados e conectando transições com o mouse.
+na qual o usuário constrói o autômato posicionando estados e conectando transições com o \textit{mouse}.
 Embora essa abordagem seja útil para ilustrar conceitos, ela apresenta limitações relevantes: a
 descrição do autômato não é textual, o que dificulta o versionamento e o compartilhamento dos
 modelos; não há validação formal da estrutura com mensagens de erro claras e localizadas; e o
@@ -217,7 +217,7 @@ interativa. Para atingir esse objetivo, definem-se os seguintes objetivos espec�
 Este trabalho está organizado como segue.
 O Capítulo~\ref{cap:automatos} apresenta os conceitos teóricos de autômatos finitos e linguagens
 formais.
-O Capítulo~\ref{cap:dsl} aborda linguagens de domínio específico e as fases de compilação.
+O Capítulo~\ref{cap:conceitos-compiladores} aborda linguagens de domínio específico e as fases de compilação.
 O Capítulo~\ref{cap:relacionados} discute as ferramentas relacionadas e suas limitações.
 O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramática.
 O Capítulo~\ref{cap:implementacao} detalha a implementação do compilador e da interface gráfica.
@@ -727,8 +727,139 @@ renderização do diagrama de estados e o processamento programático da descri�
 \section{Simulação de Autômatos}
 \label{sec:simulacao_automatos}
 
+A definição formal de um autômato finito, vista nas seções anteriores, descreve sob a forma de
+quíntupla os elementos que compõem a máquina, mas não esclarece, por si só, como verificar se
+uma cadeia específica é aceita ou rejeitada. Essa verificação, conhecida como
+\textbf{simulação}, consiste em executar passo a passo a função de transição $\delta$ a partir
+do estado inicial, consumindo cada símbolo da cadeia de entrada e observando se a configuração
+final corresponde a um estado de aceitação \cite{hopcroft2006,sipser2012}. Em termos
+pedagógicos, a simulação cumpre um papel análogo ao da execução de um programa em uma linguagem
+de programação, pois permite que o estudante observe o comportamento do autômato projetado e
+confronte-o com o comportamento esperado \cite{morazan2014}.
+
+\citeonline{morazan2014} argumentam que disciplinas introdutórias de linguagens formais,
+tradicionalmente, exigem que estudantes projetem máquinas e provem sua correção sem oferecer
+mecanismos para experimentar com os artefatos produzidos. Os autores defendem que essa ausência
+de retroalimentação imediata contraria a forma como o estudante de Ciência da Computação aprende
+a programar, em que compiladores e interpretadores fornecem mensagens de erro e advertências
+durante o desenvolvimento. A consequência observada é que estudantes inexperientes submetem com
+frequência soluções incorretas, mesmo para exercícios relativamente simples, e dedicam esforço
+a tentativas de prova de correção sobre projetos defeituosos \cite{morazan2014}. Para mitigar
+esse problema, os autores propõem que a teoria da computação seja ensinada com ferramentas
+capazes de \textit{construir} computações, isto é, ambientes em que a descrição formal possa
+ser traduzida em uma representação executável e submetida a testes.
+
+Formalmente, simular um AFD $M = (Q, \Sigma, \delta, q_0, F)$ sobre uma cadeia $w = a_1 a_2
+\dots a_n \in \Sigma^*$ corresponde a calcular a sequência de configurações $q_0, q_1, \dots,
+q_n$, em que $q_i = \delta(q_{i-1}, a_i)$ para $1 \leq i \leq n$. A cadeia $w$ é aceita se, e
+somente se, $q_n \in F$ \cite{hopcroft2006}. Para um AFD, a simulação é determinística e
+linear: cada símbolo lido conduz a exatamente um próximo estado, de modo que o custo
+computacional cresce proporcionalmente ao comprimento da cadeia. Essa propriedade torna o AFD
+particularmente adequado para implementações eficientes, pois pode ser realizado por uma
+estrutura de dados simples, como uma tabela de transição indexada pelo par (estado, símbolo)
+\cite{sipser2012}.
+
+A simulação de um AFN, em contraste, exige tratamento adicional, pois a função de transição
+$\delta$ pode levar um mesmo par (estado, símbolo) a um conjunto de estados, e transições
+$\varepsilon$ permitem mudança de estado sem consumir símbolos da entrada. Conforme descrito
+por \citeonline{morazan2014} ao apresentar a função \textit{apply-sm} da biblioteca FSM, a
+simulação de uma máquina não determinística é realizada por meio de uma busca em largura sobre
+todos os caminhos possíveis que o autômato pode seguir ao consumir a cadeia. Em cada passo, o
+simulador mantém o conjunto de estados alcançáveis e, ao final da entrada, verifica se algum
+desses estados pertence ao conjunto de aceitação. Alternativamente, conforme \citeonline{hopcroft2006},
+o AFN pode ser convertido previamente em um AFD equivalente pelo algoritmo de construção de
+subconjuntos, transferindo a simulação para o caso determinístico ao custo de uma possível
+expansão exponencial do número de estados.
+
+Além de produzir um veredito de aceitação ou rejeição, uma ferramenta de simulação útil para o
+ensino deve expor o \textit{caminho percorrido} pelo autômato, isto é, a sequência de
+configurações intermediárias atravessadas durante o processamento da cadeia. \citeonline{morazan2014}
+denominam essa funcionalidade \textit{show-transitions} e destacam sua importância para que o
+estudante identifique exatamente em que ponto sua máquina diverge do comportamento esperado.
+Essa visualização do \textit{trace} de execução substitui o exercício manual de acompanhar transições
+em papel, propenso a erros, por uma observação direta do comportamento da máquina, em
+consonância com a prática de depuração comum no desenvolvimento de \textit{software}.
+
+A relevância da simulação ganha ainda mais destaque quando se considera o fenômeno descrito por
+\citeonline{morazan2014} de que estudantes, sem ambiente de teste, frequentemente partem para
+demonstrações formais sobre projetos incorretos, com perda de tempo e desmotivação como
+consequência. Esse argumento é central para o presente trabalho: a ferramenta proposta busca
+oferecer simulação visual interativa diretamente acoplada à descrição textual do autômato, de
+forma que o estudante possa, a partir de uma única especificação, examinar a estrutura do
+diagrama de estados, executar cadeias de teste e acompanhar a evolução das configurações,
+recebendo retroalimentação imediata sobre o comportamento da máquina.
+
+Cabe ainda diferenciar dois sentidos do termo simulação que aparecem na literatura. Em sentido
+estrito, simular um autômato é executar sua função de transição sobre uma entrada específica,
+como descrito acima. Em sentido mais amplo, ferramentas como o JFLAP \cite{rodger2006jflap} e a
+biblioteca FSM \cite{morazan2014} oferecem também a possibilidade de \textit{testar} um
+autômato com múltiplas cadeias geradas aleatoriamente, comparar duas máquinas quanto à
+equivalência de suas linguagens e visualizar transformações construtivas, como a conversão de
+AFN em AFD. Essas operações estendem a noção básica de simulação para um conjunto mais rico de
+recursos didáticos, ao qual se pode atribuir o termo \textit{ambiente de experimentação}. A
+ferramenta proposta neste trabalho posiciona-se nesse espectro, oferecendo, em primeiro plano,
+a simulação visual passo a passo de autômatos finitos descritos por meio de uma linguagem de
+domínio específico, conforme será detalhado no Capítulo~\ref{cap:conceitos-compiladores}.
+
 \section{Aplicações de Autômatos}
 \label{sec:aplicacoes_automatos}
+
+Apesar de serem objetos teóricos, autômatos finitos não são uma abstração restrita ao ambiente
+acadêmico. \citeonline{hopcroft2006} destacam que esse modelo computacional sustenta o
+funcionamento de diversas categorias de \textit{software} e \textit{hardware} utilizadas no dia a dia, sempre que
+um sistema precisa registrar, em um número finito de configurações, a parte relevante de seu
+histórico para decidir qual ação tomar diante da próxima entrada. Esta seção apresenta as
+principais áreas de aplicação descritas pelos autores e estabelece a ponte entre os conceitos
+formais discutidos até aqui e os capítulos seguintes deste trabalho.
+
+\citeonline{hopcroft2006} agrupam as aplicações dos autômatos finitos em quatro grandes
+categorias:
+
+\begin{itemize}
+    \item \textbf{Projeto e verificação de circuitos digitais.} Sistemas digitais com um número
+    finito de estados internos podem ser modelados diretamente como autômatos, permitindo que
+    o comportamento do circuito seja descrito de forma rigorosa e verificado antes da
+    implementação física. Cada estado do autômato corresponde a uma configuração possível do
+    circuito, e cada transição corresponde à resposta do \textit{hardware} a um sinal de entrada
+    \cite{hopcroft2006}.
+
+    \item \textbf{Análise léxica de compiladores.} O componente responsável por dividir o
+    texto-fonte em unidades léxicas (identificadores, palavras-chave, operadores e literais)
+    é tipicamente implementado como um autômato finito. \citeonline{hopcroft2006} ilustram
+    esse uso com um autômato cuja função é reconhecer a palavra-chave \texttt{then}: cada
+    estado corresponde a um prefixo da palavra (vazio, $t$, $th$, $the$, $then$), e a
+    sequência de transições percorrida pela cadeia de entrada determina se o lexema foi
+    encontrado. Esse mesmo princípio se generaliza para o reconhecimento de qualquer conjunto
+    finito de \textit{tokens} descrito por expressões regulares.
+
+    \item \textbf{Busca de padrões em grandes volumes de texto.} Sistemas que percorrem
+    coleções extensas de documentos, páginas \textit{web} ou arquivos em busca de palavras,
+    expressões ou padrões mais complexos costumam compilar essas consultas em autômatos
+    finitos, executando a varredura em tempo proporcional ao tamanho da entrada
+    \cite{hopcroft2006}. Utilitários clássicos do ambiente Unix, como \textit{grep}, e
+    bibliotecas modernas de expressões regulares apoiam-se diretamente nessa equivalência
+    entre expressões regulares e autômatos finitos.
+
+    \item \textbf{Verificação de sistemas com número finito de estados.} Protocolos de
+    comunicação, protocolos criptográficos e outros sistemas reativos podem ser modelados
+    como autômatos para que propriedades como ausência de \textit{deadlock}, alcançabilidade
+    de estados ou conformidade com uma especificação sejam verificadas automaticamente
+    \cite{hopcroft2006}.
+\end{itemize}
+
+A presença pervasiva dos autômatos finitos nessas áreas decorre de uma característica central
+do modelo: o número fixo de estados permite que sua representação seja implementada com uma
+quantidade limitada de recursos, seja como um circuito de \textit{hardware}, seja como uma estrutura
+de dados em memória \cite{hopcroft2006}. Esse equilíbrio entre simplicidade e poder expressivo
+explica por que o modelo permanece relevante mesmo após décadas de evolução das ferramentas
+de \textit{software}.
+
+Para o presente trabalho, a aplicação de maior interesse é a análise léxica, pois constitui o
+elo direto entre a teoria dos autômatos finitos e a construção de compiladores e
+interpretadores para linguagens de programação. A linguagem de domínio específico proposta
+nesta monografia, descrita no Capítulo~\ref{cap:conceitos-compiladores}, será analisada
+lexicamente por um autômato finito gerado a partir das regras léxicas da própria linguagem,
+em uma aplicação concreta dos conceitos apresentados neste capítulo.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
