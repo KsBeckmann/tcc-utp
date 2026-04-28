@@ -22,6 +22,8 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{forest}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc}
 
 % =================================================================================================
 % -------------------------------------------------------------------------------------------------
@@ -871,20 +873,439 @@ em uma aplicação concreta dos conceitos apresentados neste capítulo.
 \label{cap:compiladores}
 texto breve aqui depois
 
-\section{Conceitos de Compiladores}
+\section{Conceitos Fundamentais de Compiladores}
 \label{sec:conceitos-compiladores}
+Antes de tratar das fases específicas de análise que utilizam autômatos finitos, é necessário
+situar o que é um compilador e qual o seu papel no processo de tradução de programas. Esta seção
+apresenta a definição clássica de compilador, distingue-o do interpretador, que é o outro tipo
+mais comum de processador de linguagem, e descreve, em alto nível, a sequência de fases que
+constituem o pipeline de compilação. Os conceitos aqui introduzidos servirão de apoio às seções
+seguintes, que detalham cada fase do \textit{front-end} de um compilador.
+
+Um \textbf{compilador} é um programa que recebe como entrada um texto escrito em uma linguagem de
+programação, denominada \textbf{linguagem fonte}, e produz como saída um programa equivalente em
+outra linguagem, denominada \textbf{linguagem objeto} (ou linguagem alvo) \cite{aho2008}. A
+equivalência exigida nesse processo é semântica: o programa objeto deve produzir, sobre as mesmas
+entradas, exatamente os mesmos resultados que o programa fonte produziria, ainda que o faça em
+uma linguagem de nível mais baixo, em geral próxima da arquitetura da máquina de execução. Além
+de traduzir o programa, o compilador desempenha um segundo papel essencial, o de relatar, com
+precisão, eventuais erros detectados durante a tradução, fornecendo ao programador o diagnóstico
+necessário para a correção do código fonte \cite{aho2008}.
+
+A linguagem fonte costuma ser uma linguagem de alto nível, projetada para ser lida e escrita por
+humanos, ao passo que a linguagem objeto pode ser código de máquina diretamente executável,
+código de uma máquina virtual (como os \textit{bytecodes} da JVM) ou ainda outra linguagem de
+alto nível, configurando-se nesse caso um \textit{source-to-source compiler}, ou tradutor de
+fonte para fonte \cite{aho2008}. Independentemente da forma da saída, o cerne da tarefa permanece
+o mesmo, isto é, realizar uma tradução fiel preservando o significado original.
+
+O compilador não é a única forma de processador de linguagem. Um \textbf{interpretador}, em vez
+de produzir um programa objeto que será posteriormente executado, realiza diretamente, sobre as
+entradas fornecidas pelo usuário, as operações descritas no programa fonte \cite{aho2008}. A
+diferença entre os dois modelos pode ser sintetizada pelo papel do programa fonte em tempo de
+execução: para o compilador, ele é apenas insumo de uma fase prévia, ausente no momento em que o
+programa objeto roda; para o interpretador, ele permanece presente durante toda a execução,
+sendo lido e processado instrução a instrução.
+
+Cada abordagem apresenta vantagens distintas. O programa objeto produzido por um compilador
+costuma ser substancialmente mais rápido na execução, pois a tradução para a linguagem da máquina
+é feita uma única vez e o resultado é executado diretamente pelo processador. Por outro lado, o
+interpretador costuma oferecer um melhor diagnóstico de erros em tempo de execução, uma vez que
+tem acesso direto à estrutura do programa fonte enquanto o avalia \cite{aho2008}. As duas
+estratégias não são mutuamente exclusivas, e muitas implementações modernas combinam-nas em
+arranjos híbridos. O processador de Java, por exemplo, primeiro compila o programa fonte para
+uma forma intermediária portável (os \textit{bytecodes}), que é então interpretada por uma
+máquina virtual; certas máquinas virtuais ainda recompilam dinamicamente trechos do código para
+a linguagem da máquina hospedeira, técnica conhecida como compilação \textit{just-in-time}, que
+busca obter simultaneamente a portabilidade da interpretação e o desempenho da compilação
+\cite{aho2008}.
+
+Internamente, um compilador está longe de ser uma caixa-preta monolítica. Aho et al.
+\cite{aho2008} descrevem o processo de compilação como uma sequência de fases, cada uma
+transformando uma representação do programa fonte em outra, mais próxima do programa objeto,
+conforme ilustra a Figura~\ref{fig:fases-compilador}. Essas fases agrupam-se em duas grandes
+etapas: a \textbf{análise}, responsável por compreender a estrutura e o significado do programa
+fonte, e a \textbf{síntese}, responsável por construir o programa objeto a partir dessa
+compreensão. A parte de análise é também denominada \textit{front-end} do compilador, enquanto
+a parte de síntese constitui o \textit{back-end}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{img/fases_de_um_compilador.png}
+    \caption{Fases de um compilador}
+    \label{fig:fases-compilador}
+    \fonte{Aho et al. (2008)}
+\end{figure}
+
+A etapa de análise costuma ser subdividida em três fases. A \textbf{análise léxica} (também
+chamada de \textit{scanning} ou leitura) percorre o fluxo de caracteres do programa fonte e os
+agrupa em sequências significativas, denominadas lexemas; para cada lexema, produz um
+\textit{token}, isto é, um par formado por um nome simbólico e, eventualmente, um valor de
+atributo associado. A \textbf{análise sintática} recebe o fluxo de \textit{tokens} produzido pela
+fase léxica e o organiza em uma estrutura hierárquica, em geral uma árvore de sintaxe, que torna
+explícita a estrutura gramatical do programa. Por fim, a \textbf{análise semântica} percorre essa
+árvore para verificar a consistência de tipos e o cumprimento de outras regras da linguagem que
+não podem ser expressas pela gramática livre de contexto, anotando a árvore com informações
+adicionais necessárias às fases seguintes \cite{aho2008}. Ao longo de todas essas fases, uma
+estrutura auxiliar denominada \textbf{tabela de símbolos} mantém informações sobre os
+identificadores declarados no programa, sendo consultada e atualizada conforme necessário.
+
+Concluída a análise, a etapa de síntese gera, a partir da árvore anotada, uma
+\textbf{representação intermediária}, a qual pode ser submetida a uma fase opcional de otimização
+independente da máquina, com o objetivo de produzir código mais eficiente sem alterar a
+semântica do programa. Em seguida, o gerador de código traduz a representação intermediária para
+a linguagem da máquina alvo, e uma segunda fase opcional de otimização, dependente da máquina,
+refina o resultado explorando características específicas da arquitetura \cite{aho2008}. O
+programa objeto final é, portanto, produto de uma cadeia de transformações sucessivas, em que
+cada etapa preserva a semântica do programa original e adiciona ou remove informações conforme
+necessário.
+
+Para os fins deste trabalho, interessa particularmente o \textit{front-end} do compilador e,
+dentro dele, a fase de análise léxica, que constitui a aplicação direta dos autômatos finitos
+discutidos no Capítulo~\ref{cap:automatos}. Os mecanismos pelos quais expressões regulares são
+convertidas em autômatos para o reconhecimento de \textit{tokens}, bem como as estratégias de
+implementação desses autômatos em código, são o tema da seção seguinte.
 
 \section{Análise Léxica}
 \label{sec:lexica}
+A análise léxica é a primeira fase do \textit{front-end} de um compilador e tem como tarefa
+principal ler o fluxo bruto de caracteres do programa fonte, agrupá-lo em sequências
+significativas, denominadas lexemas, e produzir, para cada lexema, um \textit{token} que será
+consumido pela fase seguinte de análise sintática \cite{aho2008}. Além desse papel central, o
+analisador léxico costuma ser responsável por tarefas auxiliares de pré-processamento, como a
+remoção de espaços em branco e comentários, o registro do número da linha em que cada lexema
+ocorre (informação essencial para a posterior emissão de mensagens de erro) e, em algumas
+implementações, a expansão de macros \cite{aho2008}.
+
+A interação entre os dois primeiros analisadores costuma ser implementada de forma orientada à
+demanda, conforme ilustra a Figura~\ref{fig:interacao-lexico-sintatico}. O analisador sintático
+invoca o analisador léxico por meio de uma chamada normalmente denominada \texttt{getNextToken},
+e este, por sua vez, lê caracteres da entrada até identificar o próximo lexema, sobre o qual
+constrói o \textit{token} a ser devolvido. Esse arranjo permite que o analisador léxico interaja
+também com a tabela de símbolos: quando reconhece um lexema correspondente a um identificador,
+insere ou consulta a entrada apropriada nessa tabela, de modo que as fases subsequentes tenham
+acesso uniforme às informações sobre os identificadores do programa \cite{aho2008}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{img/interacao_lexico_sintatico.png}
+    \caption{Interações entre o analisador léxico e o analisador sintático}
+    \label{fig:interacao-lexico-sintatico}
+    \fonte{Aho et al. (2008)}
+\end{figure}
+
+A separação entre análise léxica e análise sintática, embora pudesse, em princípio, ser dispensada,
+é justificada por três razões práticas, conforme apresenta Aho et al. \cite{aho2008}. A primeira
+é a simplicidade de projeto: tratar comentários e espaços em branco já no nível léxico evita
+poluir a gramática da fase sintática com construções acessórias. A segunda é a eficiência, pois
+técnicas especializadas de leitura, como o uso de \textit{buffers} duplos com sentinelas, podem
+ser aplicadas exclusivamente à fase léxica, acelerando substancialmente o processamento. A
+terceira é a portabilidade, uma vez que peculiaridades do dispositivo de entrada e da
+codificação de caracteres ficam restritas ao analisador léxico, sem afetar as demais fases do
+compilador.
+
+A discussão sobre análise léxica apoia-se em três termos relacionados, porém distintos. Um
+\textbf{token} é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
+o nome representa, de forma abstrata, uma classe de unidade léxica, como uma palavra-chave
+específica ou a categoria genérica de identificador. Um \textbf{padrão} é uma descrição da forma
+que os lexemas associados a um \textit{token} podem assumir, em geral expressa por meio de uma
+expressão regular. Um \textbf{lexema} é uma sequência concreta de caracteres do programa fonte
+que casa com o padrão de um \textit{token} e é, por essa razão, classificada como uma instância
+desse \textit{token} \cite{aho2008}. Por exemplo, em um programa em C que contenha o trecho
+\texttt{score = 3.14;}, a palavra \texttt{score} é um lexema que casa com o padrão de
+identificador e produz um \textit{token} \textit{id}, ao passo que \texttt{3.14} é um lexema que
+casa com o padrão de constante numérica e produz um \textit{token} \textit{number}.
+
+Quando mais de um lexema pode casar com o mesmo padrão, como ocorre tipicamente com
+identificadores e constantes, o nome do \textit{token} sozinho não basta para distinguir as
+ocorrências, e o analisador léxico precisa fornecer informação adicional às fases seguintes. Para
+isso, associa-se ao \textit{token} um \textbf{valor de atributo}, que descreve o lexema
+específico encontrado. No caso de identificadores, esse atributo costuma ser um apontador para
+a entrada correspondente na tabela de símbolos, onde se mantêm informações como o nome, o tipo
+e a posição do identificador no programa fonte; no caso de constantes numéricas, o atributo
+pode ser o próprio valor numérico ou um apontador para uma representação interna desse valor
+\cite{aho2008}.
+
+Eventualmente, o analisador léxico pode encontrar uma sequência de caracteres que não casa com
+nenhum dos padrões definidos. Em alguns casos, o erro só pode ser detectado por fases
+posteriores, pois o lexema é localmente válido, embora gramaticalmente inadequado: a sequência
+\texttt{fi}, em um programa C, é um identificador léxicamente válido, ainda que provavelmente
+seja um \texttt{if} grafado de forma equivocada \cite{aho2008}. Quando, porém, nenhum padrão
+casa com o prefixo restante da entrada, o analisador léxico precisa recorrer a alguma estratégia
+de recuperação. A mais simples, conhecida como recuperação em \textit{modo de pânico}, consiste
+em descartar caracteres da entrada até que um \textit{token} bem formado possa ser reconhecido;
+estratégias mais elaboradas tentam reparar o erro por meio de uma única transformação local
+(remoção, inserção, substituição ou transposição de caracteres), partindo da hipótese, empírica,
+de que a maioria dos erros léxicos envolve um único caractere \cite{aho2008}.
+
+Do ponto de vista de implementação, a especificação dos padrões dos \textit{tokens} costuma ser
+feita por meio de expressões regulares, e o reconhecimento, por meio de autômatos finitos
+construídos a partir delas. Essa relação entre expressões regulares e autômatos, estabelecida no
+Capítulo~\ref{cap:automatos}, é exatamente o que torna a análise léxica uma aplicação direta da
+teoria de linguagens regulares: cada padrão corresponde a uma expressão regular, o conjunto
+desses padrões é convertido em um autômato finito não determinístico (em geral pelo método de
+Thompson), o qual é então transformado em um autômato finito determinístico (pela construção de
+subconjuntos) capaz de reconhecer eficientemente os lexemas durante a varredura do programa
+fonte \cite{aho2008}. Essa cadeia, de \textit{regex} a \textit{token}, fornece a base teórica
+para os geradores automáticos de analisadores léxicos, como o Lex e o Flex, e também para
+bibliotecas modernas que empregam técnicas equivalentes em linguagens contemporâneas. A
+ferramenta proposta neste trabalho, descrita no Capítulo~\ref{cap:compiladores}, fará uso direto
+dessa correspondência ao analisar lexicamente sua linguagem de domínio específico, em uma
+aplicação concreta dos conceitos discutidos nesta seção.
 
 \section{Análise Sintática}
 \label{sec:sintatica}
+A análise sintática, também denominada \textit{parsing}, é a segunda fase do \textit{front-end}
+de um compilador e tem por finalidade verificar se a sequência de \textit{tokens} produzida pela
+análise léxica forma uma cadeia válida segundo a gramática da linguagem fonte e, em caso
+afirmativo, organizá-la em uma estrutura hierárquica que torne explícita a estrutura gramatical
+do programa \cite{aho2008}. Essa estrutura é, em geral, uma \textbf{árvore de derivação} (também
+chamada de \textit{parse tree}), na qual os nós internos representam as variáveis aplicadas
+durante a derivação e as folhas correspondem aos terminais que compõem a cadeia analisada. A
+Figura~\ref{fig:arvore-derivacao-expr} ilustra esse conceito para a expressão
+$\mathit{id} + \mathit{id} * \mathit{id}$, segundo a gramática $E \to E + T \mid T$,
+$T \to T * F \mid F$ e $F \to (E) \mid \mathit{id}$, tradicionalmente utilizada em livros-texto
+sobre análise sintática \cite{aho2008}. Observe que a estrutura hierárquica captura naturalmente
+a precedência dos operadores, pois a multiplicação, mais profunda na árvore, é avaliada antes
+da adição.
+
+\begin{figure}[h]
+    \centering
+    \begin{forest}
+        for tree={
+            math content,
+            l sep=14pt,
+            s sep=18pt,
+            inner sep=2pt
+        }
+        [E
+            [E
+                [T
+                    [F
+                        [\mathit{id}]
+                    ]
+                ]
+            ]
+            [+]
+            [T
+                [T
+                    [F
+                        [\mathit{id}]
+                    ]
+                ]
+                [*]
+                [F
+                    [\mathit{id}]
+                ]
+            ]
+        ]
+    \end{forest}
+    \caption{Árvore de derivação da expressão $\mathit{id} + \mathit{id} * \mathit{id}$}
+    \label{fig:arvore-derivacao-expr}
+    \fonte{Os autores (\the\year)}
+\end{figure}
+
+A especificação da sintaxe das linguagens de programação utiliza, em geral, gramáticas livres
+de contexto, formalismo apresentado no Capítulo~\ref{cap:automatos}. A motivação dessa escolha é
+direta: as gramáticas regulares, embora suficientes para descrever os padrões léxicos, não
+conseguem expressar construções recursivamente aninhadas, como expressões parentizadas ou blocos
+de comandos balanceados, que são comuns em linguagens de programação. As gramáticas livres de
+contexto, por sua vez, capturam naturalmente essas construções por meio de regras recursivas,
+sendo o formalismo padrão para a especificação sintática de linguagens \cite{aho2008}.
+
+Para programas bem formados, o analisador sintático constrói, ao menos conceitualmente, uma
+árvore de derivação que é então repassada às fases subsequentes do \textit{front-end}, isto é,
+à análise semântica e à geração de código intermediário. Na prática, contudo, é comum que essa
+árvore não seja construída de forma explícita: as ações de tradução podem ser entremeadas com a
+análise propriamente dita, técnica conhecida como \textbf{tradução dirigida por sintaxe}, em
+que cada produção da gramática associa-se a um conjunto de ações semânticas executadas no
+momento em que a produção é reconhecida \cite{aho2008}. Esse arranjo permite, em muitos casos,
+integrar análise sintática, análise semântica e geração de código em um único módulo coeso.
+
+Existem duas grandes famílias de algoritmos de análise sintática empregados em compiladores
+reais: a análise \textbf{descendente} (\textit{top-down}) e a análise \textbf{ascendente}
+(\textit{bottom-up}) \cite{aho2008}. Os métodos descendentes constroem a árvore de derivação
+da raiz para as folhas, partindo do símbolo inicial da gramática e tentando reescrevê-lo até
+obter a cadeia da entrada; nessa família, destacam-se os analisadores preditivos e, em
+particular, os analisadores LL, em geral implementados manualmente como um conjunto de funções
+mutuamente recursivas, técnica conhecida como descida recursiva. Os métodos ascendentes, por
+sua vez, constroem a árvore das folhas para a raiz, agrupando progressivamente os
+\textit{tokens} da entrada em estruturas maiores até alcançar o símbolo inicial; os
+analisadores LR, mais expressivos que os LL, costumam ser construídos por meio de ferramentas
+automáticas, como Yacc e Bison, devido à complexidade das tabelas que utilizam \cite{aho2008}.
+Em ambas as estratégias, a entrada é consumida da esquerda para a direita, um símbolo de cada
+vez.
+
+Espera-se de um analisador sintático mais do que a simples aceitação ou rejeição da entrada.
+Ele deve sinalizar erros de forma clara e precisa, identificar o local de cada erro no programa
+fonte e, sempre que possível, recuperar-se de modo a permitir a detecção de erros subsequentes
+em uma única invocação do compilador \cite{aho2008}. Aho et al. \cite{aho2008} discutem quatro
+estratégias gerais de recuperação de erros sintáticos. A recuperação em \textit{modo pânico}
+descarta \textit{tokens} da entrada até encontrar um \textit{token} de sincronismo, como
+ponto-e-vírgula ou chave de fechamento, retomando a análise a partir desse ponto; é simples e
+robusta, embora possa ocultar erros próximos. A recuperação em nível de frase tenta corrigir o
+erro localmente por meio de pequenas substituições, inserções ou exclusões de \textit{tokens}.
+A estratégia de produções de erro estende a gramática com regras que reconhecem construções
+erradas comuns, permitindo emitir mensagens de erro especializadas. Por fim, a correção global
+busca a menor sequência de transformações capaz de tornar a entrada sintaticamente válida;
+embora teoricamente atraente, é dispendiosa demais para uso em compiladores reais.
+
+Para os fins deste trabalho, a análise sintática é a fase responsável por reconhecer a
+estrutura gramatical da linguagem de domínio específico proposta, transformando a sequência de
+\textit{tokens} produzida pela análise léxica em uma representação estruturada que descreve, de
+forma não ambígua, o autômato finito especificado pelo usuário. As decisões de projeto da
+gramática dessa linguagem, bem como o método de análise adotado em sua implementação, serão
+detalhados em capítulo posterior.
 
 \section{Análise Semântica}
 \label{sec:semantica}
+A análise semântica é a terceira fase do \textit{front-end} e tem por objetivo verificar a
+consistência do programa em relação a regras que não podem ser expressas pela gramática livre de
+contexto utilizada na fase sintática. Apoiando-se na árvore de derivação produzida pela análise
+sintática e nas informações armazenadas na tabela de símbolos, o analisador semântico identifica
+violações das regras de escopo, declaração e tipagem da linguagem fonte e, ao mesmo tempo,
+anota a árvore com informações adicionais, como tipos inferidos e conversões implícitas, que
+serão utilizadas pelas fases subsequentes de geração de código \cite{aho2008}.
+
+A parcela mais visível do trabalho do analisador semântico é a \textbf{verificação de tipos}.
+Para realizá-la, o compilador atribui uma expressão de tipo a cada componente do programa fonte
+e verifica se essas expressões satisfazem o conjunto de regras lógicas que constitui o
+\textbf{sistema de tipos} da linguagem. Exige-se tipicamente, por exemplo, que o índice usado
+para acessar um arranjo seja inteiro, que os operandos de um operador aritmético tenham tipos
+compatíveis e que o valor retornado por uma função tenha o tipo declarado em sua assinatura
+\cite{aho2008}. Quando alguma dessas condições é violada, o compilador emite uma mensagem de
+erro de tipo, evitando que o programa avance para fases posteriores em estado inconsistente.
+
+A verificação de tipos pode ser feita estaticamente, em tempo de compilação, ou dinamicamente,
+em tempo de execução. Um sistema de tipos é dito \textbf{seguro} quando a verificação estática
+realizada pelo compilador é suficiente para garantir que erros de tipo nunca ocorrerão durante
+a execução do programa objeto, dispensando, portanto, verificações dinâmicas dispendiosas; uma
+implementação de linguagem é dita \textbf{fortemente tipada} (\textit{strongly typed}) quando o
+compilador efetivamente assegura essa propriedade para todos os programas que aceita
+\cite{aho2008}. A verificação estática de tipos é, em geral, considerada uma das principais
+ferramentas para a detecção precoce de erros e tem aplicações que vão além do contexto restrito
+da compilação, como a verificação de \textit{bytecodes} Java antes de sua execução em uma
+máquina virtual.
+
+Aho et al. \cite{aho2008} distinguem duas formas complementares de verificação de tipos. Na
+\textbf{síntese de tipos}, o tipo de uma expressão é construído a partir dos tipos de suas
+subexpressões, com base em regras locais; essa abordagem exige, em geral, que todos os nomes
+utilizados sejam declarados antes de seu uso, de modo que o compilador disponha sempre da
+informação necessária à composição dos tipos. Na \textbf{inferência de tipos}, por outro lado,
+o tipo de uma construção é deduzido a partir do modo como ela é utilizada, por meio de
+variáveis de tipo e regras de unificação; essa abordagem é típica de linguagens funcionais
+como ML e Haskell, que verificam os tipos sem exigir declarações explícitas. Em qualquer um dos
+dois modelos, o objetivo final é o mesmo, isto é, associar a cada expressão um tipo único e
+bem definido antes da geração de código.
+
+Quando os operandos de uma operação possuem tipos diferentes, mas compatíveis em algum
+sentido, o compilador pode inserir automaticamente uma \textbf{conversão de tipo}, também
+denominada \textbf{coerção}, para uniformizar os operandos. Ao avaliar a soma de um inteiro
+com um número de ponto flutuante, por exemplo, é comum que o inteiro seja convertido para a
+representação de ponto flutuante antes da operação \cite{aho2008}. Essas conversões são
+denominadas implícitas quando inseridas pelo compilador sem intervenção do programador, e
+explícitas (ou \textit{casts}) quando declaradas no próprio código fonte. As regras que regem
+cada tipo de conversão variam de linguagem para linguagem e integram a especificação semântica
+da linguagem fonte.
+
+A verificação de tipos é, em geral, a parcela mais elaborada da análise semântica, mas não é a
+única. O analisador semântico também é responsável por verificar regras de escopo, garantindo
+que cada uso de um identificador corresponda a uma declaração visível no contexto em questão,
+por detectar declarações duplicadas em um mesmo escopo, por validar a unicidade de rótulos e
+por assegurar que estruturas como condicionais, laços e retornos respeitem as restrições
+impostas pela linguagem. Em linguagens com sobrecarga de funções ou operadores, cabe-lhe ainda
+escolher, entre as várias definições disponíveis para um mesmo nome, aquela cuja assinatura é
+compatível com o contexto de uso \cite{aho2008}.
+
+Para os fins deste trabalho, a análise semântica desempenha um papel particular, pois a
+linguagem de domínio específico proposta descreve estruturas matemáticas (autômatos finitos)
+cuja correção depende de um conjunto de condições estruturais que vão além da sintaxe. Cabe à
+fase semântica verificar, por exemplo, se todos os estados referenciados em transições foram
+previamente declarados, se o estado inicial e cada estado final pertencem ao conjunto de
+estados, se cada símbolo utilizado em uma transição pertence ao alfabeto especificado e, no
+caso de autômatos determinísticos, se não existem transições conflitantes a partir de um mesmo
+estado para um mesmo símbolo. Essas verificações, embora distintas da tipagem tradicional dos
+compiladores convencionais, seguem o mesmo princípio geral, isto é, identificar inconsistências
+estruturais antes que o autômato seja submetido à simulação descrita na
+Seção~\ref{sec:simulacao_automatos}.
 
 \section{AST (Árvore Sintática Abstrata)}
 \label{sec:ast}
+A árvore de derivação produzida pela análise sintática, também chamada de \textbf{árvore
+sintática concreta}, espelha fielmente a aplicação das produções da gramática durante o
+reconhecimento da entrada. Por essa razão, ela costuma conter nós internos cuja função é
+puramente auxiliar, isto é, nós que existem apenas para resolver questões gramaticais como
+precedência, associatividade ou eliminação de recursão à esquerda, mas que não correspondem a
+nenhuma construção semanticamente significativa da linguagem fonte \cite{aho2008}. Para as
+fases posteriores do compilador, esses nós auxiliares representam ruído, pois aumentam o
+tamanho da árvore sem agregar informação útil sobre o programa.
+
+A \textbf{árvore sintática abstrata} (\textit{abstract syntax tree}, ou AST) é uma representação
+intermediária que elimina esse ruído, conservando apenas a estrutura essencial do programa
+fonte. Em uma AST de uma expressão, cada nó interno representa um operador ou uma construção
+da linguagem, e seus filhos representam os operandos ou componentes semanticamente
+significativos dessa construção \cite{aho2008}. Não há nós para variáveis sintáticas auxiliares
+nem para produções unitárias, e os terminais que servem apenas como pontuação (parênteses,
+ponto-e-vírgula, palavras-chave de delimitação) costumam ser descartados, pois sua função já
+está implícita na estrutura hierárquica da árvore. O resultado é uma estrutura mais compacta,
+mais próxima da intenção do programador e, por consequência, mais conveniente para ser
+percorrida pelas fases de análise semântica, otimização e geração de código.
+
+A Figura~\ref{fig:ast-expr} apresenta a AST da expressão $\mathit{id} + \mathit{id} * \mathit{id}$.
+Comparada à árvore de derivação da mesma expressão, exibida na
+Figura~\ref{fig:arvore-derivacao-expr}, observa-se a redução significativa do número de nós,
+pois desaparecem todos os nós internos rotulados com as variáveis auxiliares $E$, $T$ e $F$,
+preservando-se apenas os operadores e os operandos efetivos. A precedência dos operadores, antes
+expressa pela profundidade dos nós auxiliares, agora é capturada diretamente pela própria
+estrutura da árvore.
+
+\begin{figure}[h]
+    \centering
+    \begin{forest}
+        for tree={
+            math content,
+            l sep=14pt,
+            s sep=22pt,
+            inner sep=2pt
+        }
+        [+
+            [\mathit{id}]
+            [*
+                [\mathit{id}]
+                [\mathit{id}]
+            ]
+        ]
+    \end{forest}
+    \caption{Árvore sintática abstrata da expressão $\mathit{id} + \mathit{id} * \mathit{id}$}
+    \label{fig:ast-expr}
+    \fonte{Os autores (\the\year)}
+\end{figure}
+
+A construção da AST costuma ser entrelaçada com a análise sintática, por meio das ações
+semânticas associadas a cada produção da gramática, conforme o esquema da tradução dirigida
+por sintaxe descrito na Seção~\ref{sec:sintatica}. À medida que o analisador sintático
+reconhece uma produção, executa-se a ação correspondente, que tipicamente cria um nó da AST
+e o conecta aos nós já criados para os componentes da produção. Ao término da análise, o
+ponteiro para a raiz da árvore representa toda a estrutura do programa fonte e é repassado às
+fases seguintes \cite{aho2008}.
+
+Do ponto de vista de implementação, cada nó de uma AST é, em geral, um registro contendo um
+rótulo que identifica o tipo do nó (por exemplo, atribuição, soma, identificador, literal),
+um conjunto de ponteiros para os filhos e, eventualmente, atributos específicos do tipo de nó,
+como o nome de um identificador ou o valor de uma constante \cite{aho2008}. As fases
+subsequentes do compilador percorrem essa estrutura, lendo e anotando os nós conforme suas
+necessidades. A análise semântica, por exemplo, anota cada nó com seu tipo inferido e, quando
+necessário, insere nós adicionais representando conversões implícitas; o gerador de código
+intermediário, por sua vez, percorre a árvore anotada e emite, para cada nó, as instruções
+correspondentes na linguagem intermediária.
+
+Para os fins deste trabalho, a AST representa o objeto central manipulado pela ferramenta
+proposta. Cada programa escrito na linguagem de domínio específico descreve um autômato finito,
+e sua AST organiza, em uma estrutura hierárquica única, os componentes desse autômato, ou seja,
+o conjunto de estados, o alfabeto, o conjunto de transições, o estado inicial e o conjunto de
+estados finais. É sobre essa estrutura, e não sobre o texto fonte, que operam tanto a análise
+semântica, descrita na Seção~\ref{sec:semantica}, quanto a etapa subsequente de simulação
+visual, conforme apresentada na Seção~\ref{sec:simulacao_automatos}.
 
 \section{Linguagens de Domínio Específico (DSL)}
 \label{sec:dsl}
