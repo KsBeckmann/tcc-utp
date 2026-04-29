@@ -1310,17 +1310,281 @@ visual, conforme apresentada na Seção~\ref{sec:simulacao_automatos}.
 \section{Linguagens de Domínio Específico (DSL)}
 \label{sec:dsl}
 
+As seções anteriores apresentaram os fundamentos do processo de compilação tomando como cenário
+implícito o de uma linguagem de programação de propósito geral, isto é, uma linguagem projetada
+para expressar qualquer programa computável, como C, Java ou Rust. Existe, contudo, uma classe
+distinta de linguagens, voltadas não para a generalidade, mas para a expressividade restrita a
+um domínio particular. Essa categoria recebe o nome de \textbf{linguagem de domínio específico}
+ou, na sigla consagrada em inglês, \textit{Domain-Specific Language} (DSL). Esta seção apresenta
+o conceito de DSL, suas principais variantes e a relação que mantém com o ferramental de
+compiladores discutido nas seções precedentes.
+
+Fowler \cite{fowler2010} define uma DSL como uma linguagem de programação de expressividade
+limitada, voltada para um domínio específico. A definição é deliberadamente curta, mas seus
+quatro elementos centrais merecem atenção. Em primeiro lugar, uma DSL é uma \textit{linguagem
+de programação}, no sentido de que se destina a ser escrita e lida por seres humanos para
+expressar instruções a serem processadas por um computador, e não meramente um formato de dados.
+Em segundo lugar, é necessária a existência de uma \textit{natureza linguística}, ou seja, os
+fragmentos isolados da DSL devem compor-se em construções maiores cujo sentido depende da forma
+como se articulam, e não apenas da soma das partes. Em terceiro lugar, sua \textit{expressividade
+é limitada}, no sentido de que oferece apenas os recursos estritamente necessários para descrever
+o domínio que pretende cobrir, sem aspirar à generalidade computacional. Por fim, é
+\textit{focada em um domínio}, e essa restrição de escopo é justamente o que torna a linguagem
+útil, pois permite que tanto a sintaxe quanto a semântica sejam moldadas em torno dos conceitos
+naturais daquele domínio.
+
+A consequência prática dessa restrição é que uma DSL bem projetada permite que problemas do seu
+domínio sejam expressos de maneira mais concisa, mais legível e mais próxima da terminologia
+utilizada pelos especialistas do que seria possível em uma linguagem de propósito geral
+\cite{fowler2010}. Em contrapartida, uma DSL não se presta à escrita de programas fora do seu
+escopo. Não se trata de uma deficiência, mas de uma decisão de projeto, pois a perda de
+generalidade é o preço pago para obter um vocabulário e uma sintaxe mais alinhados ao problema
+que se quer resolver.
+
+Fowler \cite{fowler2010} distingue duas grandes categorias de DSLs conforme a estratégia de
+implementação adotada. Uma \textbf{DSL externa} é uma linguagem com sintaxe própria, independente
+da sintaxe de qualquer linguagem hospedeira, e cujo processamento exige a construção de um
+analisador, em geral por meio das técnicas clássicas de análise léxica e sintática descritas nas
+Seções~\ref{sec:lexica} e~\ref{sec:sintatica}. Exemplos consagrados desse tipo incluem expressões
+regulares, SQL, a linguagem de descrição de gráficos do Graphviz e os formatos de configuração
+estruturada com regras próprias. Uma \textbf{DSL interna}, por sua vez, é construída sobre uma
+linguagem hospedeira de propósito geral, aproveitando sua sintaxe e seu sistema de tipos para
+exprimir conceitos do domínio na forma de uma biblioteca, com nomes de funções e composições
+sintáticas escolhidos de modo a parecer uma linguagem própria. Linguagens como Ruby, Lisp, Scala
+e Kotlin são particularmente populares como anfitriãs de DSLs internas, devido à flexibilidade
+sintática que oferecem.
+
+Cada uma das duas estratégias apresenta vantagens distintas. A DSL interna tem custo de
+implementação reduzido, pois reaproveita o compilador, o sistema de tipos e o ecossistema de
+ferramentas da linguagem hospedeira; em compensação, sua sintaxe está limitada por aquilo que a
+hospedeira permite expressar, e o usuário do domínio acaba exposto a detalhes da linguagem
+subjacente. A DSL externa tem o custo inicial mais alto, uma vez que demanda a construção de um
+\textit{front-end} dedicado, mas oferece liberdade total na escolha da sintaxe e isolamento
+completo em relação a qualquer linguagem hospedeira, o que costuma resultar em uma notação mais
+próxima do vocabulário do domínio \cite{fowler2010}.
+
+Independentemente da categoria, Fowler \cite{fowler2010} argumenta que toda DSL bem estruturada
+se organiza em torno de dois elementos. O primeiro é a \textbf{representação textual}, isto é, a
+sintaxe concreta que o usuário efetivamente lê e escreve. O segundo é o \textbf{modelo semântico},
+uma estrutura de objetos, em geral construída em uma linguagem de propósito geral, que captura
+o significado do que foi escrito e sobre a qual se efetivamente operam as funcionalidades do
+sistema. O processamento de um programa escrito na DSL consiste, então, em traduzir a
+representação textual no correspondente modelo semântico, tarefa para a qual o ferramental de
+compiladores apresentado nas seções anteriores se aplica diretamente: a análise léxica converte
+caracteres em \textit{tokens}, a análise sintática organiza os \textit{tokens} em uma árvore, e
+fases subsequentes de tradução dirigida pela sintaxe constroem o modelo semântico a partir dessa
+árvore.
+
+Essa visão é particularmente útil para situar o presente trabalho. A ferramenta proposta adota
+uma DSL externa, com sintaxe própria, voltada exclusivamente para a descrição declarativa de
+autômatos finitos. Seu modelo semântico é a representação interna do autômato, isto é, o conjunto
+de estados, o alfabeto, o conjunto de transições, o estado inicial e o conjunto de estados
+finais, organizados em uma estrutura de dados sobre a qual operam o verificador semântico e o
+simulador visual. As fases descritas nas Seções~\ref{sec:lexica} a~\ref{sec:semantica}
+correspondem precisamente ao processo de tradução da forma textual para esse modelo, e a árvore
+sintática abstrata, apresentada na Seção~\ref{sec:ast}, é a estrutura intermediária por meio da
+qual essa tradução se concretiza.
+
 \section{Construção de Compiladores (ferramentas)}
 \label{sec:contrucao-compiladores}
+
+A descrição apresentada nas seções anteriores dá conta de \textit{o que} cada fase de um
+compilador realiza, mas é silenciosa sobre \textit{como} essas fases são efetivamente
+implementadas em um sistema concreto. Construir manualmente, do zero, um analisador léxico, um
+analisador sintático e os mecanismos de tradução dirigida pela sintaxe é um esforço considerável
+e propenso a erros, sobretudo no caso de uma DSL externa, em que toda a infraestrutura precisa
+ser provida pelo próprio implementador. Por essa razão, ao longo das décadas consolidou-se um
+conjunto de ferramentas e bibliotecas voltadas justamente a automatizar partes substanciais
+desse trabalho. Esta seção apresenta as principais classes de ferramentas utilizadas na
+construção de compiladores, em particular daqueles destinados a DSLs, organizadas conforme a
+classificação proposta por Fowler \cite{fowler2010}.
+
+A primeira e mais tradicional classe de ferramentas é a dos \textbf{geradores de analisadores
+sintáticos}, também chamados de \textit{parser generators}. Nessa abordagem, o implementador
+descreve a linguagem por meio de uma gramática livre de contexto, escrita em uma notação
+próxima da BNF apresentada na Seção~\ref{sec:sintatica}, eventualmente acrescida de ações
+semânticas associadas a cada produção. A ferramenta toma essa especificação como entrada e
+produz, automaticamente, o código fonte de um analisador completo, em geral em uma linguagem de
+propósito geral como C, Java ou Python \cite{fowler2010}. Pertencem a essa família ferramentas
+como Yacc e Bison, voltadas à análise ascendente do tipo LR, e ANTLR, particularmente popular
+para análise descendente preditiva. A vantagem central dessa abordagem é a correspondência
+direta entre a descrição formal da linguagem e o analisador gerado, o que torna o resultado
+fácil de revisar e de modificar quando a linguagem evolui. Em contrapartida, o uso desse tipo
+de ferramenta exige certa familiaridade com a teoria de gramáticas livres de contexto e com as
+limitações específicas da classe de \textit{parsers} que a ferramenta produz, como as restrições
+LR, LL ou LALR.
+
+Uma segunda classe de ferramentas é a dos \textbf{combinadores de \textit{parsers}}, ou
+\textit{parser combinators}. Em vez de gerar código a partir de uma gramática externa, essa
+abordagem fornece, na forma de uma biblioteca dentro de uma linguagem hospedeira, um conjunto
+de \textit{parsers} elementares, capazes de reconhecer fragmentos triviais como um único
+caractere, uma palavra-chave ou um número, junto a um conjunto de combinadores que permitem
+construir \textit{parsers} mais complexos a partir desses elementos por meio de composição
+\cite{fowler2010}. A gramática da linguagem aparece, então, no próprio código fonte do
+compilador, expressa diretamente pelas funções e operadores da biblioteca. Essa estratégia é
+particularmente comum em linguagens funcionais, como Haskell e Scala, mas também encontra
+expressão em linguagens modernas com bom suporte a tipos algébricos, sendo amplamente utilizada
+no ecossistema Rust por meio de bibliotecas como nom e pest. Sua principal vantagem é a
+ausência de qualquer etapa adicional de geração de código, o que integra perfeitamente o
+analisador ao restante do compilador, em uma única linguagem e em um único processo de
+compilação. A contrapartida é que o desempenho e a clareza dos diagnósticos podem depender de
+forma sensível da maneira como a gramática é estruturada, exigindo do implementador atenção a
+questões como retrocesso e ambiguidade.
+
+Uma terceira opção, frequentemente subestimada, é a do \textbf{analisador escrito manualmente},
+em geral pela técnica de descida recursiva, descrita na Seção~\ref{sec:sintatica}. Nessa
+abordagem, cada não-terminal da gramática é traduzido em uma função do compilador, que invoca,
+direta ou indiretamente, as demais funções correspondentes aos não-terminais que aparecem em
+suas produções. Apesar de demandar mais trabalho inicial do que as duas alternativas anteriores,
+essa estratégia oferece o controle mais fino sobre o comportamento do analisador, sendo
+especialmente útil quando se deseja produzir mensagens de erro de alta qualidade ou quando a
+linguagem inclui construções que se acomodam mal às restrições de um gerador automático
+\cite{fowler2010}. Não por acaso, muitos compiladores de produção, incluindo os de linguagens
+de propósito geral amplamente utilizadas, optam pela escrita manual do analisador.
+
+Uma quarta classe, mais recente, é a das \textbf{\textit{language workbenches}}, ou plataformas
+para engenharia de linguagens. Diferentemente das ferramentas anteriores, que se concentram
+quase exclusivamente na construção do \textit{front-end}, uma \textit{language workbench}
+oferece suporte integrado a todas as etapas de definição de uma DSL, da gramática à semântica,
+passando pelas ferramentas de edição, de verificação e até de geração de código
+\cite{fowler2010}. Sistemas como Xtext, JetBrains MPS e Spoofax permitem que o desenvolvedor da
+linguagem defina, em um único ambiente, a sintaxe, o sistema de tipos, os transformadores e os
+geradores, recebendo em troca um editor com realce de sintaxe, completamento automático e
+diagnóstico em tempo real, tudo derivado da própria definição da linguagem. Essa abordagem
+amplia consideravelmente a produtividade do projetista de DSLs, mas implica adesão a um
+ecossistema específico e introduz uma curva de aprendizado nada trivial.
+
+A escolha entre essas alternativas depende de fatores como a complexidade da linguagem, o
+público-alvo, as exigências de desempenho do analisador e a familiaridade da equipe com as
+diferentes técnicas \cite{fowler2010}. Para os fins do presente trabalho, em que a DSL proposta
+é compacta, voltada exclusivamente à descrição de autômatos finitos, e cujo compilador integra
+um sistema mais amplo escrito em uma única linguagem hospedeira, a estratégia adotada
+contempla, de modo combinado, o uso de uma biblioteca de \textit{parser combinators} para a
+construção do \textit{front-end} e a escrita manual das demais etapas. Essa combinação preserva
+a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust},
+sem introduzir dependências de geradores externos ou de plataformas de \textit{language
+engineering}.
 
 \section{Diagnóstico de Erros}
 \label{sec:diagnostico-erro}
 
+A capacidade de relatar erros de forma precisa e útil é, ao lado da própria tradução, uma das
+duas funções essenciais de um compilador, conforme observado já na Seção~\ref{sec:conceitos-compiladores}.
+Em compiladores de linguagens de propósito geral, essa exigência costuma ser tratada como uma
+preocupação de engenharia entre outras, mas em compiladores de DSLs ela assume um peso ainda
+maior, pois o público que escreve programas em uma DSL inclui frequentemente especialistas do
+domínio sem formação extensa em programação \cite{fowler2010}. Para esses usuários, uma mensagem
+de erro confusa, fora de posição ou expressa em vocabulário técnico estranho ao domínio pode
+inviabilizar o uso da linguagem com a mesma eficácia de um defeito de tradução. O presente
+trabalho, voltado a estudantes de teoria da computação e dirigido também a usuários em fase de
+aprendizagem, enquadra-se justamente nesse cenário, e por isso o diagnóstico de erros recebe
+aqui tratamento próprio.
+
+Os erros que um compilador pode detectar distribuem-se ao longo das três fases do
+\textit{front-end}, conforme já exposto nas seções correspondentes. A análise léxica detecta
+erros de formação de \textit{tokens}, como caracteres isolados que não pertencem ao alfabeto da
+linguagem ou literais malformados. A análise sintática detecta erros de estrutura, isto é,
+sequências de \textit{tokens} que, embora individualmente válidas, não compõem uma derivação
+admitida pela gramática, como a ausência de um delimitador esperado ou o uso de uma construção
+fora de contexto. A análise semântica detecta, por fim, erros que escapam à descrição puramente
+sintática, tais como o uso de identificadores não declarados, incompatibilidades de tipo ou
+violações de restrições próprias do domínio que a linguagem modela. Cada fase, portanto,
+contribui com um vocabulário próprio de erros, e cada uma demanda mecanismos específicos para
+detectá-los e para recuperar-se deles a fim de prosseguir o processamento.
+
+Independentemente da fase em que ocorrem, os erros relatados por um compilador são tanto mais
+úteis quanto melhor satisfazem três critérios fundamentais. O primeiro é a \textbf{precisão da
+localização}, isto é, a indicação inequívoca, em termos de linha e coluna do arquivo fonte, do
+ponto do programa em que o erro foi detectado. O segundo é a \textbf{clareza da mensagem}, ou
+seja, a expressão do erro em uma linguagem natural compreensível para o usuário, evitando jargão
+técnico desnecessário e, sempre que possível, indicando o que se esperava encontrar e o que foi
+de fato encontrado. O terceiro é a \textbf{capacidade de detectar múltiplos erros em uma única
+execução}, evitando que o usuário tenha de repetir o ciclo de compilação diversas vezes para
+descobrir, sucessivamente, defeitos que poderiam ter sido reportados em conjunto.
+
+A recuperação após o primeiro erro, requisito para que o compilador prossiga a análise e detecte
+os erros remanescentes, depende das estratégias já discutidas na Seção~\ref{sec:sintatica}.
+Para erros sintáticos, o modo pânico oferece uma recuperação simples e robusta, ao custo de
+ignorar trechos do programa fonte; a recuperação em nível de frase tenta inserir, remover ou
+substituir \textit{tokens} para reconstruir uma forma sintaticamente válida, com riscos
+controlados de provocar erros em cascata; e as produções de erro permitem que o projetista
+da linguagem antecipe construções incorretas frequentes e atribua a elas mensagens específicas.
+Para erros semânticos, a recuperação é, em geral, mais simples, pois a estrutura do programa já
+foi reconhecida pela fase sintática, restando apenas anotar o erro detectado e prosseguir a
+verificação dos demais nós da árvore.
+
+No contexto de DSLs, Fowler \cite{fowler2010} observa que a qualidade do diagnóstico está
+intimamente ligada à escolha da estratégia de implementação discutida na Seção~\ref{sec:contrucao-compiladores}.
+Geradores automáticos de \textit{parsers} costumam produzir mensagens genéricas, expressas em
+termos de \textit{tokens} e estados internos do analisador, que pouco ajudam o usuário final.
+Combinadores de \textit{parsers} permitem maior controle sobre as mensagens, mas requerem
+atenção do implementador para que esse controle seja efetivamente exercido. Analisadores
+escritos manualmente, por sua vez, oferecem o mais alto grau de personalização das mensagens,
+sendo essa, conforme já apontado, uma das principais razões pelas quais compiladores de
+produção continuam a ser escritos dessa maneira. \textit{Language workbenches} costumam ir além
+do diagnóstico em \textit{batch} e oferecer detecção de erros incremental, em tempo de edição,
+diretamente na interface gráfica do editor.
+
+Para a ferramenta proposta neste trabalho, o diagnóstico de erros é tratado como parte central
+do projeto da DSL, e não como decoração posterior. Cada fase do compilador, da análise léxica à
+análise semântica, é instrumentada para registrar os erros encontrados em uma estrutura comum,
+preservando a localização exata no texto fonte e uma mensagem redigida em vocabulário próximo
+ao domínio dos autômatos finitos, com referências aos conceitos do Capítulo~\ref{cap:automatos},
+como estados, transições, alfabeto e estados finais. Após o término de cada fase, esses erros
+são apresentados em conjunto ao usuário, e somente quando uma fase produz erros que impeçam a
+continuação do processamento é que o restante do compilador deixa de ser executado. Esse
+tratamento dá ao usuário uma visão panorâmica dos defeitos do programa em cada execução, em
+linha com os critérios de qualidade enumerados anteriormente, e prepara o terreno para os
+recursos visuais de apoio descritos no Capítulo~\ref{cap:projeto}.
+
 \section{DSL no ensino}
 \label{sec:dsl-ensino}
 
-\chapter{Rust}
-\label{cap:rust}
+As seções anteriores deste capítulo apresentaram as DSLs como ferramentas voltadas a tornar mais
+concisa e expressiva a descrição de soluções em um domínio particular. Quando esse domínio é
+constituído pelos próprios objetos de estudo de uma disciplina acadêmica, a DSL passa a
+desempenhar, além do papel técnico habitual, uma função pedagógica, isto é, a de servir como
+linguagem por meio da qual o estudante exerce, formaliza e verifica os conceitos que aprende.
+Esta seção examina, com base no trabalho de Morazán e Antunez \cite{morazan2014}, o uso de DSLs
+no ensino de linguagens formais e teoria da computação, situando essa prática como contexto
+imediato do presente trabalho.
+
+O ensino tradicional dos conteúdos discutidos no Capítulo~\ref{cap:automatos} costuma apoiar-se
+em ferramentas gráficas que permitem ao estudante construir autômatos e gramáticas
+manipulando diretamente seus elementos visuais, dos quais o exemplo mais difundido é o JFLAP
+\cite{rodger2006jflap}. Esse tipo de abordagem oferece, sem dúvida, ganhos importantes, em
+especial a redução do esforço inicial necessário para que o estudante visualize um autômato e
+acompanhe sua execução. No entanto, conforme apontam Morazán e Antunez \cite{morazan2014}, a
+ênfase exclusiva em ferramentas gráficas tende a separar o estudo de linguagens formais do
+restante das atividades de programação que o estudante realiza ao longo do curso, tratando o
+autômato como um diagrama a ser desenhado, e não como um objeto computacional a ser construído
+e manipulado por meio de código.
+
+A alternativa proposta por Morazán e Antunez \cite{morazan2014} consiste em oferecer ao estudante
+uma DSL textual em que autômatos finitos, autômatos de pilha, máquinas de Turing e gramáticas
+sejam descritos diretamente como termos da linguagem, podendo então ser construídos, compostos,
+testados e executados como qualquer outro programa. Os autores argumentam que essa abordagem
+recoloca os objetos da teoria da computação no mesmo plano dos demais artefatos com que o
+estudante trabalha em programação, integrando o estudo das linguagens formais ao restante do
+currículo de computação em vez de tratá-lo como uma disciplina insulada com ferramental próprio.
+
+Entre os ganhos pedagógicos dessa abordagem, os autores destacam a possibilidade de o estudante
+escrever, ele mesmo, programas que constroem autômatos a partir de outras estruturas, que
+verificam propriedades de máquinas dadas ou que comparam computações em diferentes formalismos,
+exercícios praticamente inviáveis em um ambiente exclusivamente gráfico \cite{morazan2014}.
+Outro ganho relevante é a possibilidade de submeter os autômatos descritos na DSL a testes
+automatizados, no estilo dos testes unitários usuais em desenvolvimento de software, o que
+introduz, já no contexto da disciplina de linguagens formais, hábitos de verificação que serão
+úteis ao estudante em todo o restante de sua formação.
+
+A abordagem textual não se opõe, entretanto, à visualização. Pelo contrário, uma DSL voltada ao
+ensino tende a beneficiar-se da combinação entre uma representação textual primária, em que o
+estudante exprime suas ideias, e uma representação visual derivada, gerada automaticamente a
+partir do texto, que serve para a inspeção do resultado e para a execução passo a passo da
+máquina descrita. Esse arranjo preserva os ganhos de programação enumerados anteriormente sem
+abrir mão dos ganhos visuais que motivam o uso de ferramentas como o JFLAP, e é precisamente
+esse o equilíbrio que a ferramenta proposta no presente trabalho busca alcançar, conforme
+detalhado nos capítulos subsequentes.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
