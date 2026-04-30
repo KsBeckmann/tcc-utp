@@ -23,6 +23,9 @@
 \usepackage{booktabs}
 \usepackage{forest}
 \usepackage{tikz}
+\usepackage{tabularx} % Adicione este pacote ao seu preâmbulo
+\usepackage{booktabs}
+\usepackage{makecell} % Útil para quebras de linha em células
 \usetikzlibrary{positioning, arrows.meta, calc}
 
 % =================================================================================================
@@ -1967,19 +1970,21 @@ presente trabalho.
     \caption{Comparação entre os trabalhos relacionados e a ferramenta proposta}
     \label{quad:comparativo}
     \small
-    \setlength{\tabcolsep}{4pt}
-    \begin{tabular}{l c c c c c}
+    % Define o tipo de coluna X com alinhamento centralizado
+    \newcolumntype{Y}{>{\centering\arraybackslash}X}
+    
+    \begin{tabularx}{\textwidth}{l Y Y Y Y >{\raggedright\arraybackslash}X}
         \toprule
         \textbf{Trabalho}
-            & \textbf{\shortstack{DSL\\textual}}
-            & \textbf{\shortstack{Compilador com\\diagnóstico}}
-            & \textbf{\shortstack{Simulação\\visual}}
-            & \textbf{\shortstack{Simulação\\passo a passo}}
+            & \textbf{DSL textual}
+            & \textbf{Compilador / diagnóstico}
+            & \textbf{Simulação visual}
+            & \textbf{Simulação passo a passo}
             & \textbf{Plataforma} \\
         \midrule
-        Writing a Lexer in Rust
+        Writing a Lexer
             & Não & Não & Não & Linha de comando
-            & \shortstack{Implementação de\\léxico em Rust} \\
+            & Implementação de léxico em Rust \\
         \addlinespace
         JFLAP
             & Não & Não & Sim & Sim
@@ -1987,21 +1992,21 @@ presente trabalho.
         \addlinespace
         GAM
             & Não & Não & Sim & Parcial
-            & \shortstack{Desktop\\(C++/GTK)} \\
+            & Desktop (C++/GTK) \\
         \addlinespace
         Simulador UFSC
             & Não & Não & Sim & Sim
             & Web \\
         \addlinespace
         AutomatoGraph
-            & Não & Não & Parcial (textual) & \shortstack{Parcial (lista\\de transições)}
+            & Não & Não & Parcial (textual) & Parcial (lista de transições)
             & Desktop (Java) \\
         \addlinespace
         \textbf{Este trabalho}
             & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim}
             & \textbf{Desktop} \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{table}
 
