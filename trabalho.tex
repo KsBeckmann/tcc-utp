@@ -1475,7 +1475,7 @@ diferentes técnicas \cite{fowler2010}. Para os fins do presente trabalho, em qu
 um sistema mais amplo escrito em uma única linguagem hospedeira, a estratégia adotada
 contempla, de modo combinado, o uso de uma biblioteca de \textit{parser combinators} para a
 construção do \textit{front-end} e a escrita manual das demais etapas. Essa combinação preserva
-a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust}, //vai ter um capitulo de rust?
+a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust},
 sem introduzir dependências de geradores externos ou de plataformas de \textit{language
 engineering}.
 
@@ -1793,7 +1793,265 @@ integralmente em Rust. A análise comparativa apresentada nesta seção fornece 
 necessário para essa decisão, que será documentada e justificada no
 Capítulo~\ref{cap:implementacao}.
 
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 5. Trabalhos Relacionados
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Trabalhos Relacionados}
+\label{cap:relacionados}
 
+O desenvolvimento de ferramentas computacionais para apoiar o ensino de autômatos finitos tem
+uma trajetória longa e relativamente consolidada na literatura de educação em Ciência da
+Computação. No entanto, conforme se argumenta ao longo deste trabalho, as abordagens existentes
+compartilham uma limitação comum: a ausência de uma representação textual formal e de um
+compilador associado capaz de validar e diagnosticar erros com precisão. Este capítulo apresenta
+e analisa os cinco trabalhos mais relevantes identificados na revisão bibliográfica, organizados
+conforme sua plataforma e abordagem, evidenciando em cada caso as contribuições e as limitações
+que motivam o desenvolvimento da ferramenta proposta.
+
+\section{Writing a Lexer in Rust}
+\label{sec:rel-lexer-rust}
+
+O trabalho intitulado \textit{Writing a Lexer in Rust}, publicado na forma de artigo técnico e
+tutorial prático por Bruzzone \cite{bruzzone2023}, apresenta uma implementação de analisador
+léxico em Rust fundamentada diretamente na teoria dos autômatos finitos. O autor parte da
+constatação de que analisadores léxicos são, em essência, autômatos finitos não-determinísticos
+aplicados ao reconhecimento de \textit{tokens}, e propõe uma implementação em que cada categoria
+léxica corresponde a um estado ou conjunto de estados explicitamente codificados na estrutura
+do autômato.
+
+A relevância deste trabalho para o presente contexto reside justamente nessa ponte explícita
+entre a teoria dos autômatos, apresentada no Capítulo~\ref{cap:automatos}, e sua aplicação
+prática em uma linguagem de programação moderna. O autor demonstra que as primitivas de Rust,
+em especial os tipos enumerados e o mecanismo de correspondência de padrões, são
+particularmente adequados para representar estados e transições de autômatos de forma segura e
+eficiente, antecipando argumentos desenvolvidos com maior profundidade no
+Capítulo~\ref{cap:rust} deste trabalho.
+
+No entanto, o escopo do trabalho de Bruzzone \cite{bruzzone2023} restringe-se à fase de análise
+léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de
+compilação nem para qualquer forma de simulação visual ou interativa. Trata-se, portanto, de
+uma contribuição de natureza técnica e didática voltada a programadores que desejam compreender
+a implementação de lexers, e não de uma ferramenta educacional direcionada ao ensino de
+autômatos em si. A ferramenta proposta no presente trabalho diferencia-se ao incorporar, além
+da análise léxica, as fases sintática e semântica completas, a construção da AST e a simulação
+visual interativa do autômato descrito.
+
+\section{JFLAP}
+\label{sec:rel-jflap}
+
+O JFLAP (\textit{Java Formal Languages and Automata Package}) é, sem dúvida, a ferramenta
+educacional mais amplamente utilizada para o ensino de linguagens formais e autômatos no mundo.
+Desenvolvida por Susan H. Rodger e colaboradores na Duke University, com origens que remontam
+ao início da década de 1990, a ferramenta acumula décadas de desenvolvimento contínuo e tem
+sido adotada em universidades de mais de cem países \cite{rodger2006jflap}. Sua versão mais
+recente, 7.1, permite a criação e simulação de autômatos finitos determinísticos e
+não-determinísticos, autômatos de pilha, máquinas de Turing, gramáticas livres de contexto e
+sistemas-L, constituindo um ambiente abrangente para toda a hierarquia de Chomsky.
+
+A abordagem do JFLAP é exclusivamente gráfica e baseada em manipulação direta: o usuário
+constrói o autômato posicionando estados com o \textit{mouse} e conectando transições por meio
+de arestas rotuladas, sem qualquer forma de representação textual da estrutura produzida
+\cite{rodger2006jflap}. A simulação passo a passo destaca visualmente os estados e as
+transições percorridos durante o reconhecimento de uma cadeia, o que confere à ferramenta
+inegável valor pedagógico para a visualização do comportamento dos autômatos. Rodger e Finley
+\cite{rodger2006jflap} documentam ainda recursos avançados, como a conversão automática de AFN
+em AFD pela construção de subconjuntos, a minimização de AFDs e a conversão entre gramáticas e
+autômatos, todos apresentados com animações visuais.
+
+As limitações do JFLAP, já apontadas na introdução deste trabalho, derivam precisamente de sua
+natureza exclusivamente visual. A ausência de uma representação textual impede o versionamento,
+a comparação e o processamento automatizado dos autômatos produzidos. A construção por
+arrastar-e-soltar não fornece ao estudante diagnósticos precisos quando o autômato está
+incorretamente especificado: a ferramenta pode aceitar estruturas inválidas sem emitir mensagens
+de erro localizadas, ou simplesmente não permitir certas configurações sem explicar o motivo.
+Além disso, por ser implementada em Java e distribuída como aplicação \textit{desktop}, o JFLAP
+apresenta dependência de ambiente de execução e interface datada, que contrastam com o
+ecossistema moderno de ferramentas de desenvolvimento ao qual o estudante de Ciência da
+Computação está habitualmente exposto.
+
+\section{GAM}
+\label{sec:rel-gam}
+
+O GAM (\textit{Gerenciador de Autômatos e Máquinas}) é uma ferramenta educacional desenvolvida
+na Universidade Federal de Lavras por Jukemura, Nascimento e Uchôa \cite{jukemura2005gam}, com
+o objetivo de apoiar estudantes e professores no estudo da teoria dos autômatos finitos. A
+ferramenta é implementada em C++ com a biblioteca gráfica GTK/GTKmm e executa em sistemas
+GNU/Linux e Windows, sendo distribuída livremente para uso acadêmico.
+
+O GAM oferece módulos para a entrada, edição e teste de diferentes tipos de máquinas abstratas,
+incluindo autômatos finitos determinísticos e não-determinísticos, autômatos de pilha e máquinas
+de Turing, além de suporte à conversão de AFN em AFD com visualização das etapas da construção
+de subconjuntos \cite{jukemura2005gam}. A interface gráfica permite a construção visual dos
+autômatos e a simulação do processamento de cadeias de entrada, com apresentação parcial das
+configurações intermediárias percorridas durante o reconhecimento.
+
+As limitações do GAM são de duas ordens. Em primeiro lugar, a ferramenta impõe restrições
+estruturais significativas: os alfabetos de entrada e saída são limitados a no máximo três
+símbolos e as máquinas a no máximo dez estados, o que inviabiliza seu uso com autômatos de
+complexidade moderada, como os utilizados em exemplos clássicos da literatura
+\cite{jukemura2005gam}. Em segundo lugar, à semelhança do JFLAP, o GAM não oferece nenhuma
+forma de representação textual dos autômatos produzidos, mantendo a descrição restrita ao
+domínio visual. A ausência de diagnósticos de erro precisos e localizados, bem como a
+dependência de uma interface gráfica de construção manual, são limitações partilhadas com as
+demais ferramentas desta categoria.
+
+\section{Simulador UFSC}
+\label{sec:rel-ufsc}
+
+O Simulador UFSC é uma aplicação \textit{web} desenvolvida como Trabalho de Conclusão de Curso
+na Universidade Federal de Santa Catarina por Nunes, com orientação de Furtado e Marchi
+\cite{nunes2017simulador}. O trabalho tem como motivação central a constatação de que as
+ferramentas \textit{desktop} existentes, como o JFLAP, impõem barreiras de instalação e
+configuração que dificultam sua adoção em ambientes educacionais heterogêneos, e propõe como
+alternativa um simulador acessível diretamente pelo navegador, sem necessidade de instalação.
+
+A ferramenta suporta autômatos finitos determinísticos e não-determinísticos, autômatos de
+pilha e máquinas de Turing, permitindo a construção gráfica dos modelos e a simulação visual
+do processamento de cadeias, com apresentação dos estados e transições percorridos em cada
+passo \cite{nunes2017simulador}. A arquitetura \textit{web} é um diferencial relevante em
+relação às ferramentas \textit{desktop} analisadas anteriormente, pois elimina dependências de
+sistema operacional e facilita o compartilhamento de autômatos entre estudantes e professores
+por meio de URLs.
+
+Contudo, o Simulador UFSC mantém a abordagem exclusivamente gráfica para a construção dos
+autômatos, sem oferecer qualquer forma de representação textual ou de compilador associado. A
+ausência de validação formal da estrutura e de diagnósticos de erro precisos é, portanto, uma
+limitação compartilhada com os demais trabalhos desta categoria. O estudante que constrói um
+autômato incorreto não recebe indicação clara do ponto e da natureza do problema, cabendo-lhe
+identificar o erro por inspeção visual, processo que, conforme argumentado por
+\citeonline{morazan2014}, tende a ser menos eficaz do que o diagnóstico automatizado oferecido
+por compiladores.
+
+\section{AutomatoGraph}
+\label{sec:rel-automatograph}
+
+O AutomatoGraph é uma ferramenta educacional desenvolvida em Java por Kienetz e Canal
+\cite{kienetz2016automatograph}, com o objetivo de auxiliar estudantes no estudo de autômatos
+finitos determinísticos no contexto da disciplina de Linguagens Formais e Autômatos. Em
+contraste com as ferramentas anteriores, que oferecem suporte a múltiplos tipos de máquinas
+abstratas, o AutomatoGraph restringe-se deliberadamente aos AFDs, aprofundando o suporte a esse
+formalismo específico.
+
+A característica mais distintiva do AutomatoGraph em relação às demais ferramentas analisadas é
+a geração automática da gramática regular correspondente ao autômato construído, recurso que
+explicita ao estudante a equivalência entre os dois formalismos e reforça a compreensão da
+hierarquia de Chomsky discutida na Seção~\ref{sec:gramaticas-formais}
+\cite{kienetz2016automatograph}. A interface apresenta, em colunas paralelas, a lista de passos
+percorridos pelo autômato durante o reconhecimento de uma cadeia e a gramática regular gerada,
+permitindo ao estudante observar ambas as representações simultaneamente.
+
+A simulação passo a passo é apenas parcialmente visual: embora a lista de transições percorridas
+seja exibida textualmente, o diagrama de estados não é animado de forma interativa durante o
+processamento, o que reduz o impacto pedagógico em comparação com ferramentas que destacam
+visualmente o estado corrente em tempo real \cite{kienetz2016automatograph}. Além disso, o
+AutomatoGraph mantém a abordagem gráfica para a construção do autômato e não oferece
+representação textual formal, versionamento ou diagnóstico de erros estruturais. O escopo
+restrito a AFDs também constitui uma limitação quando se considera o ensino de
+não-determinismo, ponto em que a ferramenta proposta no presente trabalho, que suporta tanto
+AFDs quanto AFNs com descrição textual unificada, representa um avanço significativo.
+
+\section{Análise Comparativa}
+\label{sec:rel-comparativa}
+
+A análise dos trabalhos apresentados nas seções anteriores evidencia um padrão comum entre as
+ferramentas existentes: todas adotam abordagens exclusivamente visuais para a construção de
+autômatos, sem oferecer representação textual formal, compilador com diagnóstico de erros ou
+versionamento dos modelos produzidos. O Quadro~\ref{quad:comparativo} sintetiza as
+características centrais de cada ferramenta em relação aos critérios mais relevantes para o
+presente trabalho.
+
+\begin{table}[h]
+    \centering
+    \caption{Comparação entre os trabalhos relacionados e a ferramenta proposta}
+    \label{quad:comparativo}
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{l c c c c c}
+        \toprule
+        \textbf{Trabalho}
+            & \textbf{\shortstack{DSL\\textual}}
+            & \textbf{\shortstack{Compilador com\\diagnóstico}}
+            & \textbf{\shortstack{Simulação\\visual}}
+            & \textbf{\shortstack{Simulação\\passo a passo}}
+            & \textbf{Plataforma} \\
+        \midrule
+        Writing a Lexer in Rust
+            & Não & Não & Não & Linha de comando
+            & \shortstack{Implementação de\\léxico em Rust} \\
+        \addlinespace
+        JFLAP
+            & Não & Não & Sim & Sim
+            & Desktop (Java) \\
+        \addlinespace
+        GAM
+            & Não & Não & Sim & Parcial
+            & \shortstack{Desktop\\(C++/GTK)} \\
+        \addlinespace
+        Simulador UFSC
+            & Não & Não & Sim & Sim
+            & Web \\
+        \addlinespace
+        AutomatoGraph
+            & Não & Não & Parcial (textual) & \shortstack{Parcial (lista\\de transições)}
+            & Desktop (Java) \\
+        \addlinespace
+        \textbf{Este trabalho}
+            & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim}
+            & \textbf{Desktop} \\
+        \bottomrule
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{table}
+
+Observa-se que nenhum dos trabalhos analisados combina, em um único instrumento, a descrição
+textual declarativa do autômato com um compilador que realize análise léxica, sintática e
+semântica, fornecendo diagnósticos de erro com indicação precisa de localização e natureza do
+problema. A ferramenta proposta neste trabalho ocupa, portanto, uma lacuna identificada na
+literatura: a integração entre uma DSL externa voltada ao domínio dos autômatos finitos, um
+compilador pedagógico com diagnóstico de qualidade e uma interface gráfica interativa que
+anime a simulação passo a passo a partir da descrição textual produzida pelo estudante.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 6. Projeto da DSL
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Projeto da DSL}
+\label{cap:projeto}
+
+% TODO: Descrever o projeto da DSL, sua sintaxe e gramática.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 7. Implementação
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Implementação}
+\label{cap:implementacao}
+
+% TODO: Detalhar a implementação do compilador e da interface gráfica.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 8. Resultados
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Resultados}
+\label{cap:resultados}
+
+% TODO: Apresentar os testes e os resultados obtidos.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 9. Conclusão
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Conclusão}
+\label{cap:conclusao}
+
+% TODO: Apresentar as considerações finais e trabalhos futuros.
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
