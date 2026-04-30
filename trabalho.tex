@@ -122,6 +122,8 @@ como requisito à obtenção ao grau de Bacharel.}
     \item[BNF]   Forma de Backus-Naur
     \item[DSL]   Linguagem de Domínio Específico
     \item[EBNF]  Forma de Backus-Naur Estendida
+    \item[LLVM]  Low Level Virtual Machine
+    \item[PEG]   Gramática de Expressão de Análise
 \end{siglas}
 
 
@@ -217,9 +219,9 @@ interativa. Para atingir esse objetivo, definem-se os seguintes objetivos espec�
 \end{alineas}
 
 Este trabalho está organizado como segue.
-O Capítulo~\ref{cap:automatos} apresenta os conceitos teóricos de autômatos finitos e linguagens
-formais.
+O Capítulo~\ref{cap:automatos} apresenta os conceitos teóricos de autômatos finitos e linguagens formais.
 O Capítulo~\ref{cap:compiladores} aborda linguagens de domínio específico e as fases de compilação.
+O Capítulo~\ref{cap:rust} apresenta a linguagem Rust e justifica sua adoção como plataforma de implementação da ferramenta proposta.
 O Capítulo~\ref{cap:relacionados} discute as ferramentas relacionadas e suas limitações.
 O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramática.
 O Capítulo~\ref{cap:implementacao} detalha a implementação do compilador e da interface gráfica.
@@ -871,7 +873,19 @@ em uma aplicação concreta dos conceitos apresentados neste capítulo.
 
 \chapter{Compiladores e Linguagens de Domínio Específico}
 \label{cap:compiladores}
-texto breve aqui depois
+Este capítulo apresenta os fundamentos teóricos de compiladores e linguagens de domínio 
+específico que embasam a ferramenta proposta. Inicia-se com os conceitos gerais de compiladores 
+e sua distinção em relação a interpretadores (Seção~\ref{sec:conceitos-compiladores}), 
+seguindo-se a descrição detalhada das três fases do \textit{front-end}: análise léxica 
+(Seção~\ref{sec:lexica}), análise sintática (Seção~\ref{sec:sintatica}) e análise semântica 
+(Seção~\ref{sec:semantica}). Em seguida, apresenta-se a Árvore Sintática Abstrata como 
+estrutura intermediária central do processo de compilação (Seção~\ref{sec:ast}). A partir 
+desses fundamentos, introduz-se o conceito de Linguagem de Domínio Específico 
+(Seção~\ref{sec:dsl}), discutem-se as principais ferramentas e abordagens para sua construção 
+(Seção~\ref{sec:contrucao-compiladores}), trata-se do diagnóstico de erros como componente 
+essencial de qualidade (Seção~\ref{sec:diagnostico-erro}) e, por fim, examina-se o uso de DSLs 
+no contexto do ensino de linguagens formais (Seção~\ref{sec:dsl-ensino}), perspectiva que 
+motiva diretamente o desenvolvimento do presente trabalho.
 
 \section{Conceitos Fundamentais de Compiladores}
 \label{sec:conceitos-compiladores}
@@ -1461,7 +1475,7 @@ diferentes técnicas \cite{fowler2010}. Para os fins do presente trabalho, em qu
 um sistema mais amplo escrito em uma única linguagem hospedeira, a estratégia adotada
 contempla, de modo combinado, o uso de uma biblioteca de \textit{parser combinators} para a
 construção do \textit{front-end} e a escrita manual das demais etapas. Essa combinação preserva
-a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust},
+a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust}, //vai ter um capitulo de rust?
 sem introduzir dependências de geradores externos ou de plataformas de \textit{language
 engineering}.
 
@@ -1585,6 +1599,200 @@ máquina descrita. Esse arranjo preserva os ganhos de programação enumerados a
 abrir mão dos ganhos visuais que motivam o uso de ferramentas como o JFLAP, e é precisamente
 esse o equilíbrio que a ferramenta proposta no presente trabalho busca alcançar, conforme
 detalhado nos capítulos subsequentes.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 4. Rust como Linguagem de Implementação
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Rust como Linguagem de Implementação}
+\label{cap:rust}
+Este capítulo apresenta a linguagem de programação Rust e justifica sua adoção como plataforma
+de implementação da ferramenta proposta. Inicia-se com uma visão geral da linguagem e de suas
+características centrais (Seção~\ref{sec:rust-visao-geral}), seguindo-se uma discussão sobre
+seu sistema de tipos e o modelo de propriedade de memória
+(Seção~\ref{sec:rust-ownership}). Em seguida, apresenta-se o ecossistema de bibliotecas e o
+gerenciador de pacotes Cargo (Seção~\ref{sec:rust-cargo}), e discutem-se as principais
+bibliotecas de \textit{parser combinators} disponíveis para Rust
+(Seção~\ref{sec:rust-parsers}), cujas características orientam a escolha de implementação
+descrita no Capítulo~\ref{cap:implementacao}.
+
+\section{Visão Geral da Linguagem}
+\label{sec:rust-visao-geral}
+
+Rust é uma linguagem de programação de sistemas criada pela Mozilla Research e lançada em sua
+primeira versão estável em 2015 \cite{klabnik2019}. Seu projeto parte de uma premissa central:
+oferecer desempenho comparável ao de C e C++, sem abrir mão das garantias de segurança de
+memória que essas linguagens historicamente não fornecem em tempo de compilação. Para atingir
+esse objetivo, Rust introduz um sistema de tipos estático e um conjunto de regras de compilação,
+coletivamente denominado modelo de \textit{ownership} e \textit{borrowing}, que permite ao
+compilador verificar, antes da execução, a ausência de erros como acessos a regiões de memória
+inválidas, condições de corrida e uso de ponteiros nulos \cite{klabnik2019}.
+
+A linguagem é compilada para código nativo por meio do compilador \texttt{rustc}, que utiliza
+como \textit{backend} a infraestrutura LLVM, a mesma empregada por compiladores como Clang e
+Swift \cite{klabnik2019}. O resultado é um binário executável diretamente pelo sistema
+operacional, sem a necessidade de uma máquina virtual ou de um interpretador em tempo de
+execução. Essa característica torna Rust adequado tanto para o desenvolvimento de sistemas de
+baixo nível, como kernels e drivers, quanto para aplicações de alto nível que exigem desempenho
+previsível, como compiladores, servidores e ferramentas de linha de comando.
+
+Do ponto de vista da expressividade, Rust combina paradigmas de programação imperativa,
+funcional e orientada a objetos por meio de \textit{traits}, que funcionam de forma análoga às
+interfaces de Java ou às classes de tipos de Haskell \cite{klabnik2019}. Essa flexibilidade
+permite que construções comuns em linguagens funcionais, como mapeamento, filtragem e
+encadeamento de iteradores, sejam expressas de forma concisa e com custo de abstração zero,
+isto é, sem sobrecarga de desempenho em relação ao código imperativo equivalente. Para a
+construção de compiladores e processadores de linguagens, esse conjunto de características é
+particularmente valioso: a segurança de tipos facilita a representação de estruturas como
+tokens, nós de AST e estados de autômatos sem o risco de inconsistências em tempo de execução,
+enquanto o modelo funcional favorece a composição das fases de análise de forma clara e
+modular.
+
+\section{Sistema de Tipos, \textit{Ownership} e \textit{Borrowing}}
+\label{sec:rust-ownership}
+
+O traço mais distintivo de Rust em relação a outras linguagens de sistemas é seu modelo de
+gerenciamento de memória, que elimina a necessidade de um coletor de lixo (\textit{garbage
+collector}) sem exigir que o programador gerencie a memória manualmente \cite{klabnik2019}. Esse
+modelo é fundamentado em três conceitos inter-relacionados: \textit{ownership} (propriedade),
+\textit{borrowing} (empréstimo) e \textit{lifetimes} (tempos de vida).
+
+O princípio de \textit{ownership} estabelece que cada valor em Rust possui exatamente um
+\textbf{dono} em qualquer ponto do programa, e que o valor é automaticamente liberado da memória
+quando seu dono sai de escopo \cite{klabnik2019}. A atribuição de um valor a uma nova variável,
+ou sua passagem como argumento a uma função, transfere a propriedade para o novo contexto,
+invalidando o acesso anterior. Essa regra, verificada estaticamente pelo compilador, garante
+que não existam dois fragmentos de código tentando liberar a mesma região de memória
+simultaneamente.
+
+O \textit{borrowing} complementa o \textit{ownership} ao permitir que um valor seja
+\textbf{referenciado} sem que sua propriedade seja transferida. Rust distingue dois tipos de
+referências: as \textbf{referências imutáveis} (\texttt{\&T}), das quais podem existir
+simultaneamente quantas forem necessárias, e as \textbf{referências mutáveis} (\texttt{\&mut T}),
+das quais apenas uma pode existir em qualquer instante, excluindo a coexistência com qualquer
+referência imutável \cite{klabnik2019}. Essas restrições, verificadas pelo compilador em uma
+fase denominada \textit{borrow checking}, eliminam em tempo de compilação toda uma classe de
+erros relacionados à mutação concorrente de dados compartilhados.
+
+O sistema de tipos de Rust é estático e fortemente tipado, com suporte a inferência de tipos
+que dispensa, na maior parte dos casos, anotações explícitas de tipo \cite{klabnik2019}. Para a
+representação de estruturas de dados que podem assumir diferentes formas, Rust oferece os
+\textbf{tipos enumerados} (\texttt{enum}), que permitem associar dados distintos a cada variante
+e são processados por meio de correspondência de padrões (\textit{pattern matching}) com
+verificação de exaustividade pelo compilador. Esse recurso é particularmente útil na
+implementação de compiladores, onde nós de AST, tokens e erros costumam ser representados
+naturalmente como enumerações: o compilador garante que todo código que manipula essas
+estruturas trate explicitamente cada variante possível, evitando casos não tratados silenciosos.
+
+No contexto do presente trabalho, o sistema de tipos e o modelo de \textit{ownership} de Rust
+oferecem garantias concretas para a implementação das fases do compilador da DSL proposta. A
+AST do autômato, por exemplo, pode ser representada como uma enumeração cujas variantes
+correspondem aos diferentes nós da árvore, estados, transições, declarações de alfabeto e
+metadados, com a certeza de que qualquer acesso a essas estruturas será verificado em tempo de
+compilação. Da mesma forma, a passagem da AST entre as fases de análise semântica e de
+simulação não requer cópias desnecessárias, pois o modelo de \textit{borrowing} permite que
+cada fase leia a estrutura sem assumir sua propriedade.
+
+\section{Ecossistema e Gerenciador de Pacotes Cargo}
+\label{sec:rust-cargo}
+
+O ecossistema de Rust organiza-se em torno do \textbf{Cargo}, ferramenta oficial que acumula as
+funções de gerenciador de pacotes, sistema de \textit{build} e executor de testes
+\cite{klabnik2019}. Por meio do Cargo, o desenvolvedor declara as dependências do projeto em um
+arquivo de manifesto (\texttt{Cargo.toml}), e a ferramenta resolve automaticamente as versões
+compatíveis, baixa os pacotes do repositório central \texttt{crates.io} e compila todo o
+projeto em uma única invocação. Esse modelo elimina a necessidade de sistemas de \textit{build}
+externos e garante que projetos Rust sejam reprodutíveis em qualquer ambiente que disponha do
+compilador instalado.
+
+A unidade de distribuição de código em Rust é denominada \textbf{\textit{crate}}, termo que
+corresponde, aproximadamente, ao conceito de biblioteca ou módulo em outras linguagens
+\cite{klabnik2019}. O repositório \texttt{crates.io} hospeda dezenas de milhares de
+\textit{crates} de código aberto, cobrindo desde estruturas de dados e algoritmos até
+bibliotecas para desenvolvimento \textit{web}, interfaces gráficas e, em especial para os fins
+deste trabalho, análise sintática e processamento de linguagens.
+
+A integração entre Cargo e o compilador \texttt{rustc} estende-se à execução automatizada de
+testes unitários e de integração. Todo projeto Rust pode incluir módulos de teste diretamente
+no código fonte, anotados com o atributo \texttt{\#[test]}, que são compilados e executados
+pelo comando \texttt{cargo test} \cite{klabnik2019}. Esse mecanismo nativo de testes é
+relevante para o presente trabalho, pois permite validar cada fase do compilador da DSL de
+forma isolada, verificando o comportamento do analisador léxico, do analisador sintático e do
+verificador semântico sobre entradas controladas, em linha com a estratégia de validação
+descrita no Capítulo~\ref{cap:resultados}.
+
+\section{\textit{Parser Combinators} em Rust}
+\label{sec:rust-parsers}
+
+Conforme discutido na Seção~\ref{sec:contrucao-compiladores}, a estratégia de implementação
+adotada para o compilador da DSL proposta baseia-se no uso de uma biblioteca de
+\textit{parser combinators}, abordagem que integra naturalmente a definição da gramática ao
+restante do código da ferramenta. O ecossistema Rust oferece três bibliotecas principais para
+esse fim: \textbf{nom}, \textbf{pest} e \textbf{chumsky}, cada uma com características
+distintas que as tornam adequadas a diferentes cenários.
+
+A biblioteca \textbf{nom} é uma das mais antigas e consolidadas do ecossistema Rust para
+análise sintática \cite{couprie2015nom}. Sua abordagem é baseada em funções que recebem uma
+fatia de bytes ou caracteres e retornam o resultado do reconhecimento juntamente com o restante
+da entrada não consumida, compondo-se por meio de macros e funções de ordem superior. A
+orientação de nom para o processamento de formatos binários e protocolos de rede, domínio em
+que a eficiência é crítica, torna-a uma escolha robusta para linguagens textuais, embora a
+geração de mensagens de erro precisas requeira esforço adicional do implementador, pois a
+biblioteca não foi projetada com esse objetivo em primeiro plano.
+
+A biblioteca \textbf{pest} adota uma abordagem diferente: em vez de compor \textit{parsers} no
+código Rust, o desenvolvedor descreve a gramática da linguagem em um arquivo externo com
+notação própria, derivada de gramáticas de expressão de análise (\textit{Parsing Expression
+Grammars}, ou PEG), e a biblioteca gera automaticamente o analisador correspondente em tempo de
+compilação por meio de macros procedurais \cite{pest2018}. Essa estratégia separa claramente a
+especificação da gramática de sua implementação, facilitando a leitura e a manutenção da
+definição da linguagem, mas reduz o controle sobre o comportamento do analisador e sobre as
+mensagens de erro produzidas.
+
+A biblioteca \textbf{chumsky} é a mais recente das três e foi projetada explicitamente com foco
+na qualidade do diagnóstico de erros \cite{chumsky2022}. Seus combinadores propagam
+automaticamente informações de localização ao longo do processo de análise e oferecem
+mecanismos nativos de recuperação de erros, permitindo que o analisador continue após encontrar
+uma construção inválida e reporte múltiplos erros em uma única execução. Essas características
+alinham-se diretamente com os requisitos de diagnóstico estabelecidos na
+Seção~\ref{sec:diagnostico-erro}, tornando chumsky uma alternativa particularmente adequada
+para DSLs voltadas ao ensino, em que a qualidade das mensagens de erro é tão importante quanto
+a correção da análise.
+
+O Quadro~\ref{tab:comparacao-parsers} sintetiza as principais características das três
+bibliotecas, evidenciando os critérios mais relevantes para a escolha a ser realizada durante a
+implementação descrita no Capítulo~\ref{cap:implementacao}.
+
+\begin{table}[h]
+    \centering
+    \caption{Comparação entre bibliotecas de \textit{parser combinators} para Rust}
+    \label{tab:comparacao-parsers}
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{l l l l}
+        \toprule
+        \textbf{Critério}              & \textbf{nom}       & \textbf{pest}         & \textbf{chumsky}       \\
+        \midrule
+        Abordagem                      & Combinadores       & Gramática PEG externa & Combinadores           \\
+        Qualidade dos erros            & Baixa              & Média                 & Alta                   \\
+        Recuperação de erros           & Manual             & Limitada              & Nativa                 \\
+        Rastreamento de localização    & Manual             & Automático            & Automático             \\
+        Maturidade                     & Alta               & Alta                  & Média                  \\
+        Foco original                  & Dados binários     & Linguagens textuais   & Linguagens textuais    \\
+        \bottomrule
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{table}
+
+A escolha entre as três bibliotecas será orientada, durante a fase de implementação, pelos
+requisitos estabelecidos para o compilador da DSL: em especial, a necessidade de mensagens de
+erro com indicação precisa de localização e natureza do problema, conforme descrito na
+Seção~\ref{sec:diagnostico-erro}, e a integração natural com o restante da ferramenta, escrita
+integralmente em Rust. A análise comparativa apresentada nesta seção fornece o embasamento
+necessário para essa decisão, que será documentada e justificada no
+Capítulo~\ref{cap:implementacao}.
+
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
