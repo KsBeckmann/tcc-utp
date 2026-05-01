@@ -1773,7 +1773,8 @@ implementação descrita no Capítulo~\ref{cap:implementacao}.
     \label{tab:comparacao-parsers}
     \small
     \setlength{\tabcolsep}{5pt}
-    \begin{tabular}{l l l l}
+    \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{l Y Y Y}
         \toprule
         \textbf{Critério}              & \textbf{nom}       & \textbf{pest}         & \textbf{chumsky}       \\
         \midrule
@@ -1784,7 +1785,7 @@ implementação descrita no Capítulo~\ref{cap:implementacao}.
         Maturidade                     & Alta               & Alta                  & Média                  \\
         Foco original                  & Dados binários     & Linguagens textuais   & Linguagens textuais    \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{table}
 
@@ -1969,10 +1970,11 @@ presente trabalho.
     \centering
     \caption{Comparação entre os trabalhos relacionados e a ferramenta proposta}
     \label{quad:comparativo}
-    \small
+    \footnotesize
+    \setlength{\tabcolsep}{3pt}
     % Define o tipo de coluna X com alinhamento centralizado
     \newcolumntype{Y}{>{\centering\arraybackslash}X}
-    
+
     \begin{tabularx}{\textwidth}{l Y Y Y Y >{\raggedright\arraybackslash}X}
         \toprule
         \textbf{Trabalho}
