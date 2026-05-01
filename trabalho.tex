@@ -125,8 +125,18 @@ como requisito à obtenção ao grau de Bacharel.}
     \item[BNF]   Forma de Backus-Naur
     \item[DSL]   Linguagem de Domínio Específico
     \item[EBNF]  Forma de Backus-Naur Estendida
-    \item[LLVM]  Low Level Virtual Machine
+    \item[FSM]   \textit{Finite State Machine}
+    \item[GNU]   GNU's Not Unix
+    \item[GTK]   GIMP Toolkit
+    \item[JVM]   \textit{Java Virtual Machine}
+    \item[LALR]  \textit{Look-Ahead LR}
+    \item[LL]    \textit{Left-to-right, Leftmost derivation}
+    \item[LLVM]  \textit{Low Level Virtual Machine}
+    \item[LR]    \textit{Left-to-right, Rightmost derivation}
     \item[PEG]   Gramática de Expressão de Análise
+    \item[SQL]   \textit{Structured Query Language}
+    \item[UFSC]  Universidade Federal de Santa Catarina
+    \item[URL]   \textit{Uniform Resource Locator}
 \end{siglas}
 
 
@@ -1648,7 +1658,7 @@ encadeamento de iteradores, sejam expressas de forma concisa e com custo de abst
 isto é, sem sobrecarga de desempenho em relação ao código imperativo equivalente. Para a
 construção de compiladores e processadores de linguagens, esse conjunto de características é
 particularmente valioso: a segurança de tipos facilita a representação de estruturas como
-tokens, nós de AST e estados de autômatos sem o risco de inconsistências em tempo de execução,
+\textit{tokens}, nós de AST e estados de autômatos sem o risco de inconsistências em tempo de execução,
 enquanto o modelo funcional favorece a composição das fases de análise de forma clara e
 modular.
 
@@ -1684,7 +1694,7 @@ representação de estruturas de dados que podem assumir diferentes formas, Rust
 \textbf{tipos enumerados} (\texttt{enum}), que permitem associar dados distintos a cada variante
 e são processados por meio de correspondência de padrões (\textit{pattern matching}) com
 verificação de exaustividade pelo compilador. Esse recurso é particularmente útil na
-implementação de compiladores, onde nós de AST, tokens e erros costumam ser representados
+implementação de compiladores, onde nós de AST, \textit{tokens} e erros costumam ser representados
 naturalmente como enumerações: o compilador garante que todo código que manipula essas
 estruturas trate explicitamente cada variante possível, evitando casos não tratados silenciosos.
 
@@ -1814,7 +1824,7 @@ e analisa os cinco trabalhos mais relevantes identificados na revisão bibliogr�
 conforme sua plataforma e abordagem, evidenciando em cada caso as contribuições e as limitações
 que motivam o desenvolvimento da ferramenta proposta.
 
-\section{Writing a Lexer in Rust}
+\section{\textit{Writing a Lexer in Rust}}
 \label{sec:rel-lexer-rust}
 
 O trabalho intitulado \textit{Writing a Lexer in Rust}, publicado na forma de artigo técnico e
@@ -1837,7 +1847,7 @@ No entanto, o escopo do trabalho de Bruzzone \cite{bruzzone2023} restringe-se à
 léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de
 compilação nem para qualquer forma de simulação visual ou interativa. Trata-se, portanto, de
 uma contribuição de natureza técnica e didática voltada a programadores que desejam compreender
-a implementação de lexers, e não de uma ferramenta educacional direcionada ao ensino de
+a implementação de \textit{lexers}, e não de uma ferramenta educacional direcionada ao ensino de
 autômatos em si. A ferramenta proposta no presente trabalho diferencia-se ao incorporar, além
 da análise léxica, as fases sintática e semântica completas, a construção da AST e a simulação
 visual interativa do autômato descrito.
