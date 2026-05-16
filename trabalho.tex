@@ -74,9 +74,7 @@ como requisito à obtenção ao grau de Bacharel.}
 
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 \begin{agradecimentos}
-    Agradecemos a Manoel Gomes, o eterno Caneta Azul, cujo meme nos acompanhou
-    nos momentos mais difíceis desta jornada acadêmica. Sua obra, de profundidade
-    imensurável, foi a inspiração diária que nos deu forças para continuar.
+    
 \end{agradecimentos}
 
 % Resumo do trabalho
@@ -96,10 +94,8 @@ como requisito à obtenção ao grau de Bacharel.}
     diagnósticos gerados. Espera-se que a ferramenta contribua para a compreensão prática do
     funcionamento de autômatos finitos, conectando a teoria de autômatos à prática de compiladores
     em um único instrumento educacional.
-
-    % O comando \palavraschave inclui automáticamente o ponto final
-    \palavraschave{Autômatos Finitos; Linguagem de Domínio Específico; Compiladores; 
-        Simulação Visual; Ensino de Computação}
+    
+    \palavraschave{Autômatos Finitos; Linguagem de Domínio Específico; Compiladores; Simulação Visual; Ensino de Computação}
 \end{resumo}
 
 
@@ -184,7 +180,7 @@ como requisito à obtenção ao grau de Bacharel.}
 \label{cap:introducao}
 
 O ensino de Teoria da Computação, em especial o conteúdo de autômatos finitos, representa um
-desafio recorrente nos cursos de Bacharelado em Ciência da Computação. Conceitos como estados,
+desafio recurrent nos cursos de Bacharelado em Ciência da Computação. Conceitos como estados,
 transições, alfabetos e reconhecimento de cadeias são abstratos por natureza, e sua compreensão
 prática depende fortemente da capacidade do estudante de visualizar e simular o comportamento
 das máquinas formais descritas teoricamente em sala de aula.
@@ -198,37 +194,37 @@ modelos; não há validação formal da estrutura com mensagens de erro claras e
 estudante que comete um erro na construção não recebe um diagnóstico preciso do problema.
 
 Diante desse cenário, este trabalho propõe o desenvolvimento de uma ferramenta educacional que
-adota uma abordagem diferente. A solução consiste em uma Linguagem de Domínio Específico (DSL)
-textual para a descrição declarativa de Autômatos Finitos Determinísticos (AFD) e
-Não-Determinísticos (AFN), acompanhada de um compilador que realiza análise léxica, sintática e
-semântica, fornecendo mensagens de erro com indicação precisa da localização e da natureza do
-problema. A ferramenta integra ainda uma interface gráfica interativa que renderiza visualmente
-o autômato descrito e anima o processo de simulação passo a passo, destacando os estados e
-transições percorridos durante o reconhecimento de cadeias de entrada.
+adota uma abordagem baseada em texto formal e compilação pedagógica. A principal contribuição inédita 
+desta solução é o acoplamento direto entre uma Linguagem de Domínio Específico (DSL) textual e a 
+geração automática de uma interface gráfica interativa sincronizada. Isso diferencia a ferramenta 
+do JFLAP de duas formas fundamentais: primeiro, substitui a modelagem puramente visual e propensa a 
+erros de clique por uma descrição declarativa estruturada, permitindo o uso de ferramentas de 
+versionamento de código (como o Git); segundo, introduz uma infraestrutura de compilador real (com análises 
+léxica, sintática e semântica) focada no diagnóstico detalhado de erros conceituais (como transições 
+para estados não declarados ou determinismo violado), fornecendo mensagens com linha e coluna exatas.
 
-Um aspecto adicional de relevância é que a própria ferramenta, por ser construída com técnicas
-reais de compilação, funciona como um exemplo prático dos conceitos que o estudante está
-aprendendo, conectando a teoria de autômatos à prática de compiladores em um único instrumento
-educacional. A ausência de uma ferramenta que integre descrição textual formal, validação com
-diagnósticos claros e simulação visual interativa justifica o desenvolvimento deste trabalho,
-que busca preencher essa lacuna com uma solução unificada e pedagogicamente orientada.
+Do ponto de vista pedagógico, a ferramenta resolve o problema específico do "vácuo de retroalimentação" 
+que ocorre na transição entre o formalismo matemático e a prática computacional. Ao invés de o estudante 
+testar sua máquina por tentativa e erro visual, ele interage com diagnósticos formais de um compilador, 
+conectando nativamente a teoria de autômatos à prática de compiladores em um único instrumento 
+educacional. A solução unificada busca guiar o aprendizado através do rigor linguístico e da depuração contextual.
 
 O objetivo geral deste trabalho é desenvolver uma ferramenta educacional baseada em uma
-Linguagem de Domínio Específico para apoiar o ensino de autômatos finitos, com simulação visual
-interativa. Para atingir esse objetivo, definem-se os seguintes objetivos específicos:
+Linguagem de Domínio Específico para apoiar o ensino de autômatos finitos, preenchendo as lacunas 
+de validação estrutural e versionamento por meio de simulação visual e textual síncronas.
+Para atingir esse objetivo, definem-se os seguintes objetivos específicos:
 
 \begin{alineas}
-    \item projetar uma DSL textual com sintaxe própria para a descrição declarativa de AFDs e
+    \item projetar uma DSL textual com sintaxe declarativa própria para a descrição formal de AFDs e
     AFNs, com a gramática formalizada em notação BNF/EBNF;
-    \item implementar um compilador para a DSL com análise léxica, sintática e semântica,
-    construindo uma Árvore Sintática Abstrata (AST) e fornecendo mensagens de erro com indicação
-    de localização e natureza do problema;
+    \item implementar um compilador pedagógico para a DSL com análise léxica, sintática e semântica,
+    focado na detecção precoce de erros de consistência formal e na geração de mensagens de diagnóstico localizadas;
     \item desenvolver um simulador capaz de processar cadeias de entrada sobre os autômatos
-    descritos, determinando aceitação ou rejeição e registrando o caminho percorrido;
-    \item construir uma interface gráfica interativa que renderize o autômato e anime a simulação
-    passo a passo, permitindo ao usuário controlar a velocidade e navegar entre os passos;
-    \item validar o protótipo por meio de testes com autômatos clássicos da literatura, incluindo
-    casos com erros propositais para avaliar a qualidade dos diagnósticos gerados.
+    descritos na DSL, determinando aceitação ou rejeição e registrando detalhadamente as configurações intermediárias;
+    \item construir uma interface gráfica interativa que renderize automaticamente o diagrama de estados a partir do 
+    texto fonte e anime a simulação passo a passo, permitindo o rastreamento síncrono da execução;
+    \item validar a capacidade diagnóstica e pedagógica da ferramenta por meio de testes com autômatos clássicos da literatura 
+    e cenários com falhas estruturais induzidas.
 \end{alineas}
 
 Este trabalho está organizado como segue.
