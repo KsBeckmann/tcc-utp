@@ -95,7 +95,7 @@ como requisito à obtenção do grau de Bacharel.}
     funcionamento de autômatos finitos, conectando a teoria de autômatos à prática de compiladores
     em um único instrumento educacional.
     
-    \palavraschave{Autômatos Finitos; Linguagem de Domínio Específico; Compiladores; Simulação Visual; Ensino de Computação}
+    \palavraschave{autômatos finitos; linguagem de domínio específico; compiladores; simulação visual; ensino de computação.}
 \end{resumo}
 
 
@@ -105,8 +105,8 @@ como requisito à obtenção do grau de Bacharel.}
 % - A lista de símbolos e siglas devem ser editadas manualmente
 \listadefiguras
 % \listadegraficos
-\listadetabelas
-% \listadequadros
+% \listadetabelas
+\listadequadros
 % \listadecodigos
 % \listadealgoritmos
 
@@ -121,18 +121,18 @@ como requisito à obtenção do grau de Bacharel.}
     \item[BNF]   Forma de Backus-Naur
     \item[DSL]   Linguagem de Domínio Específico
     \item[EBNF]  Forma de Backus-Naur Estendida
-    \item[FSM]   \textit{Finite State Machine}
-    \item[GNU]   GNU's Not Unix
-    \item[GTK]   GIMP Toolkit
-    \item[JVM]   \textit{Java Virtual Machine}
-    \item[LALR]  \textit{Look-Ahead LR}
-    \item[LL]    \textit{Left-to-right, Leftmost derivation}
-    \item[LLVM]  \textit{Low Level Virtual Machine}
-    \item[LR]    \textit{Left-to-right, Rightmost derivation}
+    \item[FSM]   \textit{Finite State Machine} (Máquina de Estados Finitos)
+    \item[GNU]   GNU's Not Unix (GNU Não é Unix)
+    \item[GTK]   GIMP Toolkit (Conjunto de Ferramentas do GIMP)
+    \item[JVM]   \textit{Java Virtual Machine} (Máquina Virtual Java)
+    \item[LALR]  \textit{Look-Ahead LR} (LR com Visualização de Próximo Símbolo)
+    \item[LL]    \textit{Left-to-right, Leftmost derivation} (Esquerda para a direita, Derivação mais à esquerda)
+    \item[LLVM]  \textit{Low Level Virtual Machine} (Máquina Virtual de Baixo Nível)
+    \item[LR]    \textit{Left-to-right, Rightmost derivation} (Esquerda para a direita, Derivação mais à direita)
     \item[PEG]   Gramática de Expressão de Análise
-    \item[SQL]   \textit{Structured Query Language}
+    \item[SQL]   \textit{Structured Query Language} (Linguagem de Consulta Estruturada)
     \item[UFSC]  Universidade Federal de Santa Catarina
-    \item[URL]   \textit{Uniform Resource Locator}
+    \item[URL]   \textit{Uniform Resource Locator} (Localizador Uniforme de Recursos)
 \end{siglas}
 
 
@@ -179,40 +179,35 @@ como requisito à obtenção do grau de Bacharel.}
 \chapter{Introdução}
 \label{cap:introducao}
 
-O ensino de Teoria da Computação, em especial o conteúdo de autômatos finitos, representa um
-desafio recorrente em cursos de Bacharelado em Ciência da Computação. Conceitos como estados,
-transições, alfabetos e reconhecimento de cadeias são abstratos por natureza, e sua compreensão
-prática depende fortemente da capacidade do estudante de visualizar e simular o comportamento
-das máquinas formais descritas teoricamente em sala de aula.
+As ferramentas disponíveis atualmente para apoiar esse aprendizado, como
+o JFLAP \cite{rodger2006jflap}, adotam uma abordagem exclusivamente visual
+baseada em arrastar e soltar, na qual o usuário constrói o autômato posicionando
+estados e conectando transições com o \textit{mouse}. Embora essa abordagem seja útil
+para ilustrar conceitos, ela apresenta limitações relevantes: a descrição do autômato
+não é textual, o que dificulta o versionamento e o compartilhamento dos modelos; não
+há validação formal da estrutura com mensagens de erro claras e localizadas; e o
+estudante que comete um erro na construção não recebe um diagnóstico preciso do
+problema.
 
-As ferramentas disponíveis atualmente para apoiar esse aprendizado, como o JFLAP
-\cite{rodger2006jflap}, adotam uma abordagem exclusivamente visual baseada em arrastar e soltar,
-na qual o usuário constrói o autômato posicionando estados e conectando transições com o \textit{mouse}.
-Embora essa abordagem seja útil para ilustrar conceitos, ela apresenta limitações relevantes: a
-descrição do autômato não é textual, o que dificulta o versionamento e o compartilhamento dos
-modelos; não há validação formal da estrutura com mensagens de erro claras e localizadas; e o
-estudante que comete um erro na construção não recebe um diagnóstico preciso do problema.
+Diante desse cenário, este trabalho propõe o desenvolvimento de uma ferra-
+menta educacional que adota uma abordagem baseada em texto formal e compilação
+pedagógica. A principal contribuição inédita desta solução é o acoplamento direto entre
+uma Linguagem de Domínio Específico (DSL) textual e a geração automática de uma
+interface gráfica interativa sincronizada. Isso diferencia a ferramenta do JFLAP de duas
+formas fundamentais: primeiro, substitui a modelagem puramente visual e propensa a
+erros de clique por uma descrição declarativa estruturada, permitindo o uso de ferra-
+mentas de versionamento de código (como o Git); segundo, introduz uma infraestrutura
+de compilador real (com análises léxica, sintática e semântica) focada no diagnóstico
+detalhado de erros conceituais (como transições para estados não declarados ou
+determinismo violado), fornecendo mensagens com linha e coluna exatas.
 
-Diante desse cenário, este trabalho propõe o desenvolvimento de uma ferramenta educacional que
-adota uma abordagem baseada em texto formal e compilação pedagógica. A principal contribuição inédita 
-desta solução é o acoplamento direto entre uma Linguagem de Domínio Específico (DSL) textual e a 
-geração automática de uma interface gráfica interativa sincronizada. Isso diferencia a ferramenta 
-do JFLAP de duas formas fundamentais: primeiro, substitui a modelagem puramente visual e propensa a 
-erros de clique por uma descrição declarativa estruturada, permitindo o uso de ferramentas de 
-versionamento de código (como o Git); segundo, introduz uma infraestrutura de compilador real (com análises 
-léxica, sintática e semântica) focada no diagnóstico detalhado de erros conceituais (como transições 
-para estados não declarados ou determinismo violado), fornecendo mensagens com linha e coluna exatas.
-
-Do ponto de vista pedagógico, a ferramenta resolve o problema específico do "vácuo de retroalimentação" 
-que ocorre na transição entre o formalismo matemático e a prática computacional. Ao invés de o estudante 
-testar sua máquina por tentativa e erro visual, ele interage com diagnósticos formais de um compilador, 
-conectando nativamente a teoria de autômatos à prática de compiladores em um único instrumento 
-educacional. A solução unificada busca guiar o aprendizado através do rigor linguístico e da depuração contextual.
-
-O objetivo geral deste trabalho é desenvolver uma ferramenta educacional baseada em uma
-Linguagem de Domínio Específico para apoiar o ensino de autômatos finitos, preenchendo as lacunas 
-de validação estrutural e versionamento por meio de simulação visual e textual síncronas.
-Para atingir esse objetivo, definem-se os seguintes objetivos específicos:
+Do ponto de vista pedagógico, a ferramenta resolve o problema específico da
+ausência de retroalimentação imediata que ocorre na transição entre o formalismo matemático
+e a prática computacional. Em vez de o estudante testar sua máquina por tentativa
+e erro visual, ele interage com diagnósticos formais de um compilador, conectando
+nativamente a teoria de autômatos à prática de compiladores em um único instrumento
+educacional. A solução unificada busca guiar o aprendizado através do rigor linguístico
+e da depuração contextual.
 
 \begin{alineas}
     \item projetar uma DSL textual com sintaxe declarativa própria para a descrição formal de AFDs e
@@ -242,33 +237,22 @@ Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e t
 % 2. Autômatos Finitos e Linguagens Formais (funcamentação teórica)
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-\chapter{Autômatos Finitos e Linguagens Formais}
-\label{cap:automatos}
-Este capítulo apresenta os fundamentos teóricos necessários à compreensão dos autômatos finitos
-e das linguagens regulares, formalismos que constituem o objeto central da ferramenta proposta
-neste trabalho. Inicia-se com os conceitos básicos de linguagens formais
-(Seção~\ref{sec:linguagens-formais}) e gramáticas (Seção~\ref{sec:gramaticas-formais}),
-seguindo-se a formalização dos autômatos finitos determinísticos (Seção~\ref{sec:afd}) e
-não-determinísticos (Seção~\ref{sec:afn}). Por fim, demonstra-se a equivalência entre ambos os
-modelos (Seção~\ref{sec:equivalencia}), resultado que justifica o uso de qualquer um deles na
-descrição de linguagens regulares.
-
 \section{Conceitos Fundamentais de Linguagens Formais}
 \label{sec:linguagens-formais}
 O estudo dos autômatos finitos exige a compreensão prévia de algumas estruturas matemáticas
 elementares: conjuntos, alfabetos, palavras e linguagens. Esta seção apresenta tais conceitos de
 forma sistemática, fixando a notação e a terminologia adotadas nos capítulos subsequentes.
 
-Um \textbf{conjunto} é uma coleção de elementos, que podem ser de qualquer natureza, como
+Um conjunto é uma coleção de elementos, que podem ser de qualquer natureza, como
 números, letras, símbolos ou mesmo outros conjuntos. Para indicar que um elemento $a$ pertence a um conjunto
 $C$, escreve-se $a \in C$; o símbolo $\notin$ denota a relação inversa. Por exemplo, dado
 $C = \{a, b, c\}$, tem-se $a \in C$ e $d \notin C$. Conjuntos podem ser finitos ou infinitos; no
 segundo caso, é usual o emprego de reticências para indicar a continuação dos elementos, como em
 $\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}$. O conjunto que não contém qualquer elemento é
-denominado \textbf{conjunto vazio} e é representado pelo símbolo $\varnothing$ \cite{sipser2012}.
+denominado conjunto vazio e é representado pelo símbolo $\varnothing$ \cite{sipser2012}.
 
 A partir desta noção de conjunto, define-se a primeira estrutura específica da teoria das
-linguagens formais: o alfabeto. Um \textbf{alfabeto} é um conjunto finito e não vazio de símbolos,
+linguagens formais: o alfabeto. Um alfabeto é um conjunto finito e não vazio de símbolos,
 representado, por convenção, pela letra grega $\Sigma$ \cite{sipser2012}. Os elementos de um
 alfabeto são denominados símbolos ou letras. Por exemplo, $\Sigma_1 = \{0, 1\}$ é o alfabeto
 binário, enquanto $\Sigma_2 = \{a, b, c, \ldots, z\}$ corresponde ao alfabeto latino minúsculo. A
@@ -277,17 +261,16 @@ seguintes, possam manipular o alfabeto de forma efetiva; a não vacuidade, por s
 que sempre haja ao menos um símbolo disponível para a formação de palavras
 \cite{vieira2006,diverio2011}.
 
-Sobre um alfabeto $\Sigma$, define-se uma \textbf{palavra} (ou cadeia) como uma sequência finita
+Sobre um alfabeto $\Sigma$, define-se uma palavra (ou cadeia) como uma sequência finita
 de símbolos pertencentes a $\Sigma$, escritos de forma justaposta e sem separadores. O comprimento
 de uma palavra $w$, denotado por $|w|$, corresponde ao número de símbolos que a compõem. A palavra
-de comprimento zero, denominada \textbf{palavra vazia}, é representada pelo símbolo $\varepsilon$
+de comprimento zero, denominada palavra vazia, é representada pelo símbolo $\varepsilon$
 \cite{sipser2012}. O conjunto de todas as palavras que podem ser formadas sobre $\Sigma$,
 incluindo a palavra vazia, é denotado por $\Sigma^*$. Assim, para $\Sigma = \{a, b\}$, tem-se
 $\Sigma^* = \{\varepsilon, a, b, aa, ab, ba, bb, aaa, \ldots\}$, conjunto que é sempre infinito e
 enumerável \cite{vieira2006}.
-
 Estabelecidas as noções de alfabeto e palavra, é possível definir o objeto central deste trabalho:
-a linguagem. Uma \textbf{linguagem formal} sobre um alfabeto $\Sigma$ é qualquer subconjunto de
+a linguagem. Uma linguagem formal sobre um alfabeto $\Sigma$ é qualquer subconjunto de
 $\Sigma^*$, ou seja, qualquer conjunto de palavras formadas a partir dos símbolos de $\Sigma$
 \cite{sipser2012,vieira2006}. Linguagens podem ser finitas, como $L_1 = \{a, ab, abb\}$, ou
 infinitas, como $L_2 = \{a^n b^n \mid n \geq 1\}$, que contém todas as palavras compostas por uma
@@ -295,15 +278,15 @@ sequência de $a$'s seguida de igual número de $b$'s. A maior parte das linguag
 teórico e prático é infinita, o que motiva o desenvolvimento de mecanismos formais, como
 gramáticas e autômatos, capazes de descrevê-las de maneira finita.
 
-Por serem conjuntos, as linguagens admitem as operações usuais de \textbf{união},
-\textbf{interseção} e \textbf{diferença}. Além dessas, três operações específicas, derivadas da
+Por serem conjuntos, as linguagens admitem as operações usuais de união,
+interseção e diferença. Além dessas, três operações específicas, derivadas da
 estrutura sequencial das palavras, desempenham papel central na teoria
-\cite{vieira2006,diverio2011}. A \textbf{concatenação} de duas palavras
+\cite{vieira2006,diverio2011}. A concatenação de duas palavras
 $x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$ produz a palavra
 $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular, $w\varepsilon = \varepsilon w = w$
 para qualquer palavra $w$, o que faz de $\varepsilon$ o elemento neutro dessa operação. A
 concatenação estende-se naturalmente a linguagens: dadas $L_1$ e $L_2$, define-se
-$L_1 L_2 = \{xy \mid x \in L_1 \text{ e } y \in L_2\}$. Por fim, o \textbf{fecho de Kleene} de uma
+$L_1 L_2 = \{xy \mid x \in L_1 \text{ e } y \in L_2\}$. Por fim, o fecho de Kleene de uma
 linguagem $L$, denotado por $L^*$, corresponde ao conjunto de todas as palavras obtidas pela
 concatenação de zero ou mais elementos de $L$, isto é, $L^* = \bigcup_{n \in \mathbb{N}} L^n$,
 onde $L^0 = \{\varepsilon\}$ e $L^n = L^{n-1} L$ para $n \geq 1$. Essas operações constituem a
@@ -315,26 +298,26 @@ regulares e gramáticas estudadas nas seções seguintes.
 Conforme observado na seção anterior, a maior parte das linguagens de interesse prático é
 infinita, o que torna inviável descrevê-las pela enumeração explícita de suas palavras. Faz-se
 necessário, portanto, um mecanismo finito capaz de gerar todas as palavras de uma linguagem.
-Entre os formalismos propostos para esse fim, as \textbf{gramáticas} ocupam posição de destaque,
+Entre os formalismos propostos para esse fim, as gramáticas ocupam posição de destaque,
 tanto pelo seu poder expressivo quanto pela estreita relação com os autômatos estudados nas
 seções subsequentes \cite{vieira2006,lewis1998}.
 
-Uma gramática descreve uma linguagem por meio de um conjunto finito de \textbf{regras de
-produção}, que indicam como certas sequências de símbolos podem ser substituídas por outras.
-Nessa estrutura, distinguem-se dois tipos de símbolos: os \textbf{terminais}, que compõem o
-alfabeto da linguagem gerada e aparecem nas palavras finais, e os \textbf{não-terminais} (ou
-\textbf{variáveis}), símbolos auxiliares que servem de intermediários no processo de geração e
+Uma gramática descreve uma linguagem por meio de um conjunto finito de regras de
+produção, que indicam como certas sequências de símbolos podem ser substituídas por outras.
+Nessa estrutura, distinguem-se dois tipos de símbolos: os terminais, que compõem o
+alfabeto da linguagem gerada e aparecem nas palavras finais, e os não-terminais (ou
+variáveis), símbolos auxiliares que servem de intermediários no processo de geração e
 não fazem parte das palavras produzidas \cite{lewis1998,sipser2012}. A geração de uma palavra
-inicia-se sempre a partir de uma variável especial, denominada \textbf{símbolo inicial} (ou
+inicia-se sempre a partir de uma variável especial, denominada símbolo inicial (ou
 variável de partida), e prossegue pela aplicação sucessiva das regras até que reste apenas uma
 sequência de terminais.
 
-Formalmente, uma \textbf{gramática} é uma quádrupla $G = (V, \Sigma, R, S)$, na qual
+Formalmente, uma gramática é uma quádrupla $G = (V, \Sigma, R, S)$, na qual
 \cite{vieira2006,lewis1998}:
 \begin{itemize}
     \item $V$ é um conjunto finito de variáveis (símbolos não-terminais);
     \item $\Sigma$ é um alfabeto de símbolos terminais, com $V \cap \Sigma = \varnothing$;
-    \item $R$ é um conjunto finito de \textbf{regras de produção}, cada uma escrita na forma
+    \item $R$ é um conjunto finito de regras de produção, cada uma escrita na forma
           $\alpha \to \beta$, em que $\alpha, \beta \in (V \cup \Sigma)^*$ e o lado esquerdo
           $\alpha$ contém ao menos uma variável;
     \item $S \in V$ é a variável de partida.
@@ -351,7 +334,7 @@ $A \to ab$ e a cadeia $cAd$, tem-se $cAd \Rightarrow cabd$, identificando-se $x 
 $\alpha = A$, $y = d$ e $\beta = ab$.
 
 A aplicação sucessiva de regras, isto é, o fecho reflexivo e transitivo de $\Rightarrow$, é
-denotada por $\Rightarrow^*$. A \textbf{linguagem gerada} pela gramática $G$ é o conjunto de
+denotada por $\Rightarrow^*$. A linguagem gerada pela gramática $G$ é o conjunto de
 todas as palavras formadas exclusivamente por terminais que podem ser obtidas a partir do
 símbolo inicial: $L(G) = \{ w \in \Sigma^* \mid S \Rightarrow^* w \}$
 \cite{vieira2006,sipser2012}.
@@ -364,13 +347,15 @@ exemplo, a palavra $aabb$ por meio da seguinte derivação:
       &\Rightarrow aaSbb && \text{(aplicação da regra } S \to aSb\text{)} \\
       &\Rightarrow aabb  && \text{(aplicação da regra } S \to \varepsilon\text{)}
 \end{align*}
-A estrutura dessa derivação pode ser visualizada por meio de uma \textbf{árvore de derivação},
+A estrutura dessa derivação pode ser visualizada por meio de uma árvore de derivação,
 representada na Figura~\ref{fig:arvore-derivacao}, na qual a raiz corresponde ao símbolo inicial,
 os nós internos representam as variáveis substituídas e as folhas correspondem aos terminais que
 compõem a palavra gerada \cite{sipser2012}.
 
 \begin{figure}[h]
     \centering
+    \caption{ÁRVORE DE DERIVAÇÃO DA PALAVRA $aabb$ NA GRAMÁTICA $G$}
+    \label{fig:arvore-derivacao}
     \begin{forest}
         for tree={
             math content,
@@ -388,72 +373,69 @@ compõem a palavra gerada \cite{sipser2012}.
             [b]
         ]
     \end{forest}
-    \caption{Árvore de derivação da palavra $aabb$ na gramática $G$}
-    \label{fig:arvore-derivacao}
     \fonte{Os autores (\the\year)}
 \end{figure}
 
-De modo geral, cada aplicação da regra $S \to aSb$ acrescenta um $a$ à esquerda e um $b$ à
-direita do símbolo $S$, enquanto a regra $S \to \varepsilon$ encerra a derivação eliminando a
-variável remanescente. Conclui-se que $L(G) = \{a^n b^n \mid n \geq 0\}$, linguagem que, conforme
-será discutido adiante, não pode ser gerada por nenhum mecanismo mais restrito que uma gramática
-livre de contexto \cite{lewis1998,sipser2012}.
+De modo geral, cada aplicação da regra $S \to aSb$ acrescenta um $a$ à esquerda e um $b$ à direita 
+do símbolo $S$, enquanto a regra $S \to \varepsilon$ encerra a derivação eliminando a variável 
+remanescente. Conclui-se que $L(G) = \{a^n b^n \mid n \geq 0\}$, linguagem que, conforme será discutido 
+adiante, não pode ser gerada por nenhum mecanismo mais restrito que uma gramática livre de contexto 
+\cite{lewis1998, sipser2012}.
 
-Restrições impostas sobre a forma das regras de produção dão origem a diferentes classes de
-gramáticas e, consequentemente, a diferentes classes de linguagens. Essa estruturação,
-conhecida como \textbf{Hierarquia de Chomsky}, organiza as linguagens em quatro categorias
-(irrestritas, sensíveis ao contexto, livres de contexto e regulares), cada uma associada a um
-modelo computacional específico \cite{vieira2006,lewis1998}. O Quadro~\ref{quad:chomsky} sintetiza
-essa classificação, evidenciando a forma das regras de produção admitidas em cada classe e o
-modelo computacional que reconhece a linguagem correspondente.
+Restrições impostas sobre a forma das regras de produção dão origem a diferentes classes de gramáticas e,
+consequentemente, a diferentes classes de linguagens. Essa estratificação, conhecida como Hierarquia de 
+Chomsky, organiza as linguagens em quatro categorias (irrestritas, sensíveis ao contexto, livres de contexto
+e regulares), cada uma associada a um modelo computacional específico \cite{vieira2006, lewis1998}.
+O Quadro~\ref{quad:chomsky} sintetiza essa classificação, evidenciando a forma das regras de produção
+admitidas em cada classe e o modelo computacional que reconhece a linguagem correspondente.
 
-\begin{table}[h]
+\begin{quadro}[h]
     \centering
-    \caption{Hierarquia de Chomsky}
+    \caption{HIERARQUIA DE CHOMSKY}
     \label{quad:chomsky}
     \small
     \setlength{\tabcolsep}{5pt}
-    \begin{tabular}{c l l l}
-        \toprule
+    \begin{tabular}{|c|l|l|l|}
+        \hline
         \textbf{Tipo} & \textbf{Classe de Linguagem}    & \textbf{Forma das Regras}                & \textbf{Modelo Computacional}    \\
-        \midrule
+        \hline
         0             & Recursivamente enumeráveis      & $\alpha \to \beta$                       & Máquina de Turing                \\
         1             & Sensíveis ao contexto           & $\alpha A \beta \to \alpha \gamma \beta$ & Autômato linearmente limitado    \\
         2             & Livres de contexto              & $A \to \gamma$                           & Autômato com pilha               \\
         3             & Regulares                       & $A \to aB$ ou $A \to a$                  & Autômato finito                  \\
-        \bottomrule
+        \hline
     \end{tabular}
-    \fonte{Adaptado de \citeonline{vieira2006} e \citeonline{lewis1998}}
-\end{table}
+    \fonte{Adaptado de Vieira (2006) e Lewis e Papadimitriou (1998), disponível em: \url{http://www.enderecocompleto.tudo}}
+\end{quadro}
 
-As gramáticas regulares (Tipo 3), em particular, geram exatamente a classe das linguagens
-reconhecidas pelos autômatos finitos, formalismo apresentado nas próximas seções.
+As gramáticas regulares (Tipo 3), em particular, geram exatamente a classe das linguagens reconhecidas
+pelos autômatos finitos, formalismo apresentado nas próximas seções.
 
 \section{Autômato Finito Determinístico}
 \label{sec:afd}
 Conforme indicado ao final da seção anterior, as gramáticas regulares (Tipo 3 da Hierarquia de
 Chomsky) descrevem exatamente a classe das linguagens reconhecidas pelo modelo computacional
-mais simples: o autômato finito. Esta seção apresenta a formalização do \textbf{autômato finito
-determinístico} (AFD), modelo que serve como ponto de partida para o estudo dos reconhecedores
+mais simples: o autômato finito. Esta seção apresenta a formalização do autômato finito
+determinístico (AFD), modelo que serve como ponto de partida para o estudo dos reconhecedores
 de linguagens regulares e que constitui o objeto central da ferramenta proposta neste trabalho.
 
-Intuitivamente, um AFD é uma máquina abstrata composta por um número finito de \textbf{estados},
-interligados por \textbf{transições} rotuladas com símbolos de um alfabeto. A máquina inicia sua
-operação em um estado especial, denominado \textbf{estado inicial}, e processa uma cadeia de
+Intuitivamente, um AFD é uma máquina abstrata composta por um número finito de estados,
+interligados por transições rotuladas com símbolos de um alfabeto. A máquina inicia sua
+operação em um estado especial, denominado estado inicial, e processa uma cadeia de
 entrada lendo seus símbolos um a um, da esquerda para a direita. A cada símbolo lido, o autômato
 transita para um novo estado, conforme determinado pela rotulação das arestas. Encerrado o
 processamento da cadeia, se o autômato encontrar-se em um dos estados designados como
-\textbf{estados finais} (ou de aceitação), diz-se que a cadeia foi \textbf{aceita}; caso
-contrário, é \textbf{rejeitada} \cite{hopcroft2006,sipser2012}. O termo
+estados finais (ou de aceitação), diz-se que a cadeia foi aceita; caso
+contrário, é rejeitad \cite{hopcroft2006,sipser2012}. O termo
 \textit{determinístico} reflete a característica de que, para cada combinação de estado atual e
 símbolo de entrada, existe uma única transição possível.
 
-Formalmente, um \textbf{autômato finito determinístico} é uma quíntupla
+Formalmente, um autômato finito determinístico é uma quíntupla
 $M = (Q, \Sigma, \delta, q_0, F)$, na qual \cite{hopcroft2006,sipser2012}:
 \begin{itemize}
     \item $Q$ é um conjunto finito de estados;
     \item $\Sigma$ é um alfabeto finito de símbolos de entrada;
-    \item $\delta : Q \times \Sigma \to Q$ é a \textbf{função de transição}, que associa a cada
+    \item $\delta : Q \times \Sigma \to Q$ é a função de transição, que associa a cada
           par formado por um estado e um símbolo o estado para o qual o autômato transita;
     \item $q_0 \in Q$ é o estado inicial;
     \item $F \subseteq Q$ é o conjunto de estados finais (ou de aceitação).
@@ -468,16 +450,16 @@ $\hat{\delta} : Q \times \Sigma^* \to Q$, dada por \cite{hopcroft2006}:
 \end{align*}
 em que $w \in \Sigma^*$ e $a \in \Sigma$. A função estendida indica, portanto, o estado em que
 o autômato se encontra após processar uma cadeia $w$ a partir do estado $q$. A
-\textbf{linguagem reconhecida} (ou aceita) por um AFD $M$, denotada $L(M)$, é o conjunto de
+linguagem reconhecida (ou aceita) por um AFD $M$, denotada $L(M)$, é o conjunto de
 todas as cadeias que conduzem o autômato, partindo do estado inicial, a algum estado de
 aceitação:
 \[
     L(M) = \{\, w \in \Sigma^* \mid \hat{\delta}(q_0, w) \in F \,\}.
 \]
-As linguagens reconhecidas por algum AFD são denominadas \textbf{linguagens regulares}
+As linguagens reconhecidas por algum AFD são denominadas linguagens regulares
 \cite{sipser2012}.
 
-A representação gráfica de um AFD é feita por meio de um \textbf{diagrama de estados}, no qual
+A representação gráfica de um AFD é feita por meio de um diagrama de estados, no qual
 os estados são representados por círculos, as transições por arestas rotuladas com os símbolos
 correspondentes, o estado inicial é apontado por uma seta sem origem e os estados de aceitação
 são marcados com círculos duplos. A título de exemplo, considere o AFD apresentado na
@@ -487,7 +469,7 @@ $01$ como subcadeia \cite{hopcroft2006}.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{img/automato_finito_deterministico.png}
-    \caption{AFD que reconhece cadeias contendo $01$ como subcadeia}
+    \caption{AFD QUE RECONHECE CADEIAS CONTENDO $01$ COMO SUBCADEIA}
     \label{fig:afd-exemplo}
     \fonte{\citeonline{hopcroft2006}}
 \end{figure}
@@ -516,12 +498,12 @@ cada combinação de estado e símbolo de entrada, uma única transição defini
 situações, no entanto, é mais natural descrever um reconhecedor permitindo que, em certos
 estados, mais de uma transição esteja disponível para o mesmo símbolo, ou ainda que, em outros,
 não haja qualquer transição definida \cite{hopcroft2006,sipser2012}. Tal flexibilidade dá origem
-ao \textbf{autômato finito não-determinístico} (AFN), modelo que, embora distinto em
+ao autômato finito não-determinístico (AFN), modelo que, embora distinto em
 comportamento, reconhece a mesma classe de linguagens que os AFDs.
 
 A diferença essencial em relação ao AFD reside na natureza da função de transição. Enquanto, em
 um AFD, a aplicação de $\delta$ a um par estado-símbolo retorna um único estado, em um AFN ela
-retorna um \textbf{conjunto} de estados, possivelmente vazio. Isso significa que, ao processar
+retorna um conjunto de estados, possivelmente vazio. Isso significa que, ao processar
 um símbolo a partir de um dado estado, o AFN pode prosseguir por qualquer um dos estados
 indicados (caso haja mais de um) ou travar (caso o conjunto seja vazio). Intuitivamente,
 imagina-se que o autômato investiga simultaneamente todas as escolhas possíveis: o caminho
@@ -529,12 +511,12 @@ computacional que, ao final da leitura, atinge um estado de aceitação determin
 cadeia, mesmo que outros caminhos tenham travado ou terminado em estados não-finais
 \cite{sipser2012}.
 
-Formalmente, um \textbf{autômato finito não-determinístico} é uma quíntupla
+Formalmente, um autômato finito não-determinístico é uma quíntupla
 $N = (Q, \Sigma, \delta, q_0, F)$, na qual \cite{hopcroft2006,sipser2012}:
 \begin{itemize}
     \item $Q$ é um conjunto finito de estados;
     \item $\Sigma$ é um alfabeto finito de símbolos de entrada;
-    \item $\delta : Q \times \Sigma \to \mathcal{P}(Q)$ é a \textbf{função de transição}, que
+    \item $\delta : Q \times \Sigma \to \mathcal{P}(Q)$ é a função de transição, que
           associa a cada par estado-símbolo um subconjunto de $Q$, sendo $\mathcal{P}(Q)$ o
           conjunto das partes de $Q$;
     \item $q_0 \in Q$ é o estado inicial;
@@ -550,7 +532,7 @@ múltiplos estados \cite{hopcroft2006}:
 \end{align*}
 em que $w \in \Sigma^*$ e $a \in \Sigma$. A função estendida indica, portanto, o conjunto de
 todos os estados em que o autômato pode encontrar-se após processar a cadeia $w$ a partir do
-estado $q$. A \textbf{linguagem aceita} por um AFN $N$, denotada $L(N)$, é o conjunto das
+estado $q$. A linguagem aceita por um AFN $N$, denotada $L(N)$, é o conjunto das
 cadeias para as quais existe ao menos um caminho computacional terminando em estado de
 aceitação:
 \[
@@ -565,7 +547,7 @@ a linguagem das cadeias sobre $\{0, 1\}$ que terminam em $01$ \cite{hopcroft2006
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{img/automato_finito_nao_deterministico.png}
-    \caption{AFN que reconhece cadeias terminadas em $01$}
+    \caption{AFN QUER RECONHECE CADEIAS TERMINADAS EM $01$}
     \label{fig:afn-exemplo}
     \fonte{\citeonline{hopcroft2006}}
 \end{figure}
@@ -587,8 +569,8 @@ não contém o estado final $q_2$, de modo que a cadeia é rejeitada.
 
 Embora o não-determinismo confira maior flexibilidade aparente na descrição de linguagens,
 demonstra-se que toda linguagem reconhecida por um AFN também pode ser reconhecida por algum
-AFD \cite{hopcroft2006,sipser2012}. Esse resultado, fundamentado na chamada \textbf{construção
-de subconjuntos}, é apresentado na seção seguinte e justifica o fato de ambos os modelos
+AFD \cite{hopcroft2006,sipser2012}. Esse resultado, fundamentado na chamada construção
+de subconjuntos, é apresentado na seção seguinte e justifica o fato de ambos os modelos
 definirem exatamente a mesma classe de linguagens: as linguagens regulares.
 
 \section{Equivalência entre AFD e AFN}
@@ -598,7 +580,7 @@ linguagens, demonstra-se que essa flexibilidade não amplia a classe de linguage
 Mais precisamente, vale o seguinte resultado central da teoria dos autômatos: uma linguagem $L$
 é reconhecida por algum AFD se, e somente se, é reconhecida por algum AFN
 \cite{hopcroft2006,sipser2012}. Em outras palavras, AFDs e AFNs são modelos
-\textbf{equivalentes em poder de reconhecimento}, ainda que possam diferir significativamente em
+equivalentes em poder de reconhecimento, ainda que possam diferir significativamente em
 número de estados e em facilidade de projeto.
 
 A demonstração desse resultado é constituída por duas direções. A primeira, e mais imediata,
@@ -606,7 +588,7 @@ consiste em observar que todo AFD pode ser interpretado como um AFN: basta tomar
 transição do AFD e, para cada par estado-símbolo, considerar o conjunto unitário formado pelo
 único destino existente. Como o AFN resultante simula passo a passo o AFD original, ambos
 reconhecem a mesma linguagem \cite{hopcroft2006}. A segunda direção, conhecida como
-\textbf{construção de subconjuntos} (\textit{subset construction}), é menos trivial e fornece um
+construção de subconjuntos (\textit{subset construction}), é menos trivial e fornece um
 procedimento algorítmico para converter qualquer AFN em um AFD equivalente.
 
 A construção de subconjuntos parte da seguinte ideia: em um AFN, após ler uma cadeia $w$, o
@@ -651,7 +633,7 @@ na Figura~\ref{fig:afd-construido}.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.85\textwidth]{img/dfa_construida_a_partir_da_nfa.png}
-    \caption{AFD construído a partir do AFN da Figura~\ref{fig:afn-exemplo} pela construção de subconjuntos}
+    \caption{AFD CONSTRUIDO A PARTIR DO AFN DA FIGURA~\ref{fig:afn-exemplo} PELA CONSTRUÇÃO DE SUBCONJUNTOS}
     \label{fig:afd-construido}
     \fonte{\citeonline{hopcroft2006}}
 \end{figure}
@@ -677,7 +659,7 @@ três representações distintas e complementares, cada uma adequada a um propó
 \cite{hopcroft2006,sipser2012}. Esta seção apresenta essas representações, evidenciando as
 vantagens e limitações de cada uma.
 
-A primeira forma é a \textbf{notação formal}, em que o autômato é descrito explicitamente como a
+A primeira forma é a notação formal, em que o autômato é descrito explicitamente como a
 quíntupla $M = (Q, \Sigma, \delta, q_0, F)$, listando-se cada um de seus componentes. Trata-se
 da representação mais precisa e desambígua, sendo indispensável em demonstrações matemáticas e
 em provas de equivalência. Por outro lado, sua leitura direta é trabalhosa: a função de
@@ -685,7 +667,7 @@ transição $\delta$, em particular, costuma ser apresentada como uma enumeraç�
 $\delta(q, a) = q'$, que rapidamente se torna extensa à medida que cresce o número de estados
 \cite{hopcroft2006}.
 
-A segunda forma é o \textbf{diagrama de estados}, já utilizado nas Figuras~\ref{fig:afd-exemplo}
+A segunda forma é o diagrama de estados, já utilizado nas Figuras~\ref{fig:afd-exemplo}
 e~\ref{fig:afn-exemplo} das seções anteriores. Nessa representação, cada estado corresponde a um
 nó (círculo simples para estados comuns ou círculo duplo para estados de aceitação), as
 transições são arestas rotuladas com os símbolos do alfabeto, e o estado inicial é apontado por
@@ -695,7 +677,7 @@ leitor reconheça visualmente padrões como ciclos, estados de absorção e sime
 limitação é a dificuldade de manipulação textual: o diagrama é uma imagem e, portanto, não pode
 ser facilmente versionado, comparado ou processado por ferramentas automatizadas.
 
-A terceira forma é a \textbf{tabela de transição}, que organiza a função $\delta$ em uma matriz
+A terceira forma é a tabela de transição, que organiza a função $\delta$ em uma matriz
 bidimensional cujas linhas correspondem aos estados e cujas colunas correspondem aos símbolos do
 alfabeto \cite{hopcroft2006}. A Tabela~\ref{tab:tabela-transicao-afd} ilustra essa representação
 para o AFD da Figura~\ref{fig:afd-exemplo}, que reconhece cadeias contendo $01$ como subcadeia.
@@ -708,7 +690,7 @@ aceitação, conforme convenção adotada por \citeonline{hopcroft2006}.
     \label{tab:tabela-transicao-afd}
     \begin{tabular}{c c c}
         \toprule
-                                    & \textbf{0} & \textbf{1} \\
+                                    & 0 & 1 \\
         \midrule
         $\rightarrow q_0$           & $q_2$      & $q_0$      \\
         $\phantom{\rightarrow} q_2$ & $q_2$      & $q_1$      \\
@@ -743,7 +725,7 @@ renderização do diagrama de estados e o processamento programático da descri�
 A definição formal de um autômato finito, vista nas seções anteriores, descreve sob a forma de
 quíntupla os elementos que compõem a máquina, mas não esclarece, por si só, como verificar se
 uma cadeia específica é aceita ou rejeitada. Essa verificação, conhecida como
-\textbf{simulação}, consiste em executar passo a passo a função de transição $\delta$ a partir
+simulação, consiste em executar passo a passo a função de transição $\delta$ a partir
 do estado inicial, consumindo cada símbolo da cadeia de entrada e observando se a configuração
 final corresponde a um estado de aceitação \cite{hopcroft2006,sipser2012}. Em termos
 pedagógicos, a simulação cumpre um papel análogo ao da execução de um programa em uma linguagem
@@ -829,14 +811,14 @@ formais discutidos até aqui e os capítulos seguintes deste trabalho.
 categorias:
 
 \begin{itemize}
-    \item \textbf{Projeto e verificação de circuitos digitais.} Sistemas digitais com um número
+    \item Projeto e verificação de circuitos digitais. Sistemas digitais com um número
     finito de estados internos podem ser modelados diretamente como autômatos, permitindo que
     o comportamento do circuito seja descrito de forma rigorosa e verificado antes da
     implementação física. Cada estado do autômato corresponde a uma configuração possível do
     circuito, e cada transição corresponde à resposta do \textit{hardware} a um sinal de entrada
     \cite{hopcroft2006}.
 
-    \item \textbf{Análise léxica de compiladores.} O componente responsável por dividir o
+    \item Análise léxica de compiladores. O componente responsável por dividir o
     texto-fonte em unidades léxicas (identificadores, palavras-chave, operadores e literais)
     é tipicamente implementado como um autômato finito. \citeonline{hopcroft2006} ilustram
     esse uso com um autômato cuja função é reconhecer a palavra-chave \texttt{then}: cada
@@ -845,7 +827,7 @@ categorias:
     encontrado. Esse mesmo princípio se generaliza para o reconhecimento de qualquer conjunto
     finito de \textit{tokens} descrito por expressões regulares.
 
-    \item \textbf{Busca de padrões em grandes volumes de texto.} Sistemas que percorrem
+    \item Busca de padrões em grandes volumes de texto. Sistemas que percorrem
     coleções extensas de documentos, páginas \textit{web} ou arquivos em busca de palavras,
     expressões ou padrões mais complexos costumam compilar essas consultas em autômatos
     finitos, executando a varredura em tempo proporcional ao tamanho da entrada
@@ -853,7 +835,7 @@ categorias:
     bibliotecas modernas de expressões regulares apoiam-se diretamente nessa equivalência
     entre expressões regulares e autômatos finitos.
 
-    \item \textbf{Verificação de sistemas com número finito de estados.} Protocolos de
+    \item Verificação de sistemas com número finito de estados. Protocolos de
     comunicação, protocolos criptográficos e outros sistemas reativos podem ser modelados
     como autômatos para que propriedades como ausência de \textit{deadlock}, alcançabilidade
     de estados ou conformidade com uma especificação sejam verificadas automaticamente
@@ -905,9 +887,9 @@ mais comum de processador de linguagem, e descreve, em alto nível, a sequência
 constituem o pipeline de compilação. Os conceitos aqui introduzidos servirão de apoio às seções
 seguintes, que detalham cada fase do \textit{front-end} de um compilador.
 
-Um \textbf{compilador} é um programa que recebe como entrada um texto escrito em uma linguagem de
-programação, denominada \textbf{linguagem fonte}, e produz como saída um programa equivalente em
-outra linguagem, denominada \textbf{linguagem objeto} (ou linguagem alvo) \cite{aho2008}. A
+Um compilador é um programa que recebe como entrada um texto escrito em uma linguagem de
+programação, denominada linguagem fonte, e produz como saída um programa equivalente em
+outra linguagem, denominada linguagem objeto (ou linguagem alvo) \cite{aho2008}. A
 equivalência exigida nesse processo é semântica: o programa objeto deve produzir, sobre as mesmas
 entradas, exatamente os mesmos resultados que o programa fonte produziria, ainda que o faça em
 uma linguagem de nível mais baixo, em geral próxima da arquitetura da máquina de execução. Além
@@ -922,7 +904,7 @@ alto nível, configurando-se nesse caso um \textit{source-to-source compiler}, o
 fonte para fonte \cite{aho2008}. Independentemente da forma da saída, o cerne da tarefa permanece
 o mesmo, isto é, realizar uma tradução fiel preservando o significado original.
 
-O compilador não é a única forma de processador de linguagem. Um \textbf{interpretador}, em vez
+O compilador não é a única forma de processador de linguagem. Um interpretador, em vez
 de produzir um programa objeto que será posteriormente executado, realiza diretamente, sobre as
 entradas fornecidas pelo usuário, as operações descritas no programa fonte \cite{aho2008}. A
 diferença entre os dois modelos pode ser sintetizada pelo papel do programa fonte em tempo de
@@ -947,34 +929,34 @@ Internamente, um compilador está longe de ser uma caixa-preta monolítica. Aho 
 \cite{aho2008} descrevem o processo de compilação como uma sequência de fases, cada uma
 transformando uma representação do programa fonte em outra, mais próxima do programa objeto,
 conforme ilustra a Figura~\ref{fig:fases-compilador}. Essas fases agrupam-se em duas grandes
-etapas: a \textbf{análise}, responsável por compreender a estrutura e o significado do programa
-fonte, e a \textbf{síntese}, responsável por construir o programa objeto a partir dessa
+etapas: a análise, responsável por compreender a estrutura e o significado do programa
+fonte, e a síntese, responsável por construir o programa objeto a partir dessa
 compreensão. A parte de análise é também denominada \textit{front-end} do compilador, enquanto
 a parte de síntese constitui o \textit{back-end}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{img/fases_de_um_compilador.png}
-    \caption{Fases de um compilador}
+    \caption{FASES DE UM COMPILADOR}
     \label{fig:fases-compilador}
     \fonte{Aho et al. (2008)}
 \end{figure}
 
-A etapa de análise costuma ser subdividida em três fases. A \textbf{análise léxica} (também
+A etapa de análise costuma ser subdividida em três fases. A análise léxica (também
 chamada de \textit{scanning} ou leitura) percorre o fluxo de caracteres do programa fonte e os
 agrupa em sequências significativas, denominadas lexemas; para cada lexema, produz um
 \textit{token}, isto é, um par formado por um nome simbólico e, eventualmente, um valor de
-atributo associado. A \textbf{análise sintática} recebe o fluxo de \textit{tokens} produzido pela
+atributo associado. A análise sintática recebe o fluxo de tokens produzido pela
 fase léxica e o organiza em uma estrutura hierárquica, em geral uma árvore de sintaxe, que torna
-explícita a estrutura gramatical do programa. Por fim, a \textbf{análise semântica} percorre essa
+explícita a estrutura gramatical do programa. Por fim, a análise semântica percorre essa
 árvore para verificar a consistência de tipos e o cumprimento de outras regras da linguagem que
 não podem ser expressas pela gramática livre de contexto, anotando a árvore com informações
 adicionais necessárias às fases seguintes \cite{aho2008}. Ao longo de todas essas fases, uma
-estrutura auxiliar denominada \textbf{tabela de símbolos} mantém informações sobre os
+estrutura auxiliar denominada tabela de símbolos mantém informações sobre os
 identificadores declarados no programa, sendo consultada e atualizada conforme necessário.
 
 Concluída a análise, a etapa de síntese gera, a partir da árvore anotada, uma
-\textbf{representação intermediária}, a qual pode ser submetida a uma fase opcional de otimização
+representação intermediária, a qual pode ser submetida a uma fase opcional de otimização
 independente da máquina, com o objetivo de produzir código mais eficiente sem alterar a
 semântica do programa. Em seguida, o gerador de código traduz a representação intermediária para
 a linguagem da máquina alvo, e uma segunda fase opcional de otimização, dependente da máquina,
@@ -1012,7 +994,7 @@ acesso uniforme às informações sobre os identificadores do programa \cite{aho
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{img/interacao_lexico_sintatico.png}
-    \caption{Interações entre o analisador léxico e o analisador sintático}
+    \caption{INTERAÇÕES ENTRE O ANALISADOR LÉXICO E O ANALISADOR SINTÁTICO}
     \label{fig:interacao-lexico-sintatico}
     \fonte{Aho et al. (2008)}
 \end{figure}
@@ -1028,11 +1010,11 @@ codificação de caracteres ficam restritas ao analisador léxico, sem afetar as
 compilador.
 
 A discussão sobre análise léxica apoia-se em três termos relacionados, porém distintos. Um
-\textbf{token} é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
+token é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
 o nome representa, de forma abstrata, uma classe de unidade léxica, como uma palavra-chave
-específica ou a categoria genérica de identificador. Um \textbf{padrão} é uma descrição da forma
+específica ou a categoria genérica de identificador. Um padrão é uma descrição da forma
 que os lexemas associados a um \textit{token} podem assumir, em geral expressa por meio de uma
-expressão regular. Um \textbf{lexema} é uma sequência concreta de caracteres do programa fonte
+expressão regular. Um lexema é uma sequência concreta de caracteres do programa fonte
 que casa com o padrão de um \textit{token} e é, por essa razão, classificada como uma instância
 desse \textit{token} \cite{aho2008}. Por exemplo, em um programa em C que contenha o trecho
 \texttt{score = 3.14;}, a palavra \texttt{score} é um lexema que casa com o padrão de
@@ -1042,7 +1024,7 @@ casa com o padrão de constante numérica e produz um \textit{token} \textit{num
 Quando mais de um lexema pode casar com o mesmo padrão, como ocorre tipicamente com
 identificadores e constantes, o nome do \textit{token} sozinho não basta para distinguir as
 ocorrências, e o analisador léxico precisa fornecer informação adicional às fases seguintes. Para
-isso, associa-se ao \textit{token} um \textbf{valor de atributo}, que descreve o lexema
+isso, associa-se ao \textit{token} um valor de atributo, que descreve o lexema
 específico encontrado. No caso de identificadores, esse atributo costuma ser um apontador para
 a entrada correspondente na tabela de símbolos, onde se mantêm informações como o nome, o tipo
 e a posição do identificador no programa fonte; no caso de constantes numéricas, o atributo
@@ -1082,7 +1064,7 @@ A análise sintática, também denominada \textit{parsing}, é a segunda fase do
 de um compilador e tem por finalidade verificar se a sequência de \textit{tokens} produzida pela
 análise léxica forma uma cadeia válida segundo a gramática da linguagem fonte e, em caso
 afirmativo, organizá-la em uma estrutura hierárquica que torne explícita a estrutura gramatical
-do programa \cite{aho2008}. Essa estrutura é, em geral, uma \textbf{árvore de derivação} (também
+do programa \cite{aho2008}. Essa estrutura é, em geral, uma árvore de derivação (também
 chamada de \textit{parse tree}), na qual os nós internos representam as variáveis aplicadas
 durante a derivação e as folhas correspondem aos terminais que compõem a cadeia analisada. A
 Figura~\ref{fig:arvore-derivacao-expr} ilustra esse conceito para a expressão
@@ -1123,7 +1105,7 @@ da adição.
             ]
         ]
     \end{forest}
-    \caption{Árvore de derivação da expressão $\mathit{id} + \mathit{id} * \mathit{id}$}
+    \caption{ÁRVORE DE DERIVAÇÃO DA EXPRESSÃO $\mathit{id} + \mathit{id} * \mathit{id}$}
     \label{fig:arvore-derivacao-expr}
     \fonte{Os autores (\the\year)}
 \end{figure}
@@ -1140,13 +1122,13 @@ Para programas bem formados, o analisador sintático constrói, ao menos conceit
 árvore de derivação que é então repassada às fases subsequentes do \textit{front-end}, isto é,
 à análise semântica e à geração de código intermediário. Na prática, contudo, é comum que essa
 árvore não seja construída de forma explícita: as ações de tradução podem ser entremeadas com a
-análise propriamente dita, técnica conhecida como \textbf{tradução dirigida por sintaxe}, em
+análise propriamente dita, técnica conhecida como tradução dirigida por sintaxe, em
 que cada produção da gramática associa-se a um conjunto de ações semânticas executadas no
 momento em que a produção é reconhecida \cite{aho2008}. Esse arranjo permite, em muitos casos,
 integrar análise sintática, análise semântica e geração de código em um único módulo coeso.
 
 Existem duas grandes famílias de algoritmos de análise sintática empregados em compiladores
-reais: a análise \textbf{descendente} (\textit{top-down}) e a análise \textbf{ascendente}
+reais: a análise descendente (\textit{top-down}) e a análise ascendente
 (\textit{bottom-up}) \cite{aho2008}. Os métodos descendentes constroem a árvore de derivação
 da raiz para as folhas, partindo do símbolo inicial da gramática e tentando reescrevê-lo até
 obter a cadeia da entrada; nessa família, destacam-se os analisadores preditivos e, em
@@ -1190,20 +1172,20 @@ violações das regras de escopo, declaração e tipagem da linguagem fonte e, a
 anota a árvore com informações adicionais, como tipos inferidos e conversões implícitas, que
 serão utilizadas pelas fases subsequentes de geração de código \cite{aho2008}.
 
-A parcela mais visível do trabalho do analisador semântico é a \textbf{verificação de tipos}.
+A parcela mais visível do trabalho do analisador semântico é a verificação de tipos.
 Para realizá-la, o compilador atribui uma expressão de tipo a cada componente do programa fonte
 e verifica se essas expressões satisfazem o conjunto de regras lógicas que constitui o
-\textbf{sistema de tipos} da linguagem. Exige-se tipicamente, por exemplo, que o índice usado
+sistema de tipos da linguagem. Exige-se tipicamente, por exemplo, que o índice usado
 para acessar um arranjo seja inteiro, que os operandos de um operador aritmético tenham tipos
 compatíveis e que o valor retornado por uma função tenha o tipo declarado em sua assinatura
 \cite{aho2008}. Quando alguma dessas condições é violada, o compilador emite uma mensagem de
 erro de tipo, evitando que o programa avance para fases posteriores em estado inconsistente.
 
 A verificação de tipos pode ser feita estaticamente, em tempo de compilação, ou dinamicamente,
-em tempo de execução. Um sistema de tipos é dito \textbf{seguro} quando a verificação estática
+em tempo de execução. Um sistema de tipos é dito seguro quando a verificação estática
 realizada pelo compilador é suficiente para garantir que erros de tipo nunca ocorrerão durante
 a execução do programa objeto, dispensando, portanto, verificações dinâmicas dispendiosas; uma
-implementação de linguagem é dita \textbf{fortemente tipada} (\textit{strongly typed}) quando o
+implementação de linguagem é dita fortemente tipada (\textit{strongly typed}) quando o
 compilador efetivamente assegura essa propriedade para todos os programas que aceita
 \cite{aho2008}. A verificação estática de tipos é, em geral, considerada uma das principais
 ferramentas para a detecção precoce de erros e tem aplicações que vão além do contexto restrito
@@ -1211,10 +1193,10 @@ da compilação, como a verificação de \textit{bytecodes} Java antes de sua ex
 máquina virtual.
 
 Aho et al. \cite{aho2008} distinguem duas formas complementares de verificação de tipos. Na
-\textbf{síntese de tipos}, o tipo de uma expressão é construído a partir dos tipos de suas
+síntese de tipos, o tipo de uma expressão é construído a partir dos tipos de suas
 subexpressões, com base em regras locais; essa abordagem exige, em geral, que todos os nomes
 utilizados sejam declarados antes de seu uso, de modo que o compilador disponha sempre da
-informação necessária à composição dos tipos. Na \textbf{inferência de tipos}, por outro lado,
+informação necessária à composição dos tipos. Na inferência de tipos, por outro lado,
 o tipo de uma construção é deduzido a partir do modo como ela é utilizada, por meio de
 variáveis de tipo e regras de unificação; essa abordagem é típica de linguagens funcionais
 como ML e Haskell, que verificam os tipos sem exigir declarações explícitas. Em qualquer um dos
@@ -1222,8 +1204,8 @@ dois modelos, o objetivo final é o mesmo, isto é, associar a cada expressão u
 bem definido antes da geração de código.
 
 Quando os operandos de uma operação possuem tipos diferentes, mas compatíveis em algum
-sentido, o compilador pode inserir automaticamente uma \textbf{conversão de tipo}, também
-denominada \textbf{coerção}, para uniformizar os operandos. Ao avaliar a soma de um inteiro
+sentido, o compilador pode inserir automaticamente uma conversão de tipo, também
+denominada coerção, para uniformizar os operandos. Ao avaliar a soma de um inteiro
 com um número de ponto flutuante, por exemplo, é comum que o inteiro seja convertido para a
 representação de ponto flutuante antes da operação \cite{aho2008}. Essas conversões são
 denominadas implícitas quando inseridas pelo compilador sem intervenção do programador, e
@@ -1254,8 +1236,8 @@ Seção~\ref{sec:simulacao_automatos}.
 
 \section{AST (Árvore Sintática Abstrata)}
 \label{sec:ast}
-A árvore de derivação produzida pela análise sintática, também chamada de \textbf{árvore
-sintática concreta}, espelha fielmente a aplicação das produções da gramática durante o
+A árvore de derivação produzida pela análise sintática, também chamada de árvore
+sintática concreta, espelha fielmente a aplicação das produções da gramática durante o
 reconhecimento da entrada. Por essa razão, ela costuma conter nós internos cuja função é
 puramente auxiliar, isto é, nós que existem apenas para resolver questões gramaticais como
 precedência, associatividade ou eliminação de recursão à esquerda, mas que não correspondem a
@@ -1263,7 +1245,7 @@ nenhuma construção semanticamente significativa da linguagem fonte \cite{aho20
 fases posteriores do compilador, esses nós auxiliares representam ruído, pois aumentam o
 tamanho da árvore sem agregar informação útil sobre o programa.
 
-A \textbf{árvore sintática abstrata} (\textit{abstract syntax tree}, ou AST) é uma representação
+A árvore sintática abstrata (\textit{abstract syntax tree}, ou AST) é uma representação
 intermediária que elimina esse ruído, conservando apenas a estrutura essencial do programa
 fonte. Em uma AST de uma expressão, cada nó interno representa um operador ou uma construção
 da linguagem, e seus filhos representam os operandos ou componentes semanticamente
@@ -1299,7 +1281,7 @@ estrutura da árvore.
             ]
         ]
     \end{forest}
-    \caption{Árvore sintática abstrata da expressão $\mathit{id} + \mathit{id} * \mathit{id}$}
+    \caption{ÁRVORE SINTÁTICA ABSTRATA DA EXPRESSÃO $\mathit{id} + \mathit{id} * \mathit{id}$}
     \label{fig:ast-expr}
     \fonte{Os autores (\the\year)}
 \end{figure}
@@ -1337,7 +1319,7 @@ As seções anteriores apresentaram os fundamentos do processo de compilação t
 implícito o de uma linguagem de programação de propósito geral, isto é, uma linguagem projetada
 para expressar qualquer programa computável, como C, Java ou Rust. Existe, contudo, uma classe
 distinta de linguagens, voltadas não para a generalidade, mas para a expressividade restrita a
-um domínio particular. Essa categoria recebe o nome de \textbf{linguagem de domínio específico}
+um domínio particular. Essa categoria recebe o nome de linguagem de domínio específico
 ou, na sigla consagrada em inglês, \textit{Domain-Specific Language} (DSL). Esta seção apresenta
 o conceito de DSL, suas principais variantes e a relação que mantém com o ferramental de
 compiladores discutido nas seções precedentes.
@@ -1365,12 +1347,12 @@ generalidade é o preço pago para obter um vocabulário e uma sintaxe mais alin
 que se quer resolver.
 
 Fowler \cite{fowler2010} distingue duas grandes categorias de DSLs conforme a estratégia de
-implementação adotada. Uma \textbf{DSL externa} é uma linguagem com sintaxe própria, independente
+implementação adotada. Uma DSL externa é uma linguagem com sintaxe própria, independente
 da sintaxe de qualquer linguagem hospedeira, e cujo processamento exige a construção de um
 analisador, em geral por meio das técnicas clássicas de análise léxica e sintática descritas nas
 Seções~\ref{sec:lexica} e~\ref{sec:sintatica}. Exemplos consagrados desse tipo incluem expressões
 regulares, SQL, a linguagem de descrição de gráficos do Graphviz e os formatos de configuração
-estruturada com regras próprias. Uma \textbf{DSL interna}, por sua vez, é construída sobre uma
+estruturada com regras próprias. Uma DSL interna, por sua vez, é construída sobre uma
 linguagem hospedeira de propósito geral, aproveitando sua sintaxe e seu sistema de tipos para
 exprimir conceitos do domínio na forma de uma biblioteca, com nomes de funções e composições
 sintáticas escolhidos de modo a parecer uma linguagem própria. Linguagens como Ruby, Lisp, Scala
@@ -1387,8 +1369,8 @@ completo em relação a qualquer linguagem hospedeira, o que costuma resultar em
 próxima do vocabulário do domínio \cite{fowler2010}.
 
 Independentemente da categoria, Fowler \cite{fowler2010} argumenta que toda DSL bem estruturada
-se organiza em torno de dois elementos. O primeiro é a \textbf{representação textual}, isto é, a
-sintaxe concreta que o usuário efetivamente lê e escreve. O segundo é o \textbf{modelo semântico},
+se organiza em torno de dois elementos. O primeiro é a representação textual, isto é, a
+sintaxe concreta que o usuário efetivamente lê e escreve. O segundo é o modelo semântico,
 uma estrutura de objetos, em geral construída em uma linguagem de propósito geral, que captura
 o significado do que foi escrito e sobre a qual se efetivamente operam as funcionalidades do
 sistema. O processamento de um programa escrito na DSL consiste, então, em traduzir a
@@ -1437,7 +1419,7 @@ de ferramenta exige certa familiaridade com a teoria de gramáticas livres de co
 limitações específicas da classe de \textit{parsers} que a ferramenta produz, como as restrições
 LR, LL ou LALR.
 
-Uma segunda classe de ferramentas é a dos \textbf{combinadores de \textit{parsers}}, ou
+Uma segunda classe de ferramentas é a dos combinadores de \textit{parsers}, ou
 \textit{parser combinators}. Em vez de gerar código a partir de uma gramática externa, essa
 abordagem fornece, na forma de uma biblioteca dentro de uma linguagem hospedeira, um conjunto
 de \textit{parsers} elementares, capazes de reconhecer fragmentos triviais como um único
@@ -1454,7 +1436,7 @@ compilação. A contrapartida é que o desempenho e a clareza dos diagnósticos 
 forma sensível da maneira como a gramática é estruturada, exigindo do implementador atenção a
 questões como retrocesso e ambiguidade.
 
-Uma terceira opção, frequentemente subestimada, é a do \textbf{analisador escrito manualmente},
+Uma terceira opção, frequentemente subestimada, é a do analisador escrito manualmente,
 em geral pela técnica de descida recursiva, descrita na Seção~\ref{sec:sintatica}. Nessa
 abordagem, cada não-terminal da gramática é traduzido em uma função do compilador, que invoca,
 direta ou indiretamente, as demais funções correspondentes aos não-terminais que aparecem em
@@ -1465,7 +1447,7 @@ linguagem inclui construções que se acomodam mal às restrições de um gerado
 \cite{fowler2010}. Não por acaso, muitos compiladores de produção, incluindo os de linguagens
 de propósito geral amplamente utilizadas, optam pela escrita manual do analisador.
 
-Uma quarta classe, mais recente, é a das \textbf{\textit{language workbenches}}, ou plataformas
+Uma quarta classe, mais recente, é a das \textit{language workbenches}, ou plataformas
 para engenharia de linguagens. Diferentemente das ferramentas anteriores, que se concentram
 quase exclusivamente na construção do \textit{front-end}, uma \textit{language workbench}
 oferece suporte integrado a todas as etapas de definição de uma DSL, da gramática à semântica,
@@ -1518,7 +1500,7 @@ detectá-los e para recuperar-se deles a fim de prosseguir o processamento.
 Independentemente da fase em que ocorrem, os erros relatados por um compilador são tanto mais
 úteis quanto melhor satisfazem três critérios fundamentais. O primeiro é a \textbf{precisão da
 localização}, isto é, a indicação inequívoca, em termos de linha e coluna do arquivo fonte, do
-ponto do programa em que o erro foi detectado. O segundo é a \textbf{clareza da mensagem}, ou
+ponto do programa em que o erro foi detectado. O segundo é a clareza da mensagem, ou
 seja, a expressão do erro em uma linguagem natural compreensível para o usuário, evitando jargão
 técnico desnecessário e, sempre que possível, indicando o que se esperava encontrar e o que foi
 de fato encontrado. O terceiro é a \textbf{capacidade de detectar múltiplos erros em uma única
@@ -1668,7 +1650,7 @@ modelo é fundamentado em três conceitos inter-relacionados: \textit{ownership}
 \textit{borrowing} (empréstimo) e \textit{lifetimes} (tempos de vida).
 
 O princípio de \textit{ownership} estabelece que cada valor em Rust possui exatamente um
-\textbf{dono} em qualquer ponto do programa, e que o valor é automaticamente liberado da memória
+dono em qualquer ponto do programa, e que o valor é automaticamente liberado da memória
 quando seu dono sai de escopo \cite{klabnik2019}. A atribuição de um valor a uma nova variável,
 ou sua passagem como argumento a uma função, transfere a propriedade para o novo contexto,
 invalidando o acesso anterior. Essa regra, verificada estaticamente pelo compilador, garante
@@ -1676,9 +1658,9 @@ que não existam dois fragmentos de código tentando liberar a mesma região de 
 simultaneamente.
 
 O \textit{borrowing} complementa o \textit{ownership} ao permitir que um valor seja
-\textbf{referenciado} sem que sua propriedade seja transferida. Rust distingue dois tipos de
-referências: as \textbf{referências imutáveis} (\texttt{\&T}), das quais podem existir
-simultaneamente quantas forem necessárias, e as \textbf{referências mutáveis} (\texttt{\&mut T}),
+referenciado sem que sua propriedade seja transferida. Rust distingue dois tipos de
+referências: as referências imutáveis (\texttt{\&T}), das quais podem existir
+simultaneamente quantas forem necessárias, e as referências mutáveis (\texttt{\&mut T}),
 das quais apenas uma pode existir em qualquer instante, excluindo a coexistência com qualquer
 referência imutável \cite{klabnik2019}. Essas restrições, verificadas pelo compilador em uma
 fase denominada \textit{borrow checking}, eliminam em tempo de compilação toda uma classe de
@@ -1687,7 +1669,7 @@ erros relacionados à mutação concorrente de dados compartilhados.
 O sistema de tipos de Rust é estático e fortemente tipado, com suporte a inferência de tipos
 que dispensa, na maior parte dos casos, anotações explícitas de tipo \cite{klabnik2019}. Para a
 representação de estruturas de dados que podem assumir diferentes formas, Rust oferece os
-\textbf{tipos enumerados} (\texttt{enum}), que permitem associar dados distintos a cada variante
+tipos enumerados (\texttt{enum}), que permitem associar dados distintos a cada variante
 e são processados por meio de correspondência de padrões (\textit{pattern matching}) com
 verificação de exaustividade pelo compilador. Esse recurso é particularmente útil na
 implementação de compiladores, onde nós de AST, \textit{tokens} e erros costumam ser representados
@@ -1706,7 +1688,7 @@ cada fase leia a estrutura sem assumir sua propriedade.
 \section{Ecossistema e Gerenciador de Pacotes Cargo}
 \label{sec:rust-cargo}
 
-O ecossistema de Rust organiza-se em torno do \textbf{Cargo}, ferramenta oficial que acumula as
+O ecossistema de Rust organiza-se em torno do Cargo, ferramenta oficial que acumula as
 funções de gerenciador de pacotes, sistema de \textit{build} e executor de testes
 \cite{klabnik2019}. Por meio do Cargo, o desenvolvedor declara as dependências do projeto em um
 arquivo de manifesto (\texttt{Cargo.toml}), e a ferramenta resolve automaticamente as versões
@@ -1715,7 +1697,7 @@ projeto em uma única invocação. Esse modelo elimina a necessidade de sistemas
 externos e garante que projetos Rust sejam reprodutíveis em qualquer ambiente que disponha do
 compilador instalado.
 
-A unidade de distribuição de código em Rust é denominada \textbf{\textit{crate}}, termo que
+A unidade de distribuição de código em Rust é denominada \textit{crate}, termo que
 corresponde, aproximadamente, ao conceito de biblioteca ou módulo em outras linguagens
 \cite{klabnik2019}. O repositório \texttt{crates.io} hospeda dezenas de milhares de
 \textit{crates} de código aberto, cobrindo desde estruturas de dados e algoritmos até
@@ -1738,10 +1720,10 @@ Conforme discutido na Seção~\ref{sec:contrucao-compiladores}, a estratégia de
 adotada para o compilador da DSL proposta baseia-se no uso de uma biblioteca de
 \textit{parser combinators}, abordagem que integra naturalmente a definição da gramática ao
 restante do código da ferramenta. O ecossistema Rust oferece três bibliotecas principais para
-esse fim: \textbf{nom}, \textbf{pest} e \textbf{chumsky}, cada uma com características
+esse fim: nom, pest e chumsky, cada uma com características
 distintas que as tornam adequadas a diferentes cenários.
 
-A biblioteca \textbf{nom} é uma das mais antigas e consolidadas do ecossistema Rust para
+A biblioteca nom é uma das mais antigas e consolidadas do ecossistema Rust para
 análise sintática \cite{couprie2015nom}. Sua abordagem é baseada em funções que recebem uma
 fatia de bytes ou caracteres e retornam o resultado do reconhecimento juntamente com o restante
 da entrada não consumida, compondo-se por meio de macros e funções de ordem superior. A
@@ -1750,7 +1732,7 @@ que a eficiência é crítica, torna-a uma escolha robusta para linguagens textu
 geração de mensagens de erro precisas requeira esforço adicional do implementador, pois a
 biblioteca não foi projetada com esse objetivo em primeiro plano.
 
-A biblioteca \textbf{pest} adota uma abordagem diferente: em vez de compor \textit{parsers} no
+A biblioteca pest adota uma abordagem diferente: em vez de compor \textit{parsers} no
 código Rust, o desenvolvedor descreve a gramática da linguagem em um arquivo externo com
 notação própria, derivada de gramáticas de expressão de análise (\textit{Parsing Expression
 Grammars}, ou PEG), e a biblioteca gera automaticamente o analisador correspondente em tempo de
@@ -1759,7 +1741,7 @@ especificação da gramática de sua implementação, facilitando a leitura e a 
 definição da linguagem, mas reduz o controle sobre o comportamento do analisador e sobre as
 mensagens de erro produzidas.
 
-A biblioteca \textbf{chumsky} é a mais recente das três e foi projetada explicitamente com foco
+A biblioteca chumsky é a mais recente das três e foi projetada explicitamente com foco
 na qualidade do diagnóstico de erros \cite{chumsky2022}. Seus combinadores propagam
 automaticamente informações de localização ao longo do processo de análise e oferecem
 mecanismos nativos de recuperação de erros, permitindo que o analisador continue após encontrar
@@ -1773,27 +1755,28 @@ O Quadro~\ref{tab:comparacao-parsers} sintetiza as principais características d
 bibliotecas, evidenciando os critérios mais relevantes para a escolha a ser realizada durante a
 implementação descrita no Capítulo~\ref{cap:implementacao}.
 
-\begin{table}[h]
+\begin{quadro}[h]
     \centering
-    \caption{Comparação entre bibliotecas de \textit{parser combinators} para Rust}
+    \caption{COMPARAÇÃO ENTRE BIBLIOTECAS DE PARSER COMBINATORS PARA RUST}
     \label{tab:comparacao-parsers}
     \small
     \setlength{\tabcolsep}{5pt}
     \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-    \begin{tabularx}{\textwidth}{l Y Y Y}
-        \toprule
-        \textbf{Critério}              & \textbf{nom}       & \textbf{pest}         & \textbf{chumsky}       \\
-        \midrule
+    % Adicionado | no início, no fim e entre as colunas do tabularx
+    \begin{tabularx}{\textwidth}{|l|Y|Y|Y|}
+        \hline
+        Critério              & nom       & pest         & chumsky       \\
+        \hline
         Abordagem                      & Combinadores       & Gramática PEG externa & Combinadores           \\
         Qualidade dos erros            & Baixa              & Média                 & Alta                   \\
         Recuperação de erros           & Manual             & Limitada              & Nativa                 \\
         Rastreamento de localização    & Manual             & Automático            & Automático             \\
         Maturidade                     & Alta               & Alta                  & Média                  \\
         Foco original                  & Dados binários     & Linguagens textuais   & Linguagens textuais    \\
-        \bottomrule
+        \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
-\end{table}
+\end{quadro}
 
 A escolha entre as três bibliotecas será orientada, durante a fase de implementação, pelos
 requisitos estabelecidos para o compilador da DSL: em especial, a necessidade de mensagens de
@@ -1966,65 +1949,115 @@ AFDs quanto AFNs com descrição textual unificada, representa um avanço signif
 \label{sec:rel-comparativa}
 
 A análise dos trabalhos apresentados nas seções anteriores evidencia um padrão comum entre as
-ferramentas existentes: todas adotam abordagens exclusivamente visuais para a construção de
-autômatos, sem oferecer representação textual formal, compilador com diagnóstico de erros ou
-versionamento dos modelos produzidos. O Quadro~\ref{quad:comparativo} sintetiza as
-características centrais de cada ferramenta em relação aos critérios mais relevantes para o
-presente trabalho.
+ferramentas existentes: a grande maioria adota abordagens exclusivamente visuais para a
+construção de autômatos, o que gera lacunas críticas em termos de validação formal,
+versionamento e engenharia de software pedagógica. O Quadro~\ref{quad:comparativo-recursos}
+sintetiza as características funcionais de cada ferramenta investigada em relação aos critérios
+técnicos mais relevantes para o presente trabalho. Complementarmente, o
+Quadro~\ref{quad:comparativo-qualitativo} evidencia de que modo cada estudo fundamenta uma
+decisão de projeto da ferramenta proposta.
 
-\begin{table}[h]
+\begin{quadro}[h]
     \centering
-    \caption{Comparação entre os trabalhos relacionados e a ferramenta proposta}
-    \label{quad:comparativo}
+    \caption{COMPARAÇÃO DE RECURSOS TÉCNICOS ENTRE OS TRABALHOS RELACIONADOS}
+    \label{quad:comparativo-recursos}
     \footnotesize
     \setlength{\tabcolsep}{3pt}
-    % Define o tipo de coluna X com alinhamento centralizado
     \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
-    \begin{tabularx}{\textwidth}{l Y Y Y Y >{\raggedright\arraybackslash}X}
-        \toprule
+    \begin{tabularx}{\textwidth}{|>{\hsize=1.4\hsize\raggedright\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|}
+        \hline
         \textbf{Trabalho}
-            & \textbf{DSL textual}
-            & \textbf{Compilador / diagnóstico}
-            & \textbf{Simulação visual}
-            & \textbf{Simulação passo a passo}
+            & \textbf{\makecell{DSL\\textual}}
+            & \textbf{\makecell{Compilador /\\diagnóstico}}
+            & \textbf{\makecell{\\visual}}
+            & \textbf{\makecell{\\passo\\a passo}}
             & \textbf{Plataforma} \\
-        \midrule
+        \hline
         Writing a Lexer
-            & Não & Não & Não & Linha de comando
-            & Implementação de léxico em Rust \\
-        \addlinespace
+            & Não & Não & Não & Linha de comando & Rust (Nativo) \\
+        \hline
         JFLAP
-            & Não & Não & Sim & Sim
-            & Desktop (Java) \\
-        \addlinespace
+            & Não & Não & Sim & Sim & Desktop (Java) \\
+        \hline
         GAM
-            & Não & Não & Sim & Parcial
-            & Desktop (C++/GTK) \\
-        \addlinespace
+            & Não & Não & Sim & Parcial & Desktop (C++/GTK) \\
+        \hline
         Simulador UFSC
-            & Não & Não & Sim & Sim
-            & Web \\
-        \addlinespace
+            & Não & Não & Sim & Sim & Web (Navegador) \\
+        \hline
         AutomatoGraph
-            & Não & Não & Parcial (textual) & Parcial (lista de transições)
-            & Desktop (Java) \\
-        \addlinespace
+            & Não & Não & Parcial & Parcial & Desktop (Java) \\
+        \hline
         \textbf{Este trabalho}
-            & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim}
-            & \textbf{Desktop} \\
-        \bottomrule
+            & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Desktop} \\
+        \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
-\end{table}
+\end{quadro}
 
-Observa-se que nenhum dos trabalhos analisados combina, em um único instrumento, a descrição
-textual declarativa do autômato com um compilador que realize análise léxica, sintática e
-semântica, fornecendo diagnósticos de erro com indicação precisa de localização e natureza do
-problema. A ferramenta proposta neste trabalho ocupa, portanto, uma lacuna identificada na
-literatura: a integração entre uma DSL externa voltada ao domínio dos autômatos finitos, um
-compilador pedagógico com diagnóstico de qualidade e uma interface gráfica interativa que
-anime a simulação passo a passo a partir da descrição textual produzida pelo estudante.
+\begin{quadro}[h]
+    \centering
+    \caption{CONTRIBUIÇÕES E LACUNAS IDENTIFICADAS NA LITERATURA}
+    \label{quad:comparativo-qualitativo}
+    \small
+    \setlength{\tabcolsep}{5pt}
+
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Trabalho} & \textbf{Contribuição / Lacuna identificada para o projeto} \\
+        \hline
+        Writing a Lexer
+            & \textbf{Contribuição:} Demonstra a viabilidade prática e a segurança de tipos
+            da linguagem Rust para modelar e codificar estados de autômatos formalmente. \\
+        \hline
+        JFLAP
+            & \textbf{Lacuna:} Interface de modelagem puramente visual baseada em cliques;
+            impede o armazenamento estruturado em texto e o versionamento por código. \\
+        \hline
+        GAM
+            & \textbf{Lacuna:} Restrição de escopo severa (limite de 10 estados e 3 símbolos),
+            o que inviabiliza o mapeamento de exemplos complexos da literatura. \\
+        \hline
+        Simulador UFSC
+            & \textbf{Contribuição:} Apresenta excelente portabilidade via ambiente web, mas
+            perpetua a dependência da construção no domínio puramente gráfico. \\
+        \hline
+        AutomatoGraph
+            & \textbf{Contribuição:} Reforça a equivalência formal ao gerar gramáticas
+            automáticas, mas carece de animação interativa do diagrama em tempo real. \\
+        \hline
+        \textbf{Este trabalho}
+            & \textbf{Decisão de projeto:} Une o rigor da descrição declarativa textual
+            (Git-friendly) à esteira de compilação pedagógica e à animação visual síncrona. \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Ao analisar criticamente o cenário delineado nos Quadros~\ref{quad:comparativo-recursos}
+e~\ref{quad:comparativo-qualitativo}, observa-se que nenhuma das ferramentas focadas
+estritamente no ecossistema de ensino (JFLAP, GAM, Simulador UFSC e AutomatoGraph) permite
+qualquer tipo de edição textual estruturada ou suporte nativo a versionamento de arquivos. O
+estudante fica restrito a cliques do \textit{mouse}, impossibilitado de utilizar ferramentas
+de gerência de configuração como o Git.
+
+Além disso, o vácuo de retroalimentação se torna evidente na ausência completa de uma
+infraestrutura de compilador nessas soluções didáticas: nenhuma delas possui análise léxica,
+sintática ou semântica capaz de interceptar erros conceituais na raiz (como transições para
+estados não declarados) antes da execução. Embora o JFLAP e o Simulador UFSC entreguem uma
+simulação passo a passo robusta no diagrama de estados, eles tratam o autômato puramente como
+um desenho animado, isolado da prática de codificação. Por outro lado, abordagens de engenharia
+pura como o trabalho de \citeonline{bruzzone2023} expõem o rigor técnico do Rust e a
+manipulação via código, mas falham no suporte educacional por carecerem de interfaces gráficas
+interativas para estudantes iniciantes.
+
+A ferramenta proposta neste trabalho ocupa, portanto, essa lacuna exata de engenharia
+pedagógica: ela adota o rigor da descrição textual por meio de uma DSL externa dedicada,
+implementa uma esteira completa de compilador para fornecer diagnósticos localizados em tempo
+de compilação e, simultaneamente, renderiza e anima o diagrama de estados inseparável do
+código fonte, unificando a teoria de linguagens formais e o pragmatismo do desenvolvimento de
+software em uma única plataforma de experimentação.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
