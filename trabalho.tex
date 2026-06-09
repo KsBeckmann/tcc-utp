@@ -684,21 +684,26 @@ para o AFD da Figura~\ref{fig:afd-exemplo}, que reconhece cadeias contendo $01$ 
 A seta ($\rightarrow$) marca o estado inicial e o asterisco ($*$) destaca o estado de
 aceitação, conforme convenção adotada por \citeonline{hopcroft2006}.
 
-\begin{table}[h]
+\begin{quadro}[h]
     \centering
-    \caption{Tabela de transição do AFD que reconhece cadeias contendo $01$}
-    \label{tab:tabela-transicao-afd}
-    \begin{tabular}{c c c}
-        \toprule
-                                    & 0 & 1 \\
-        \midrule
+    \caption{TABELA DE TRANSIÇÃO DO AFD QUE RECONHECE CADEIAS CONTENDO 01}
+    \label{quad:tabela-transicao-afd}
+    \small
+    
+    % O |c|c|c| adiciona as colunas fechadas dos lados e entre as células
+    \begin{tabular}{|c|c|c|}
+        \hline
+                                    & \textbf{0} & \textbf{1} \\
+        \hline
         $\rightarrow q_0$           & $q_2$      & $q_0$      \\
+        \hline
         $\phantom{\rightarrow} q_2$ & $q_2$      & $q_1$      \\
+        \hline
         $* q_1$                     & $q_1$      & $q_1$      \\
-        \bottomrule
+        \hline
     \end{tabular}
     \fonte{Adaptado de \citeonline{hopcroft2006}}
-\end{table}
+\end{quadro}
 
 A leitura da tabela é direta: cada célula $(q, a)$ contém o estado $\delta(q, a)$ para o qual o
 autômato transita ao ler o símbolo $a$ a partir do estado $q$. Essa representação combina
@@ -1996,6 +2001,30 @@ decisão de projeto da ferramenta proposta.
     \fonte{Os autores (\the\year)}
 \end{quadro}
 
+Ao analisar criticamente o cenário delineado nos Quadros~\ref{quad:comparativo-recursos}
+e~\ref{quad:comparativo-qualitativo}, observa-se que nenhuma das ferramentas focadas
+estritamente no ecossistema de ensino (JFLAP, GAM, Simulador UFSC e AutomatoGraph) permite
+qualquer tipo de edição textual estruturada ou suporte nativo a versionamento de arquivos. O
+estudante fica restrito a cliques do \textit{mouse}, impossibilitado de utilizar ferramentas
+de gerência de configuração como o Git.
+
+Além disso, o vácuo de retroalimentação se torna evidente na ausência completa de uma
+infraestrutura de compilador nessas soluções didáticas: nenhuma delas possui análise léxica,
+sintática ou semântica capaz de interceptar erros conceituais na raiz (como transições para
+estados não declarados) antes da execução. Embora o JFLAP e o Simulador UFSC entreguem uma
+simulação passo a passo robusta no diagrama de estados, eles tratam o autômato puramente como
+um desenho animado, isolado da prática de codificação. Por outro lado, abordagens de engenharia
+pura como o trabalho de \citeonline{bruzzone2023} expõem o rigor técnico do Rust e a
+manipulação via código, mas falham no suporte educacional por carecerem de interfaces gráficas
+interativas para estudantes iniciantes.
+
+A ferramenta proposta neste trabalho ocupa, portanto, essa lacuna exata de engenharia
+pedagógica: ela adota o rigor da descrição textual por meio de uma DSL externa dedicada,
+implementa uma esteira completa de compilador para fornecer diagnósticos localizados em tempo
+de compilação e, simultaneamente, renderiza e anima o diagrama de estados inseparável do
+código fonte, unificando a teoria de linguagens formais e o pragmatismo do desenvolvimento de
+software em uma única plataforma de experimentação.
+
 \begin{quadro}[h]
     \centering
     \caption{CONTRIBUIÇÕES E LACUNAS IDENTIFICADAS NA LITERATURA}
@@ -2034,30 +2063,6 @@ decisão de projeto da ferramenta proposta.
     \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{quadro}
-
-Ao analisar criticamente o cenário delineado nos Quadros~\ref{quad:comparativo-recursos}
-e~\ref{quad:comparativo-qualitativo}, observa-se que nenhuma das ferramentas focadas
-estritamente no ecossistema de ensino (JFLAP, GAM, Simulador UFSC e AutomatoGraph) permite
-qualquer tipo de edição textual estruturada ou suporte nativo a versionamento de arquivos. O
-estudante fica restrito a cliques do \textit{mouse}, impossibilitado de utilizar ferramentas
-de gerência de configuração como o Git.
-
-Além disso, o vácuo de retroalimentação se torna evidente na ausência completa de uma
-infraestrutura de compilador nessas soluções didáticas: nenhuma delas possui análise léxica,
-sintática ou semântica capaz de interceptar erros conceituais na raiz (como transições para
-estados não declarados) antes da execução. Embora o JFLAP e o Simulador UFSC entreguem uma
-simulação passo a passo robusta no diagrama de estados, eles tratam o autômato puramente como
-um desenho animado, isolado da prática de codificação. Por outro lado, abordagens de engenharia
-pura como o trabalho de \citeonline{bruzzone2023} expõem o rigor técnico do Rust e a
-manipulação via código, mas falham no suporte educacional por carecerem de interfaces gráficas
-interativas para estudantes iniciantes.
-
-A ferramenta proposta neste trabalho ocupa, portanto, essa lacuna exata de engenharia
-pedagógica: ela adota o rigor da descrição textual por meio de uma DSL externa dedicada,
-implementa uma esteira completa de compilador para fornecer diagnósticos localizados em tempo
-de compilação e, simultaneamente, renderiza e anima o diagrama de estados inseparável do
-código fonte, unificando a teoria de linguagens formais e o pragmatismo do desenvolvimento de
-software em uma única plataforma de experimentação.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
