@@ -547,7 +547,7 @@ a linguagem das cadeias sobre $\{0, 1\}$ que terminam em $01$ \cite{hopcroft2006
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{img/automato_finito_nao_deterministico.png}
-    \caption{AFN QUER RECONHECE CADEIAS TERMINADAS EM $01$}
+    \caption{AFN QUE RECONHECE CADEIAS TERMINADAS EM $01$}
     \label{fig:afn-exemplo}
     \fonte{\citeonline{hopcroft2006}}
 \end{figure}
@@ -2072,7 +2072,228 @@ software em uma única plataforma de experimentação.
 \chapter{Projeto da DSL}
 \label{cap:projeto}
 
-% TODO: Descrever o projeto da DSL, sua sintaxe e gramática.
+Este capítulo apresenta o projeto da Linguagem de Domínio Específico (DSL) proposta,
+descrevendo sua sintaxe concreta, sua gramática formal e as principais decisões de projeto
+que orientaram seu desenvolvimento. A linguagem, denominada Autosim, foi projetada para
+permitir a descrição declarativa de autômatos finitos determinísticos (AFDs) e
+não-determinísticos (AFNs) com transições $\varepsilon$, de forma textual, estruturada e
+passível de versionamento.
+
+\section{Visão Geral da Linguagem}
+\label{sec:dsl-visao-geral}
+
+A Autosim é uma DSL externa, isto é, possui sintaxe própria e independente de qualquer
+linguagem hospedeira, processada por um compilador dedicado implementado em Rust. Sua
+sintaxe foi projetada em português para alinhar-se ao vocabulário dos estudantes
+brasileiros de teoria da computação, utilizando termos como \texttt{alfabeto},
+\texttt{automato}, \texttt{estados}, \texttt{inicial}, \texttt{finais},
+\texttt{transicoes} e \texttt{simular}.
+
+Cada arquivo fonte (extensão \texttt{.asl}) descreve um alfabeto comum e um ou mais
+autômatos, seguidos opcionalmente por comandos de simulação que especificam cadeias
+de entrada a serem testadas. A Listagem~\ref{lst:exemplo-afd} ilustra um arquivo
+válido da linguagem.
+
+\begin{lstlisting}[caption={EXEMPLO DE AFD DESCRITO NA DSL AUTOSIM}, label={lst:exemplo-afd}, language={}, numbers=left, frame=single]
+alfabeto { 'a', 'b' }
+
+automato AFD exemplo_afd {
+    estados { q0, q1, q2 }
+    inicial q0
+    finais { q2 }
+
+    transicoes {
+        q0 -> q1 com 'a'
+        q0 -> q0 com 'b'
+        q1 -> q2 com 'b'
+        q1 -> q1 com 'a'
+        q2 -> q2 com 'a'
+        q2 -> q2 com 'b'
+    }
+}
+
+simular exemplo_afd com "ab"
+simular exemplo_afd com "aab"
+simular exemplo_afd com "bbb"
+simular exemplo_afd com ""
+\end{lstlisting}
+
+O alfabeto é declarado uma única vez no início do arquivo e é compartilhado por todos os
+autômatos do programa, garantindo consistência entre as declarações. Cada autômato é
+nomeado e classificado como \texttt{AFD} (determinístico) ou \texttt{AFN}
+(não-determinístico), e sua estrutura é composta por quatro seções: estados, estado
+inicial, estados finais e transições.
+
+\section{Gramática Formal}
+\label{sec:dsl-gramatica}
+
+A gramática da linguagem é definida em notação EBNF conforme apresentado na
+Figura~\ref{fig:gramatica-dsl}. A linguagem é livre de contexto e foi projetada para ser
+analisável por um \textit{parser} descendente preditivo com um símbolo de
+\textit{lookahead}.
+
+\begin{figure}[h]
+    \centering
+    \caption{GRAMÁTICA DA DSL AUTOSIM EM NOTAÇÃO EBNF}
+    \label{fig:gramatica-dsl}
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,frame=single]
+programa        ::= declaracao_alfabeto item*
+
+declaracao_alfabeto ::= "alfabeto" "{" char_literal ("," char_literal)* [","] "}"
+
+item            ::= declaracao_automato | comando_simulacao
+
+declaracao_automato ::= "automato" tipo_automato ident "{"
+                            "estados" "{" ident ("," ident)* [","] "}"
+                            "inicial" ident
+                            "finais" "{" ident ("," ident)* [","] "}"
+                            "transicoes" "{" transicao* "}"
+                        "}"
+
+tipo_automato   ::= "AFD" | "AFN"
+
+transicao       ::= ident "->" ident "com" (char_literal | "epsilon" | "eps")
+
+comando_simulacao ::= "simular" ident "com" cadeia_literal
+    \end{lstlisting}
+    \fonte{Os autores (\the\year)}
+\end{figure}
+
+Os terminais da gramática são definidos conforme as expressões regulares
+apresentadas no Quadro~\ref{quad:terminais-dsl}.
+
+\begin{quadro}[h]
+    \centering
+    \caption{TERMINAIS DA DSL AUTOSIM}
+    \label{quad:terminais-dsl}
+    \small
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Terminal} & \textbf{Padrão} & \textbf{Exemplo} \\
+        \hline
+        identificador     & \texttt{[a-zA-Z\_][a-zA-Z0-9\_]*} & \texttt{q0}, \texttt{exemplo\_afd} \\
+        char\_literal     & \texttt{[\textasciicircum\textquotesingle]}  & \texttt{'a'}, \texttt{'0'} \\
+        cadeia\_literal   & \texttt{[\textasciicircum"]*}            & \texttt{"ab"}, \texttt{""} \\
+        \hline
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+\section{Palavras Reservadas}
+\label{sec:dsl-palavras}
+
+A linguagem define onze palavras reservadas, listadas no
+Quadro~\ref{quad:palavras-reservadas}. Todas as palavras reservadas são
+insensíveis a maiúsculas e minúsculas (\textit{case-insensitive}), de modo que
+\texttt{AFD}, \texttt{afd} e \texttt{Afd} são igualmente válidas. Essa decisão
+visa reduzir a carga cognitiva sobre o estudante, eliminando uma fonte comum de
+erros em linguagens que distinguem caixa.
+
+\begin{quadro}[h]
+    \centering
+    \caption{PALAVRAS RESERVADAS DA DSL AUTOSIM}
+    \label{quad:palavras-reservadas}
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Palavra} & \textbf{Função} \\
+        \hline
+        \texttt{alfabeto}  & Declaração do alfabeto \\
+        \texttt{automato}  & Declaração de autômato \\
+        \texttt{AFD}       & Especificação de autômato determinístico \\
+        \texttt{AFN}       & Especificação de autômato não-determinístico \\
+        \texttt{estados}   & Declaração do conjunto de estados \\
+        \texttt{inicial}   & Definição do estado inicial \\
+        \texttt{finais}    & Declaração dos estados de aceitação \\
+        \texttt{transicoes}& Declaração das transições \\
+        \texttt{simular}   & Comando de simulação \\
+        \texttt{com}       & Preposição para símbolo de transição \\
+        \texttt{epsilon} / \texttt{eps} & Transição vazia ($\varepsilon$) \\
+        \hline
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+\section{Decisões de Projeto}
+\label{sec:dsl-decisoes}
+
+O projeto da DSL foi orientado por quatro princípios fundamentais, descritos a seguir.
+
+\subsection{Declaração Única de Alfabeto}
+\label{sec:dsl-alfabeto-unico}
+
+Diferentemente de ferramentas como o JFLAP, em que cada autômato pode definir seu
+próprio alfabeto de forma implícita durante a construção visual, a Autosim exige
+que o alfabeto seja declarado explicitamente uma única vez no início do arquivo.
+Essa decisão simplifica a verificação semântica, pois todos os símbolos utilizados
+em transições podem ser validados contra um único conjunto de referência, e
+reforça o conceito teórico de que o alfabeto é parte integrante da definição
+formal do autômato.
+
+\subsection{Classificação Explícita AFD/AFN}
+\label{sec:dsl-classificacao}
+
+A linguagem exige que o usuário declare explicitamente se o autômato é
+determinístico (AFD) ou não-determinístico (AFN). Essa classificação permite que
+o compilador realize verificações específicas para cada tipo: para AFDs, o
+analisador semântico verifica a ausência de transições $\varepsilon$ e a unicidade
+de transição por par (estado, símbolo); para AFNs, ambas as construções são
+permitidas. Essa distinção tem valor pedagógico, pois obriga o estudante a
+refletir sobre a natureza do autômato que está descrevendo.
+
+\subsection{Sintaxe em Português}
+\label{sec:dsl-portugues}
+
+A escolha do português para as palavras reservadas visa reduzir a barreira
+linguística para estudantes brasileiros, permitindo que o foco permaneça nos
+conceitos de autômatos e não na memorização de vocabulário em língua estrangeira.
+Essa decisão está alinhada com o caráter educacional da ferramenta.
+
+\subsection{Insensibilidade a Maiúsculas e Minúsculas}
+\label{sec:dsl-case}
+
+Todas as palavras reservadas e identificadores são insensíveis a maiúsculas e
+minúsculas. Isso elimina erros comuns de digitação e torna a linguagem mais
+tolerante para estudantes em fase de aprendizado, sem comprometer a clareza da
+descrição.
+
+\section{Suporte a Transições $\varepsilon$}
+\label{sec:dsl-epsilon}
+
+A DSL oferece suporte nativo a transições $\varepsilon$ (vazias), características
+de AFNs. O usuário pode empregar tanto a palavra \texttt{epsilon} quanto sua
+abreviação \texttt{eps} como símbolo de transição. O tratamento de
+$\varepsilon$-fechamento é realizado durante a simulação, conforme descrito no
+Capítulo~\ref{cap:implementacao}. A Listagem~\ref{lst:exemplo-afn} ilustra um
+AFN-$\varepsilon$ que reconhece a linguagem $a^*b^*$.
+
+\begin{lstlisting}[caption={EXEMPLO DE AFN COM TRANSIÇÕES $\varepsilon$}, label={lst:exemplo-afn}, language={}, numbers=left, frame=single]
+alfabeto { 'a', 'b' }
+
+automato AFN exemplo_afn_eps {
+    estados { q0, q1 }
+    inicial q0
+    finais { q0, q1 }
+
+    transicoes {
+        q0 -> q0 com 'a'
+        q0 -> q1 com eps
+        q1 -> q1 com 'b'
+    }
+}
+
+simular exemplo_afn_eps com ""
+simular exemplo_afn_eps com "aaa"
+simular exemplo_afn_eps com "aabb"
+\end{lstlisting}
+
+\section{Tratamento de Comentários}
+\label{sec:dsl-comentarios}
+
+A linguagem suporta comentários de linha única iniciados por \texttt{//}. Os
+comentários são descartados durante a análise léxica e não afetam a geração da
+AST. Não há suporte a comentários multilinha, pois a sintaxe da linguagem é
+suficientemente compacta para que comentários de linha única sejam adequados.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2082,7 +2303,308 @@ software em uma única plataforma de experimentação.
 \chapter{Implementação}
 \label{cap:implementacao}
 
-% TODO: Detalhar a implementação do compilador e da interface gráfica.
+Este capítulo descreve a implementação da ferramenta Autosim, detalhando cada etapa do
+pipeline de compilação e da interface gráfica interativa. A implementação foi realizada
+integralmente na linguagem Rust, utilizando as bibliotecas Logos \cite{logos2021} para
+análise léxica, Chumsky \cite{chumsky2022} para análise sintática, Iced \cite{iced2022}
+para a interface gráfica e Ariadne para o diagnóstico de erros.
+
+\section{Visão Geral do Pipeline}
+\label{sec:impl-pipeline}
+
+O processamento de um arquivo-fonte \texttt{.asl} segue o pipeline ilustrado na
+Figura~\ref{fig:pipeline-autosim}. Cada fase do pipeline é executada sequencialmente;
+em caso de erro em qualquer fase, as mensagens de diagnóstico são exibidas via
+Ariadne e a execução é interrompida antes da fase seguinte.
+
+\begin{figure}[h]
+    \centering
+    \caption{PIPELINE DE COMPILAÇÃO DA FERRAMENTA AUTOSIM}
+    \label{fig:pipeline-autosim}
+    \textbf{Arquivo .asl} $\to$ \textbf{Analisador Léxico} (Logos) $\to$ \textbf{Analisador Sintático} (Chumsky) $\to$ \textbf{Analisador Semântico} $\to$ \textbf{Simulador} $\to$ \textbf{Interface Gráfica} (Iced)
+    \fonte{Os autores (\the\year)}
+\end{figure}
+
+\section{Analisador Léxico}
+\label{sec:impl-lexer}
+
+O analisador léxico é implementado com a biblioteca Logos \cite{logos2021}, que gera
+automaticamente o código do \textit{lexer} a partir de anotações declarativas na
+definição de um tipo enumerado. Cada variante do enumerado \texttt{Token} corresponde
+a uma categoria léxica, anotada com seu padrão de reconhecimento.
+
+\subsection{Definição dos Tokens}
+\label{sec:impl-tokens}
+
+O tipo \texttt{Token} é definido com a macro \texttt{\#[derive(Logos)]}, que gera o
+autômato finito determinístico para o reconhecimento eficiente dos padrões. As palavras
+reservadas utilizam o atributo \texttt{ignore(case)} para garantir insensibilidade a
+maiúsculas e minúsculas. São reconhecidas as seguintes categorias de \textit{tokens}:
+
+\begin{itemize}
+    \item \textbf{Palavras reservadas}: \texttt{alfabeto}, \texttt{automato},
+          \texttt{AFD}, \texttt{AFN}, \texttt{estados}, \texttt{inicial},
+          \texttt{finais}, \texttt{transicoes}, \texttt{simular}, \texttt{com},
+          \texttt{epsilon}, \texttt{eps};
+    \item \textbf{Símbolos}: \texttt{ChaveAberta} (\{), \texttt{ChaveFechada} (\}),
+          \texttt{Vírgula} (,), \texttt{Seta} (\texttt{-{}-{}});
+    \item \textbf{Literais}: \texttt{CharLiteral} (\texttt{'a'}), \texttt{StringLiteral}
+          (\texttt{"ab"});
+    \item \textbf{Identificadores}: \texttt{Ident} (\texttt{q0}, \texttt{exemplo}).
+\end{itemize}
+
+Espaços em branco e comentários (iniciados por \texttt{//}) são reconhecidos por padrões
+específicos e descartados, sem gerar \textit{tokens}.
+
+\subsection{Tratamento de Erros Léxicos}
+\label{sec:impl-erros-lexicos}
+
+Quando um caractere não pertence a nenhum padrão definido, o Logos retorna um erro
+contendo a posição (linha e coluna) do caractere inválido. A ferramenta converte essa
+informação em uma mensagem de diagnóstico por meio da biblioteca Ariadne, que exibe o
+trecho do código-fonte com realce colorido, uma seta apontando para a posição do erro e
+uma mensagem descritiva. Por exemplo, para o caractere \texttt{\%} não reconhecido, a
+mensagem gerada é: "token inválido \texttt{\%}".
+
+\section{Analisador Sintático}
+\label{sec:impl-parser}
+
+O analisador sintático é implementado com a biblioteca Chumsky \cite{chumsky2022}, uma
+biblioteca de combinadores de \textit{parsers} para Rust. A gramática da DSL é codificada
+diretamente em código Rust por meio da composição de funções combinadoras, cada uma
+responsável por reconhecer uma construção específica da linguagem.
+
+\subsection{Árvore Sintática Abstrata (AST)}
+\label{sec:impl-ast}
+
+A AST da linguagem é definida por um conjunto de estruturas de dados que capturam a
+essência do autômato descrito, eliminando ruídos sintáticos como delimitadores e
+palavras-chave. As principais estruturas são:
+
+\begin{itemize}
+    \item \texttt{Program}: contém o alfabeto (lista de caracteres), a lista de
+          autômatos e a lista de comandos de simulação;
+    \item \texttt{Automaton}: armazena o tipo (AFD ou AFN), o nome, a lista de estados,
+          o estado inicial, a lista de estados finais e a lista de transições;
+    \item \texttt{Transition}: representa uma transição com estado de origem, estado de
+          destino e símbolo (caractere do alfabeto ou $\varepsilon$);
+    \item \texttt{Simulation}: associa o nome de um autômato a uma cadeia de entrada.
+\end{itemize}
+
+Cada nó da AST preserva sua posição no texto-fonte original por meio de um span
+(\texttt{Range<usize>}), que registra os índices de caractere de início e fim. Essa
+informação é essencial para a geração de mensagens de erro localizadas nas fases
+posteriores.
+
+\subsection{Estrutura da Gramática}
+\label{sec:impl-gramatica}
+
+A gramática é implementada como combinadores encadeados. O combinador de mais alto
+nível, \texttt{program()}, reconhece a declaração do alfabeto seguida de zero ou mais
+itens (declarações de autômato ou comandos de simulação). Cada construção é validada
+com verificações de presença e ordenação: por exemplo, o corpo de um autômato exige
+que as quatro seções (\texttt{estados}, \texttt{inicial}, \texttt{finais},
+\texttt{transicoes}) apareçam obrigatoriamente nessa ordem.
+
+\subsection{Tratamento de Erros Sintáticos}
+\label{sec:impl-erros-sintaticos}
+
+A Chumsky oferece recuperação automática de erros, permitindo que o analisador
+continue após encontrar uma construção inválida e acumule múltiplos erros em uma única
+execução. As mensagens de erro são geradas no formato "esperava X, encontrou Y", com
+indicação precisa da linha e coluna. Por exemplo, ao encontrar um identificador onde
+se esperava a palavra \texttt{inicial}, a mensagem gerada é: "esperava 'inicial',
+encontrou 'q0'".
+
+\section{Analisador Semântico}
+\label{sec:impl-sema}
+
+A análise semântica é realizada em três fases, executadas sequencialmente sobre a AST
+produzida pelo analisador sintático. Todas as verificações são feitas estaticamente,
+antes da simulação.
+
+\subsection{Construção da Tabela de Símbolos}
+\label{sec:impl-tabela}
+
+A primeira fase percorre a AST e constrói uma tabela de símbolos contendo o alfabeto
+e as entradas de cada autômato (estados, inicial, finais). Durante essa fase, são
+detectados e reportados os seguintes erros:
+
+\begin{itemize}
+    \item Símbolo duplicado no alfabeto;
+    \item Estado duplicado em um mesmo autômato;
+    \item Nome de autômato duplicado.
+\end{itemize}
+
+\subsection{Verificação de Referências}
+\label{sec:impl-referencias}
+
+A segunda fase percorre as transições e os comandos de simulação, verificando se todas
+as referências a estados, símbolos e autômatos são válidas:
+
+\begin{itemize}
+    \item Estado inicial não declarado no conjunto de estados;
+    \item Estado final não declarado no conjunto de estados;
+    \item Estado de origem de transição não declarado;
+    \item Estado de destino de transição não declarado;
+    \item Símbolo da transição não pertence ao alfabeto;
+    \item Comando de simulação referencia autômato inexistente.
+\end{itemize}
+
+\subsection{Verificação de Determinismo}
+\label{sec:impl-determinismo}
+
+A terceira fase aplica-se exclusivamente a autômatos declarados como AFD e verifica
+duas condições:
+
+\begin{itemize}
+    \item Ausência de transições $\varepsilon$ (AFDs não podem ter transições vazias);
+    \item Unicidade de transição: para cada par (estado, símbolo), deve existir no
+          máximo uma transição definida.
+\end{itemize}
+
+Caso alguma dessas condições seja violada, o erro é reportado com indicação das
+transições conflitantes. Para AFNs, ambas as condições são permitidas, e nenhum erro
+é gerado.
+
+Os erros semânticos são acumulados e apresentados em conjunto ao final da análise,
+permitindo que o estudante visualize todos os problemas de uma só vez.
+
+\section{Simulador}
+\label{sec:impl-simulador}
+
+O simulador é o componente responsável por executar a função de transição do autômato
+sobre uma cadeia de entrada, produzindo a sequência de configurações intermediárias
+percorridas durante o reconhecimento.
+
+\subsection{Representação de Estados}
+\label{sec:impl-estados}
+
+O simulador adota uma representação unificada baseada em conjuntos de estados,
+independentemente de o autômato ser determinístico ou não. O estado corrente é
+sempre um \texttt{BTreeSet<String>} contendo todos os estados em que o autômato pode
+encontrar-se simultaneamente. Para AFDs, esse conjunto contém exatamente um elemento;
+para AFNs, pode conter múltiplos estados.
+
+\subsection{Passo de Simulação}
+\label{sec:impl-passo}
+
+A simulação avança em passos lógicos, cada um correspondendo a uma operação atômica:
+
+\begin{enumerate}
+    \item \textbf{Fecho-$\varepsilon$}: se o $\varepsilon$-fechamento do conjunto
+          corrente de estados expande o conjunto (incorporando novos estados
+          alcançáveis por transições $\varepsilon$), um passo de fecho é executado;
+    \item \textbf{Consumo de caractere}: caso o fecho-$\varepsilon$ já esteja
+          saturado e ainda haja caracteres na entrada, o simulador consome o
+          próximo caractere, calculando o conjunto de estados alcançáveis a partir
+          do conjunto corrente por meio de transições rotuladas com esse caractere;
+    \item \textbf{Término}: quando não há mais caracteres a consumir e o
+          fecho-$\varepsilon$ está saturado, a simulação termina. Se algum dos
+          estados do conjunto corrente pertence ao conjunto de estados finais, a
+          cadeia é aceita; caso contrário, é rejeitada.
+\end{enumerate}
+
+O histórico completo de configurações é armazenado em um vetor, permitindo navegação
+tanto para frente quanto para trás durante a simulação visual.
+
+\subsection{Algoritmo de Fecho-$\varepsilon$}
+\label{sec:impl-fecho}
+
+O $\varepsilon$-fechamento é implementado por um algoritmo iterativo que parte do
+conjunto de estados corrente e, enquanto houver transições $\varepsilon$ partindo de
+algum estado do conjunto que levem a estados ainda não incluídos, adiciona esses novos
+estados ao conjunto. O processo continua até que nenhum novo estado seja acrescentado
+(ponto fixo).
+
+\section{Interface Gráfica}
+\label{sec:impl-ui}
+
+A interface gráfica é implementada com a biblioteca Iced \cite{iced2022}, uma
+biblioteca \textit{cross-platform} para Rust que segue a arquitetura Elm
+(\textit{Model-View-Update}). A interface é composta por uma janela única dividida em
+três áreas principais.
+
+\subsection{Layout da Interface}
+\label{sec:impl-layout}
+
+A janela da aplicação organiza-se verticalmente em:
+
+\begin{itemize}
+    \item \textbf{Cabeçalho}: exibe o nome e o tipo do autômato selecionado, com um
+          menu suspenso para escolher qual simulação executar;
+    \item \textbf{Canvas central}: ocupa a maior parte da janela e renderiza o diagrama
+          de estados do autômato, a cadeia de entrada com destaque para os caracteres
+          já consumidos e o histórico das configurações percorridas;
+    \item \textbf{Barra de controle}: oferece botões para avançar (\texttt{Passo}),
+          retroceder (\texttt{Voltar}), reprodução automática (\texttt{Rodar/Pausar})
+          e reinicialização (\texttt{Reset}), além de exibir o progresso da simulação
+          e o veredito final (aceita ou rejeita).
+\end{itemize}
+
+\subsection{Renderização do Diagrama de Estados}
+\label{sec:impl-render}
+
+O diagrama de estados é renderizado por meio da API \textit{canvas} do Iced. O
+algoritmo de \textit{layout} distribui os estados no espaço disponível de acordo com
+as seguintes regras:
+
+\begin{itemize}
+    \item Para um único estado, o posicionamento é centralizado;
+    \item Para dois estados, eles são dispostos horizontalmente com espaçamento
+          proporcional ao raio;
+    \item Para três ou mais estados, a disposição segue um arranjo circular com
+          espaçamento angular uniforme.
+\end{itemize}
+
+Cada estado é desenhado como um círculo preenchido com o nome em texto branco. Estados
+de aceitação são representados com um círculo duplo (anel concêntrico). O estado
+inicial é indicado por uma seta apontando da esquerda. Durante a simulação, os estados
+ativos (que fazem parte do conjunto corrente) são destacados com uma cor de realce
+(azul durante a execução, verde para aceitação, vermelho para rejeição) e um efeito
+pulsante.
+
+As transições são renderizadas como arestas rotuladas entre os estados. Quando
+múltiplos símbolos compartilham a mesma origem e destino, os rótulos são concatenados.
+Transições ativas (executadas no passo corrente) são destacadas com espessura maior e
+cor brilhante.
+
+\subsection{Simulação Visual Passo a Passo}
+\label{sec:impl-visual}
+
+A simulação visual sincroniza o estado do simulador com a renderização do canvas. A
+cada passo, o canvas é atualizado para refletir:
+
+\begin{itemize}
+    \item O conjunto de estados ativos (destacado visualmente);
+    \item A transição executada no último passo (aresta destacada);
+    \item A cadeia de entrada com caracteres já consumidos em verde, o caractere
+          corrente em azul e os caracteres não lidos em cinza;
+    \item O histórico de configurações, exibido como uma linha do tempo na parte
+          inferior do canvas.
+\end{itemize}
+
+A reprodução automática avança a simulação em intervalos de 800 milissegundos,
+permitindo ao estudante acompanhar o processamento sem intervenção manual.
+
+\section{Diagnóstico de Erros com Ariadne}
+\label{sec:impl-ariadne}
+
+Todas as fases do pipeline utilizam a biblioteca Ariadne para a geração de mensagens
+de erro. O diagnóstico inclui:
+
+\begin{itemize}
+    \item O caminho do arquivo e o número da linha;
+    \item Um trecho do código-fonte com realce da região problemática;
+    \item Uma seta primária apontando para a localização exata do erro;
+    \item Setas secundárias para informações complementares (como a declaração
+          original de um estado duplicado);
+    \item Mensagem descritiva em português.
+\end{itemize}
+
+Esse formato de diagnóstico, semelhante ao de compiladores modernos como o \texttt{rustc},
+foi adotado por seu valor pedagógico: o estudante recebe informações claras e
+visualmente organizadas sobre cada erro, facilitando a correção do código-fonte.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2092,7 +2614,225 @@ software em uma única plataforma de experimentação.
 \chapter{Resultados}
 \label{cap:resultados}
 
-% TODO: Apresentar os testes e os resultados obtidos.
+Este capítulo apresenta os resultados obtidos com a implementação da ferramenta Autosim.
+A validação foi realizada por meio de uma suíte de testes automatizados, cobrindo as três
+fases de análise (léxica, sintática e semântica), totalizando 37 casos de teste. Além
+dos testes, foram conduzidas simulações com autômatos clássicos da literatura para
+verificar a correção do simulador e a qualidade dos diagnósticos de erro.
+
+\section{Estratégia de Testes}
+\label{sec:res-estrategia}
+
+Os testes foram organizados em três categorias, cada uma correspondendo a uma fase do
+pipeline de compilação. Todos os testes são executados automaticamente pelo comando
+\texttt{cargo test} e seguem o padrão de testes unitários do ecossistema Rust
+\cite{klabnik2019}. O Quadro~\ref{quad:resumo-testes} apresenta um resumo quantitativo
+da cobertura de testes.
+
+\begin{quadro}[h]
+    \centering
+    \caption{RESUMO DOS TESTES AUTOMATIZADOS}
+    \label{quad:resumo-testes}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|l|c|Z|}
+        \hline
+        \textbf{Categoria} & \textbf{Quantidade} & \textbf{Principais verificações} \\
+        \hline
+        Análise Léxica    & 11  & Palavras reservadas, case-insensitive, literais, epsilon, comentários, erros \\
+        \hline
+        Análise Sintática & 12  & Parsing completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
+        \hline
+        Análise Semântica & 14  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
+        \hline
+        \textbf{Total}    & \textbf{37} &  \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+\section{Testes do Analisador Léxico}
+\label{sec:res-lexer}
+
+Os 11 testes do analisador léxico verificam o reconhecimento correto de cada categoria
+de \textit{token} e o tratamento de casos especiais:
+
+\begin{itemize}
+    \item \textbf{Palavras reservadas} (1 teste): verifica que cada palavra-chave produz
+          o \textit{token} correspondente;
+    \item \textbf{Case-insensitive} (1 teste): verifica que variações de caixa alta e
+          baixa são igualmente reconhecidas (ex.: \texttt{ALFABETO}, \texttt{Automato},
+          \texttt{afd});
+    \item \textbf{Aliases de epsilon} (1 teste): verifica que \texttt{epsilon},
+          \texttt{eps}, \texttt{EPSILON} e \texttt{Eps} produzem o mesmo
+          \textit{token} \texttt{Epsilon};
+    \item \textbf{Símbolos} (1 teste): verifica o reconhecimento de \texttt{\{},
+          \texttt{\}}, \texttt{,} e \texttt{->};
+    \item \textbf{Literais caractere e string} (2 testes): verifica a correta extração
+          do caractere interno em \texttt{'a'} e da string em \texttt{"ab"};
+    \item \textbf{Identificadores} (1 teste): verifica que \texttt{q0} e
+          \texttt{exemplo\_afd} são reconhecidos como \texttt{Ident};
+    \item \textbf{Comentários} (1 teste): verifica que comentários iniciados por
+          \texttt{//} são ignorados;
+    \item \textbf{Espaços em branco} (1 teste): verifica que espaços, tabulações e
+          quebras de linha são ignorados;
+    \item \textbf{Programa completo} (1 teste): verifica a sequência de \textit{tokens}
+          de um arquivo completo;
+    \item \textbf{Token inválido} (1 teste): verifica que um caractere não reconhecido
+          (como \texttt{\%}) produz um erro com o \textit{span} correto (9..10).
+\end{itemize}
+
+Todos os 11 testes do analisador léxico são aprovados com sucesso.
+
+\section{Testes do Analisador Sintático}
+\label{sec:res-parser}
+
+Os 12 testes do analisador sintático verificam a construção correta da AST a partir de
+entradas válidas e o tratamento adequado de entradas malformadas:
+
+\begin{itemize}
+    \item \textbf{Alfabeto apenas} (1 teste): verifica que um programa contendo somente
+          a declaração do alfabeto produz uma AST vazia para autômatos e simulações;
+    \item \textbf{Alfabeto vazio} (1 teste): verifica que \texttt{alfabeto \{ \}} é
+          aceito;
+    \item \textbf{Vírgula final} (1 teste): verifica que uma vírgula após o último
+          elemento da lista é aceita;
+    \item \textbf{AFD completo} (1 teste): verifica que todos os campos de um AFD
+          (estados, inicial, finais, transições) são corretamente extraídos;
+    \item \textbf{AFN com epsilon} (1 teste): verifica que transições $\varepsilon$
+          são corretamente classificadas como \texttt{Symbol::Epsilon};
+    \item \textbf{Transições vazias} (1 teste): verifica que um bloco de transições
+          vazio é aceito;
+    \item \textbf{Múltiplos autômatos} (1 teste): verifica que dois autômatos no mesmo
+          arquivo são ambos reconhecidos;
+    \item \textbf{Múltiplas simulações} (1 teste): verifica que múltiplos comandos de
+          simulação são registrados;
+    \item \textbf{Case-insensitive} (1 teste): verifica que palavras em maiúsculas são
+          aceitas pelo parser;
+    \item \textbf{Erro: palavra-chave ausente} (1 teste): verifica que a ausência da
+          palavra \texttt{inicial} gera mensagem de erro;
+    \item \textbf{Erro: símbolo inválido no alfabeto} (1 teste): verifica que um
+          identificador onde se esperava um caractere literal produz erro;
+    \item \textbf{Erro: tipo de autômato ausente} (1 teste): verifica que a omissão de
+          \texttt{AFD} ou \texttt{AFN} gera erro;
+    \item \textbf{Erro: bloco não terminado} (1 teste): verifica que um bloco sem
+          fechamento produz mensagem de erro;
+    \item \textbf{Erro: símbolo de transição inválido} (1 teste): verifica que um
+          identificador no lugar de um literal de caractere na transição gera erro.
+\end{itemize}
+
+Todos os 12 testes do analisador sintático são aprovados.
+
+\section{Testes do Analisador Semântico}
+\label{sec:res-sema}
+
+Os 14 testes do analisador semântico cobrem as verificações de consistência estrutural
+dos autômatos:
+
+\begin{itemize}
+    \item \textbf{AFD válido} (1 teste): verifica que um AFD semanticamente correto
+          produz uma tabela de símbolos completa;
+    \item \textbf{AFN com epsilon válido} (1 teste): verifica que AFNs com transições
+          $\varepsilon$ são aceitos;
+    \item \textbf{Simulação válida} (1 teste): verifica que uma referência a autômato
+          existente no comando \texttt{simular} é aceita;
+    \item \textbf{Símbolo duplicado no alfabeto} (1 teste): verifica que a repetição
+          de um símbolo no alfabeto é detectada;
+    \item \textbf{Estado duplicado} (1 teste): verifica que a declaração do mesmo
+          estado duas vezes é reportada;
+    \item \textbf{Autômato duplicado} (1 teste): verifica que dois autômatos com o
+          mesmo nome são detectados;
+    \item \textbf{Estado inicial não declarado} (1 teste): verifica que uma referência
+          a estado inexistente como inicial é reportada;
+    \item \textbf{Estado final não declarado} (1 teste): similar ao anterior para
+          estados finais;
+    \item \textbf{Estado de transição não declarado} (1 teste): verifica a detecção de
+          estados não declarados usados em transições;
+    \item \textbf{Símbolo fora do alfabeto} (1 teste): verifica que um símbolo não
+          pertencente ao alfabeto é rejeitado;
+    \item \textbf{Simulação de autômato inexistente} (1 teste): verifica que referência
+          a autômato não declarado é detectada;
+    \item \textbf{AFD não-determinístico} (1 teste): verifica que transições
+          conflitantes em AFD são reportadas;
+    \item \textbf{AFD com transição epsilon} (1 teste): verifica que transições
+          $\varepsilon$ em AFD são rejeitadas;
+    \item \textbf{AFN permite não-determinismo} (1 teste): verifica que transições
+          conflitantes em AFN são permitidas;
+    \item \textbf{Acumulação de múltiplos erros} (1 teste): verifica que o analisador
+          não interrompe a análise no primeiro erro, acumulando ao menos 3 erros
+          simultâneos.
+\end{itemize}
+
+Todos os 14 testes do analisador semântico são aprovados. O teste de acumulação de
+erros confirma que o analisador semântico é capaz de detectar e reportar, em uma única
+execução, problemas de diferentes naturezas (estado inicial ausente, estado final
+ausente, símbolo fora do alfabeto), evitando que o estudante precise corrigir um erro
+de cada vez.
+
+\section{Simulações com Autômatos Clássicos}
+\label{sec:res-classicos}
+
+Para validar a correção do simulador, foram executadas simulações com autômatos
+clássicos da literatura, descritos em \citeonline{hopcroft2006} e
+\citeonline{sipser2012}. O Quadro~\ref{quad:simulacoes} apresenta os resultados obtidos.
+
+\begin{quadro}[h]
+    \centering
+    \caption{SIMULAÇÕES REALIZADAS COM AUTÔMATOS CLÁSSICOS}
+    \label{quad:simulacoes}
+    \small
+    \begin{tabular}{|l|l|c|c|}
+        \hline
+        \textbf{Autômato} & \textbf{Cadeia} & \textbf{Esperado} & \textbf{Obtido} \\
+        \hline
+        AFD: cadeias contendo 01 & \texttt{1101} & Aceita  & Aceita \\
+        AFD: cadeias contendo 01 & \texttt{111}  & Rejeita & Rejeita \\
+        AFD: cadeias contendo 01 & \texttt{101}  & Aceita  & Aceita \\
+        AFD: cadeias contendo 01 & \texttt{000}  & Rejeita & Rejeita \\
+        AFN: cadeias terminadas em 01 & \texttt{001} & Aceita & Aceita \\
+        AFN: cadeias terminadas em 01 & \texttt{010} & Rejeita & Rejeita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{aaa} & Aceita & Aceita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{aabb} & Aceita & Aceita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{ba} & Rejeita & Rejeita \\
+        AFN-$\varepsilon$: $a^*b^*$ & $\varepsilon$ & Aceita & Aceita \\
+        \hline
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Todas as simulações produziram o veredito esperado, confirmando a correção do
+simulador tanto para AFDs quanto para AFNs com transições $\varepsilon$.
+
+\section{Cenários de Diagnóstico de Erro}
+\label{sec:res-erros}
+
+A qualidade dos diagnósticos de erro foi avaliada por meio de arquivos de teste com
+erros propositais, simulando situações reais de uso por estudantes. O
+Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados obtidos.
+
+\begin{quadro}[h]
+    \centering
+    \caption{CENÁRIOS DE TESTE DE DIAGNÓSTICO DE ERRO}
+    \label{quad:cenarios-erro}
+    \small
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Arquivo de teste} & \textbf{Tipo de erro} & \textbf{Diagnóstico gerado} \\
+        \hline
+        \texttt{sema\_error.asl} & 4 erros semânticos & 4 mensagens localizadas \\
+        \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & AFD não pode ter epsilon \\
+        \texttt{sema\_nondeterministic.asl} & AFD não-determinísitco & Transição conflitante \\
+        \texttt{parse\_error.asl} & Falta \texttt{inicial} & "esperava 'inicial'" \\
+        \texttt{symbol\_error.asl} & Caractere inválido & "token inválido" \\
+        \texttt{error\_line3.asl} & Símbolo não esperado & Erro sintático localizado \\
+        \hline
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Em todos os cenários, as mensagens de erro incluíram o número da linha e coluna, o
+trecho do código-fonte com realce e uma descrição do problema em português,
+confirmando a eficácia da estratégia de diagnóstico adotada.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2102,10 +2842,84 @@ software em uma única plataforma de experimentação.
 \chapter{Conclusão}
 \label{cap:conclusao}
 
-% TODO: Apresentar as considerações finais e trabalhos futuros.
-% -------------------------------------------------------------------------------------------------
-% -------------------------------------------------------------------------------------------------
-% -------------------------------------------------------------------------------------------------
+Este trabalho apresentou o desenvolvimento de uma ferramenta educacional baseada em
+Linguagem de Domínio Específico (DSL) para o apoio ao ensino de autômatos finitos com
+simulação visual interativa. A ferramenta, denominada Autosim, foi projetada para
+preencher a lacuna identificada nas ferramentas existentes entre a descrição formal
+textual e a visualização gráfica, oferecendo uma abordagem que integra o rigor da
+compilação com a interatividade da simulação visual.
+
+\section{Síntese das Contribuições}
+\label{sec:conc-contribuicoes}
+
+As contribuições deste trabalho podem ser sintetizadas nos seguintes pontos:
+
+\begin{alineas}
+    \item \textbf{DSL textual para autômatos finitos}: foi projetada e implementada uma
+          linguagem de domínio específico com sintaxe declarativa em português para a
+          descrição formal de AFDs e AFNs com transições $\varepsilon$, cuja gramática
+          foi formalizada em notação EBNF;
+    \item \textbf{Compilador pedagógico}: foi implementado um pipeline completo de
+          compilação com análise léxica (Logos), análise sintática (Chumsky) e análise
+          semântica, capaz de detectar erros estruturais e conceituais com mensagens de
+          diagnóstico localizadas e coloridas;
+    \item \textbf{Simulador passo a passo}: foi desenvolvido um simulador que processa
+          cadeias de entrada sobre autômatos descritos na DSL, registrando o histórico
+          completo de configurações e permitindo navegação bidirecional;
+    \item \textbf{Interface gráfica interativa}: foi construída uma interface gráfica
+          que renderiza automaticamente o diagrama de estados a partir do texto fonte e
+          anima a simulação passo a passo, com destaque visual para os estados ativos e
+          transições percorridas;
+    \item \textbf{Validação experimental}: a ferramenta foi validada por meio de 37
+          testes automatizados e simulações com autômatos clássicos da literatura, com
+          todos os resultados concordando com o esperado.
+\end{alineas}
+
+\section{Limitações}
+\label{sec:conc-limitacoes}
+
+Apesar dos resultados positivos, a ferramenta apresenta limitações que devem ser
+reconhecidas:
+
+\begin{itemize}
+    \item \textbf{Alfabeto único}: todos os autômatos em um mesmo arquivo compartilham
+          o mesmo alfabeto, o que pode ser restritivo para cenários que exijam
+          alfabetos distintos;
+    \item \textbf{Simulador textual}: não há suporte a modo de execução puramente
+          textual (linha de comando) sem a interface gráfica;
+    \item \textbf{Arquivo único}: cada execução processa um único arquivo fonte, sem
+          suporte a módulos ou inclusão de múltiplos arquivos;
+    \item \textbf{Editor básico}: a interface gráfica não inclui editor de texto
+          embutido com realce de sintaxe ou completamento automático;
+    \item \textbf{Operações avançadas}: a ferramenta não oferece conversão automática
+          de AFN para AFD, minimização de estados ou geração de gramáticas regulares.
+\end{itemize}
+
+\section{Trabalhos Futuros}
+\label{sec:conc-trabalhos-futuros}
+
+Com base nas limitações identificadas e no potencial de expansão da ferramenta,
+sugerem-se os seguintes trabalhos futuros:
+
+\begin{itemize}
+    \item \textbf{Editor embutido}: integrar um editor de texto com realce de sintaxe
+          diretamente na interface gráfica, permitindo edição e visualização simultâneas;
+    \item \textbf{Suporte a múltiplos alfabetos}: estender a linguagem para permitir
+          que cada autômato defina seu próprio alfabeto;
+    \item \textbf{Conversões automáticas}: implementar algoritmos de conversão de AFN
+          para AFD (construção de subconjuntos), minimização de AFDs e conversão entre
+          autômatos e expressões regulares;
+    \item \textbf{Modo textual}: adicionar um modo de execução em linha de comando que
+          exiba a simulação textualmente, útil para integração com ferramentas de
+          automação e testes;
+    \item \textbf{Geração de gramáticas}: estender a ferramenta para suportar a
+          descrição e simulação de gramáticas formais (regulares e livres de contexto);
+    \item \textbf{Exportação de imagens}: permitir a exportação do diagrama de estados
+          como imagem para inclusão em relatórios e trabalhos acadêmicos;
+    \item \textbf{Testes com usuários}: realizar estudos controlados com estudantes
+          para avaliar o impacto pedagógico da ferramenta em comparação com abordagens
+          tradicionais.
+\end{itemize}
 
 % =================================================================================================
 % -------------------------------------------------------------------------------------------------
