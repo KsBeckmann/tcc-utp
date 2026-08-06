@@ -61,6 +61,10 @@ como requisito à obtenção do grau de Bacharel.}
 % =================================================================================================
 \begin{document}
 
+% Define o estilo das citações autor-data da norma atualizada:
+% apenas a inicial maiúscula nos sobrenomes (Ex.: (Rodger; Finley, 2006)).
+\nocite{abnt-cite-style=AuthorYEAR}
+
 % =================================================================================================
 % -------------------------------------------------------------------------------------------------
 % - ELEMENTOS PRÉ-TEXTUAIS                                                                        -
@@ -179,7 +183,20 @@ como requisito à obtenção do grau de Bacharel.}
 \chapter{Introdução}
 \label{cap:introducao}
 
-As ferramentas disponíveis atualmente para apoiar esse aprendizado, como
+O estudo de linguagens formais e de autômatos finitos é um dos pilares da
+formação em Ciência da Computação, estando diretamente relacionado à compreensão
+das máquinas abstratas, dos limites da computação e da teoria por trás dos
+compiladores. Apesar de sua importância, essa disciplina é reconhecidamente
+desafiadora para muitos estudantes: exige lidar com um alto grau de abstração
+matemática, no qual conceitos como estados, transições, alfabetos e funções de
+transição precisam ser simultaneamente compreendidos em sua forma simbólica e
+interpretados em situações concretas. Esse distanciamento entre o formalismo
+simbólico e a intuição prática faz com que a aprendizagem dependa fortemente de
+representações visuais e da experimentação, o que evidencia a necessidade de
+ferramentas didáticas que aproximem a teoria da prática computacional de forma
+interativa.
+
+Nesse contexto, ferramentas disponíveis atualmente para apoiar esse aprendizado, como
 o JFLAP \cite{rodger2006jflap}, adotam uma abordagem exclusivamente visual
 baseada em arrastar e soltar, na qual o usuário constrói o autômato posicionando
 estados e conectando transições com o \textit{mouse}. Embora essa abordagem seja útil
@@ -234,9 +251,21 @@ Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e t
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-% 2. Autômatos Finitos e Linguagens Formais (funcamentação teórica)
+% FUNDAMENTAÇÃO TEÓRICA (título de parte sem número)
+% Agrupa os capítulos teóricos: Autômatos Finitos e Linguagens Formais e Compiladores.
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
+\part*{FUNDAMENTAÇÃO TEÓRICA}
+\addcontentsline{toc}{part}{FUNDAMENTAÇÃO TEÓRICA}
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 2. Autômatos Finitos e Linguagens Formais (fundamentação teórica)
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Autômatos Finitos e Linguagens Formais}
+\label{cap:automatos}
+
 \section{Conceitos Fundamentais de Linguagens Formais}
 \label{sec:linguagens-formais}
 O estudo dos autômatos finitos exige a compreensão prévia de algumas estruturas matemáticas
@@ -386,13 +415,13 @@ Restrições impostas sobre a forma das regras de produção dão origem a difer
 consequentemente, a diferentes classes de linguagens. Essa estratificação, conhecida como Hierarquia de 
 Chomsky, organiza as linguagens em quatro categorias (irrestritas, sensíveis ao contexto, livres de contexto
 e regulares), cada uma associada a um modelo computacional específico \cite{vieira2006, lewis1998}.
-O Quadro~\ref{quad:chomsky} sintetiza essa classificação, evidenciando a forma das regras de produção
+O Quadro~\ref{tab:chomsky} sintetiza essa classificação, evidenciando a forma das regras de produção
 admitidas em cada classe e o modelo computacional que reconhece a linguagem correspondente.
 
-\begin{quadro}[h]
+\begin{table}[htpb]
     \centering
-    \caption{HIERARQUIA DE CHOMSKY}
-    \label{quad:chomsky}
+    \caption{Hierarquia de Chomsky}
+    \label{tab:chomsky}
     \small
     \setlength{\tabcolsep}{5pt}
     \begin{tabular}{|c|l|l|l|}
@@ -405,8 +434,10 @@ admitidas em cada classe e o modelo computacional que reconhece a linguagem corr
         3             & Regulares                       & $A \to aB$ ou $A \to a$                  & Autômato finito                  \\
         \hline
     \end{tabular}
-    \fonte{Adaptado de Vieira (2006) e Lewis e Papadimitriou (1998), disponível em: \url{http://www.enderecocompleto.tudo}}
-\end{quadro}
+    
+    \vspace{0.2cm}
+    {\footnotesize Fonte: Adaptado de Vieira (2006) e de Lewis e Papadimitriou (1998).}
+\end{table}
 
 As gramáticas regulares (Tipo 3), em particular, geram exatamente a classe das linguagens reconhecidas
 pelos autômatos finitos, formalismo apresentado nas próximas seções.
@@ -426,7 +457,7 @@ entrada lendo seus símbolos um a um, da esquerda para a direita. A cada símbol
 transita para um novo estado, conforme determinado pela rotulação das arestas. Encerrado o
 processamento da cadeia, se o autômato encontrar-se em um dos estados designados como
 estados finais (ou de aceitação), diz-se que a cadeia foi aceita; caso
-contrário, é rejeitad \cite{hopcroft2006,sipser2012}. O termo
+contrário, é rejeitada \cite{hopcroft2006,sipser2012}. O termo
 \textit{determinístico} reflete a característica de que, para cada combinação de estado atual e
 símbolo de entrada, existe uma única transição possível.
 
@@ -679,7 +710,7 @@ ser facilmente versionado, comparado ou processado por ferramentas automatizadas
 
 A terceira forma é a tabela de transição, que organiza a função $\delta$ em uma matriz
 bidimensional cujas linhas correspondem aos estados e cujas colunas correspondem aos símbolos do
-alfabeto \cite{hopcroft2006}. A Tabela~\ref{tab:tabela-transicao-afd} ilustra essa representação
+alfabeto \cite{hopcroft2006}. A Tabela~\ref{quad:tabela-transicao-afd} ilustra essa representação
 para o AFD da Figura~\ref{fig:afd-exemplo}, que reconhece cadeias contendo $01$ como subcadeia.
 A seta ($\rightarrow$) marca o estado inicial e o asterisco ($*$) destaca o estado de
 aceitação, conforme convenção adotada por \citeonline{hopcroft2006}.
@@ -863,7 +894,7 @@ em uma aplicação concreta dos conceitos apresentados neste capítulo.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-% 2. Compiladores e Linguagens de Domínio Específico (funcamentação teórica)
+% 3. Compiladores e Linguagens de Domínio Específico (fundamentação teórica)
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
 
@@ -1975,8 +2006,8 @@ decisão de projeto da ferramenta proposta.
         \textbf{Trabalho}
             & \textbf{\makecell{DSL\\textual}}
             & \textbf{\makecell{Compilador /\\diagnóstico}}
-            & \textbf{\makecell{\\visual}}
-            & \textbf{\makecell{\\passo\\a passo}}
+            & \textbf{\makecell{Simulação\\visual}}
+            & \textbf{\makecell{Simulação\\passo\\a passo}}
             & \textbf{Plataforma} \\
         \hline
         Writing a Lexer
@@ -2257,7 +2288,7 @@ minúsculas. Isso elimina erros comuns de digitação e torna a linguagem mais
 tolerante para estudantes em fase de aprendizado, sem comprometer a clareza da
 descrição.
 
-\section{Suporte a Transições $\varepsilon$}
+\section{Suporte a Transições \texorpdfstring{$\varepsilon$}{epsilon}}
 \label{sec:dsl-epsilon}
 
 A DSL oferece suporte nativo a transições $\varepsilon$ (vazias), características
@@ -2508,7 +2539,7 @@ A simulação avança em passos lógicos, cada um correspondendo a uma operaçã
 O histórico completo de configurações é armazenado em um vetor, permitindo navegação
 tanto para frente quanto para trás durante a simulação visual.
 
-\subsection{Algoritmo de Fecho-$\varepsilon$}
+\subsection{Algoritmo de Fecho-\texorpdfstring{$\varepsilon$}{epsilon}}
 \label{sec:impl-fecho}
 
 O $\varepsilon$-fechamento é implementado por um algoritmo iterativo que parte do
@@ -2821,7 +2852,7 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
         \hline
         \texttt{sema\_error.asl} & 4 erros semânticos & 4 mensagens localizadas \\
         \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & AFD não pode ter epsilon \\
-        \texttt{sema\_nondeterministic.asl} & AFD não-determinísitco & Transição conflitante \\
+        \texttt{sema\_nondeterministic.asl} & AFD não-determinístico & Transição conflitante \\
         \texttt{parse\_error.asl} & Falta \texttt{inicial} & "esperava 'inicial'" \\
         \texttt{symbol\_error.asl} & Caractere inválido & "token inválido" \\
         \texttt{error\_line3.asl} & Símbolo não esperado & Erro sintático localizado \\
@@ -2847,79 +2878,49 @@ Linguagem de Domínio Específico (DSL) para o apoio ao ensino de autômatos fin
 simulação visual interativa. A ferramenta, denominada Autosim, foi projetada para
 preencher a lacuna identificada nas ferramentas existentes entre a descrição formal
 textual e a visualização gráfica, oferecendo uma abordagem que integra o rigor da
-compilação com a interatividade da simulação visual.
+compilação com a interatividade da simulação. Nesse processo, foi projetada e
+implementada uma DSL textual com sintaxe declarativa em português para a descrição
+formal de autômatos finitos determinísticos e não determinísticos com transições
+$\varepsilon$, cuja gramática foi formalizada em notação EBNF. Sobre essa linguagem,
+foi implementado um compilador pedagógico completo, reunindo análise léxica,
+realizada com a biblioteca Logos, análise sintática, com base na biblioteca Chumsky,
+e análise semântica, capaz de detectar erros estruturais e conceituais com mensagens
+de diagnóstico localizadas e coloridas. Complementarmente, desenvolveu-se um
+simulador que processa cadeias de entrada sobre os autômatos descritos na DSL,
+registrando o histórico completo das configurações intermediárias e permitindo
+navegação bidirecional durante a execução. Por fim, construiu-se uma interface
+gráfica interativa que renderiza automaticamente o diagrama de estados a partir do
+texto fonte e anima a simulação passo a passo, com destaque visual para os estados
+ativos e as transições percorridas. A validação da ferramenta foi realizada por meio
+de 37 testes automatizados, distribuídos entre as fases léxica, sintática e
+semântica, além de simulações com autômatos clássicos da literatura, com todos os
+resultados concordando com o esperado, o que confirma a correção do simulador e a
+qualidade dos diagnósticos gerados.
 
-\section{Síntese das Contribuições}
-\label{sec:conc-contribuicoes}
+No entanto, apesar desses resultados positivos, a ferramenta apresenta limitações
+que devem ser reconhecidas. Todos os autômatos de um mesmo arquivo compartilham um
+único alfabeto, o que pode ser restritivo para cenários que exijam alfabetos
+distintos. Não há suporte a um modo de execução puramente textual em linha de
+comando, sem a interface gráfica, e cada execução processa apenas um arquivo fonte,
+sem suporte a módulos ou inclusão de múltiplos arquivos. A interface gráfica também
+não inclui um editor de texto embutido com realce de sintaxe ou completamento
+automático, e a ferramenta ainda não oferece operações como conversão automática de
+autômatos não determinísticos para determinísticos, minimização de estados ou
+extração de gramáticas formais.
 
-As contribuições deste trabalho podem ser sintetizadas nos seguintes pontos:
-
-\begin{alineas}
-    \item \textbf{DSL textual para autômatos finitos}: foi projetada e implementada uma
-          linguagem de domínio específico com sintaxe declarativa em português para a
-          descrição formal de AFDs e AFNs com transições $\varepsilon$, cuja gramática
-          foi formalizada em notação EBNF;
-    \item \textbf{Compilador pedagógico}: foi implementado um pipeline completo de
-          compilação com análise léxica (Logos), análise sintática (Chumsky) e análise
-          semântica, capaz de detectar erros estruturais e conceituais com mensagens de
-          diagnóstico localizadas e coloridas;
-    \item \textbf{Simulador passo a passo}: foi desenvolvido um simulador que processa
-          cadeias de entrada sobre autômatos descritos na DSL, registrando o histórico
-          completo de configurações e permitindo navegação bidirecional;
-    \item \textbf{Interface gráfica interativa}: foi construída uma interface gráfica
-          que renderiza automaticamente o diagrama de estados a partir do texto fonte e
-          anima a simulação passo a passo, com destaque visual para os estados ativos e
-          transições percorridas;
-    \item \textbf{Validação experimental}: a ferramenta foi validada por meio de 37
-          testes automatizados e simulações com autômatos clássicos da literatura, com
-          todos os resultados concordando com o esperado.
-\end{alineas}
-
-\section{Limitações}
-\label{sec:conc-limitacoes}
-
-Apesar dos resultados positivos, a ferramenta apresenta limitações que devem ser
-reconhecidas:
-
-\begin{itemize}
-    \item \textbf{Alfabeto único}: todos os autômatos em um mesmo arquivo compartilham
-          o mesmo alfabeto, o que pode ser restritivo para cenários que exijam
-          alfabetos distintos;
-    \item \textbf{Simulador textual}: não há suporte a modo de execução puramente
-          textual (linha de comando) sem a interface gráfica;
-    \item \textbf{Arquivo único}: cada execução processa um único arquivo fonte, sem
-          suporte a módulos ou inclusão de múltiplos arquivos;
-    \item \textbf{Editor básico}: a interface gráfica não inclui editor de texto
-          embutido com realce de sintaxe ou completamento automático;
-    \item \textbf{Operações avançadas}: a ferramenta não oferece conversão automática
-          de AFN para AFD, minimização de estados ou geração de gramáticas regulares.
-\end{itemize}
-
-\section{Trabalhos Futuros}
-\label{sec:conc-trabalhos-futuros}
-
-Com base nas limitações identificadas e no potencial de expansão da ferramenta,
-sugerem-se os seguintes trabalhos futuros:
-
-\begin{itemize}
-    \item \textbf{Editor embutido}: integrar um editor de texto com realce de sintaxe
-          diretamente na interface gráfica, permitindo edição e visualização simultâneas;
-    \item \textbf{Suporte a múltiplos alfabetos}: estender a linguagem para permitir
-          que cada autômato defina seu próprio alfabeto;
-    \item \textbf{Conversões automáticas}: implementar algoritmos de conversão de AFN
-          para AFD (construção de subconjuntos), minimização de AFDs e conversão entre
-          autômatos e expressões regulares;
-    \item \textbf{Modo textual}: adicionar um modo de execução em linha de comando que
-          exiba a simulação textualmente, útil para integração com ferramentas de
-          automação e testes;
-    \item \textbf{Geração de gramáticas}: estender a ferramenta para suportar a
-          descrição e simulação de gramáticas formais (regulares e livres de contexto);
-    \item \textbf{Exportação de imagens}: permitir a exportação do diagrama de estados
-          como imagem para inclusão em relatórios e trabalhos acadêmicos;
-    \item \textbf{Testes com usuários}: realizar estudos controlados com estudantes
-          para avaliar o impacto pedagógico da ferramenta em comparação com abordagens
-          tradicionais.
-\end{itemize}
+Diante desse cenário, os desdobramentos futuros buscam superar tais limitações e
+ampliar o alcance pedagógico da ferramenta. Pretende-se integrar um editor de texto
+com realce de sintaxe diretamente na interface gráfica, estendendo-o a permitir
+edição e visualização simultâneas, além de suportar alfabetos distintos por
+autômato. Também se planeja implementar algoritmos de conversão de autômatos não
+determinísticos para determinísticos pela construção de subconjuntos, de minimização
+de estados e de conversão entre autômatos e expressões regulares, bem como adicionar
+um modo de execução textual em linha de comando, útil para automação e testes.
+Outras direções incluem estender a ferramenta à descrição e simulação de gramáticas
+formais, permitir a exportação do diagrama de estados como imagem para inclusão em
+relatórios e realizar estudos controlados com estudantes, a fim de avaliar de modo
+rigoroso o impacto pedagógico da ferramenta em comparação com métodos tradicionais de
+ensino.
 
 % =================================================================================================
 % -------------------------------------------------------------------------------------------------
