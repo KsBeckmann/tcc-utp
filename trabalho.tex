@@ -99,7 +99,7 @@ como requisito à obtenção do grau de Bacharel.}
     funcionamento de autômatos finitos, conectando a teoria de autômatos à prática de compiladores
     em um único instrumento educacional.
     
-    \palavraschave{autômatos finitos; linguagem de domínio específico; compiladores; simulação visual; ensino de computação.}
+    \palavraschave{autômatos finitos; linguagem de domínio específico; compiladores; simulação visual; ensino de computação}
 \end{resumo}
 
 
@@ -121,19 +121,19 @@ como requisito à obtenção do grau de Bacharel.}
 \begin{siglas}
     \item[AFD]   Autômato Finito Determinístico
     \item[AFN]   Autômato Finito Não-Determinístico
-    \item[AST]   Árvore Sintática Abstrata
-    \item[BNF]   Forma de Backus-Naur
-    \item[DSL]   Linguagem de Domínio Específico
-    \item[EBNF]  Forma de Backus-Naur Estendida
+    \item[AST]   \textit{Abstract Syntax Tree} (Árvore Sintática Abstrata)
+    \item[BNF]   \textit{Backus-Naur Form} (Forma de Backus-Naur)
+    \item[DSL]   \textit{Domain-Specific Language} (Linguagem de Domínio Específico)
+    \item[EBNF]  \textit{Extended Backus-Naur Form} (Forma de Backus-Naur Estendida)
     \item[FSM]   \textit{Finite State Machine} (Máquina de Estados Finitos)
-    \item[GNU]   GNU's Not Unix (GNU Não é Unix)
-    \item[GTK]   GIMP Toolkit (Conjunto de Ferramentas do GIMP)
+    \item[GNU]   \textit{GNU's Not Unix} (GNU Não é Unix)
+    \item[GTK]   \textit{GIMP Toolkit} (Conjunto de Ferramentas do GIMP)
     \item[JVM]   \textit{Java Virtual Machine} (Máquina Virtual Java)
     \item[LALR]  \textit{Look-Ahead LR} (LR com Visualização de Próximo Símbolo)
     \item[LL]    \textit{Left-to-right, Leftmost derivation} (Esquerda para a direita, Derivação mais à esquerda)
     \item[LLVM]  \textit{Low Level Virtual Machine} (Máquina Virtual de Baixo Nível)
     \item[LR]    \textit{Left-to-right, Rightmost derivation} (Esquerda para a direita, Derivação mais à direita)
-    \item[PEG]   Gramática de Expressão de Análise
+    \item[PEG]   \textit{Parsing Expression Grammar} (Gramática de Expressão de Análise)
     \item[SQL]   \textit{Structured Query Language} (Linguagem de Consulta Estruturada)
     \item[UFSC]  Universidade Federal de Santa Catarina
     \item[URL]   \textit{Uniform Resource Locator} (Localizador Uniforme de Recursos)
@@ -209,8 +209,8 @@ problema.
 Diante desse cenário, este trabalho propõe o desenvolvimento de uma ferra-
 menta educacional que adota uma abordagem baseada em texto formal e compilação
 pedagógica. A principal contribuição inédita desta solução é o acoplamento direto entre
-uma Linguagem de Domínio Específico (DSL) textual e a geração automática de uma
-interface gráfica interativa sincronizada. Isso diferencia a ferramenta do JFLAP de duas
+uma \textit{Domain-Specific Language} (DSL), ou seja, uma linguagem de domínio específico
+textual, e a geração automática de uma interface gráfica interativa sincronizada. Isso diferencia a ferramenta do JFLAP de duas
 formas fundamentais: primeiro, substitui a modelagem puramente visual e propensa a
 erros de clique por uma descrição declarativa estruturada, permitindo o uso de ferra-
 mentas de versionamento de código (como o Git); segundo, introduz uma infraestrutura
@@ -228,7 +228,9 @@ e da depuração contextual.
 
 \begin{alineas}
     \item projetar uma DSL textual com sintaxe declarativa própria para a descrição formal de AFDs e
-    AFNs, com a gramática formalizada em notação BNF/EBNF;
+    AFNs, com a gramática formalizada nas notações \textit{Backus-Naur Form} (BNF) e
+    \textit{Extended Backus-Naur Form} (EBNF), ou seja, forma de Backus-Naur e sua
+    versão estendida;
     \item implementar um compilador pedagógico para a DSL com análise léxica, sintática e semântica,
     focado na detecção precoce de erros de consistência formal e na geração de mensagens de diagnóstico localizadas;
     \item desenvolver um simulador capaz de processar cadeias de entrada sobre os autômatos
@@ -288,7 +290,7 @@ binário, enquanto $\Sigma_2 = \{a, b, c, \ldots, z\}$ corresponde ao alfabeto l
 exigência de finitude é fundamental, pois garante que os autômatos, definidos nas seções
 seguintes, possam manipular o alfabeto de forma efetiva; a não vacuidade, por sua vez, assegura
 que sempre haja ao menos um símbolo disponível para a formação de palavras
-\cite{vieira2006,diverio2011}.
+\cite{diverio2011,vieira2004}.
 
 Sobre um alfabeto $\Sigma$, define-se uma palavra (ou cadeia) como uma sequência finita
 de símbolos pertencentes a $\Sigma$, escritos de forma justaposta e sem separadores. O comprimento
@@ -297,11 +299,11 @@ de comprimento zero, denominada palavra vazia, é representada pelo símbolo $\v
 \cite{sipser2012}. O conjunto de todas as palavras que podem ser formadas sobre $\Sigma$,
 incluindo a palavra vazia, é denotado por $\Sigma^*$. Assim, para $\Sigma = \{a, b\}$, tem-se
 $\Sigma^* = \{\varepsilon, a, b, aa, ab, ba, bb, aaa, \ldots\}$, conjunto que é sempre infinito e
-enumerável \cite{vieira2006}.
+enumerável \cite{vieira2004}.
 Estabelecidas as noções de alfabeto e palavra, é possível definir o objeto central deste trabalho:
 a linguagem. Uma linguagem formal sobre um alfabeto $\Sigma$ é qualquer subconjunto de
 $\Sigma^*$, ou seja, qualquer conjunto de palavras formadas a partir dos símbolos de $\Sigma$
-\cite{sipser2012,vieira2006}. Linguagens podem ser finitas, como $L_1 = \{a, ab, abb\}$, ou
+\cite{sipser2012,vieira2004}. Linguagens podem ser finitas, como $L_1 = \{a, ab, abb\}$, ou
 infinitas, como $L_2 = \{a^n b^n \mid n \geq 1\}$, que contém todas as palavras compostas por uma
 sequência de $a$'s seguida de igual número de $b$'s. A maior parte das linguagens de interesse
 teórico e prático é infinita, o que motiva o desenvolvimento de mecanismos formais, como
@@ -310,7 +312,7 @@ gramáticas e autômatos, capazes de descrevê-las de maneira finita.
 Por serem conjuntos, as linguagens admitem as operações usuais de união,
 interseção e diferença. Além dessas, três operações específicas, derivadas da
 estrutura sequencial das palavras, desempenham papel central na teoria
-\cite{vieira2006,diverio2011}. A concatenação de duas palavras
+\cite{diverio2011,vieira2004}. A concatenação de duas palavras
 $x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$ produz a palavra
 $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular, $w\varepsilon = \varepsilon w = w$
 para qualquer palavra $w$, o que faz de $\varepsilon$ o elemento neutro dessa operação. A
@@ -329,7 +331,7 @@ infinita, o que torna inviável descrevê-las pela enumeração explícita de su
 necessário, portanto, um mecanismo finito capaz de gerar todas as palavras de uma linguagem.
 Entre os formalismos propostos para esse fim, as gramáticas ocupam posição de destaque,
 tanto pelo seu poder expressivo quanto pela estreita relação com os autômatos estudados nas
-seções subsequentes \cite{vieira2006,lewis1998}.
+seções subsequentes \cite{lewis1998,vieira2004}.
 
 Uma gramática descreve uma linguagem por meio de um conjunto finito de regras de
 produção, que indicam como certas sequências de símbolos podem ser substituídas por outras.
@@ -342,7 +344,7 @@ variável de partida), e prossegue pela aplicação sucessiva das regras até qu
 sequência de terminais.
 
 Formalmente, uma gramática é uma quádrupla $G = (V, \Sigma, R, S)$, na qual
-\cite{vieira2006,lewis1998}:
+\cite{lewis1998,vieira2004}:
 \begin{itemize}
     \item $V$ é um conjunto finito de variáveis (símbolos não-terminais);
     \item $\Sigma$ é um alfabeto de símbolos terminais, com $V \cap \Sigma = \varnothing$;
@@ -366,7 +368,7 @@ A aplicação sucessiva de regras, isto é, o fecho reflexivo e transitivo de $\
 denotada por $\Rightarrow^*$. A linguagem gerada pela gramática $G$ é o conjunto de
 todas as palavras formadas exclusivamente por terminais que podem ser obtidas a partir do
 símbolo inicial: $L(G) = \{ w \in \Sigma^* \mid S \Rightarrow^* w \}$
-\cite{vieira2006,sipser2012}.
+\cite{sipser2012,vieira2004}.
 
 A título de ilustração, considere a gramática $G = (\{S\}, \{a, b\}, R, S)$, em que
 $R = \{S \to aSb,\ S \to \varepsilon\}$. Partindo do símbolo inicial $S$, é possível obter, por
@@ -414,14 +416,14 @@ adiante, não pode ser gerada por nenhum mecanismo mais restrito que uma gramát
 Restrições impostas sobre a forma das regras de produção dão origem a diferentes classes de gramáticas e,
 consequentemente, a diferentes classes de linguagens. Essa estratificação, conhecida como Hierarquia de 
 Chomsky, organiza as linguagens em quatro categorias (irrestritas, sensíveis ao contexto, livres de contexto
-e regulares), cada uma associada a um modelo computacional específico \cite{vieira2006, lewis1998}.
-O Quadro~\ref{tab:chomsky} sintetiza essa classificação, evidenciando a forma das regras de produção
+e regulares), cada uma associada a um modelo computacional específico \cite{lewis1998, vieira2004}.
+O Quadro~\ref{quad:chomsky} sintetiza essa classificação, evidenciando a forma das regras de produção
 admitidas em cada classe e o modelo computacional que reconhece a linguagem correspondente.
 
-\begin{table}[htpb]
+\begin{quadro}[htpb]
     \centering
-    \caption{Hierarquia de Chomsky}
-    \label{tab:chomsky}
+    \caption{HIERARQUIA DE CHOMSKY}
+    \label{quad:chomsky}
     \small
     \setlength{\tabcolsep}{5pt}
     \begin{tabular}{|c|l|l|l|}
@@ -434,10 +436,8 @@ admitidas em cada classe e o modelo computacional que reconhece a linguagem corr
         3             & Regulares                       & $A \to aB$ ou $A \to a$                  & Autômato finito                  \\
         \hline
     \end{tabular}
-    
-    \vspace{0.2cm}
-    {\footnotesize Fonte: Adaptado de Vieira (2006) e de Lewis e Papadimitriou (1998).}
-\end{table}
+    \fonte{Adaptado de \citeonline[p. 222--228]{vieira2004} e \citeonline[p. 271--272]{lewis1998}}
+\end{quadro}
 
 As gramáticas regulares (Tipo 3), em particular, geram exatamente a classe das linguagens reconhecidas
 pelos autômatos finitos, formalismo apresentado nas próximas seções.
@@ -499,10 +499,10 @@ $01$ como subcadeia \cite{hopcroft2006}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/automato_finito_deterministico.png}
     \caption{AFD QUE RECONHECE CADEIAS CONTENDO $01$ COMO SUBCADEIA}
     \label{fig:afd-exemplo}
-    \fonte{\citeonline{hopcroft2006}}
+    \includegraphics[width=0.75\textwidth]{img/automato_finito_deterministico.png}
+    \fonte{\citeonline[p. 48]{hopcroft2006}}
 \end{figure}
 
 Formalmente, o autômato da Figura~\ref{fig:afd-exemplo} é descrito como
@@ -577,10 +577,10 @@ a linguagem das cadeias sobre $\{0, 1\}$ que terminam em $01$ \cite{hopcroft2006
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/automato_finito_nao_deterministico.png}
     \caption{AFN QUE RECONHECE CADEIAS TERMINADAS EM $01$}
     \label{fig:afn-exemplo}
-    \fonte{\citeonline{hopcroft2006}}
+    \includegraphics[width=0.75\textwidth]{img/automato_finito_nao_deterministico.png}
+    \fonte{\citeonline[p. 56]{hopcroft2006}}
 \end{figure}
 
 Esse autômato é descrito formalmente como
@@ -663,10 +663,10 @@ na Figura~\ref{fig:afd-construido}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.85\textwidth]{img/dfa_construida_a_partir_da_nfa.png}
-    \caption{AFD CONSTRUIDO A PARTIR DO AFN DA FIGURA~\ref{fig:afn-exemplo} PELA CONSTRUÇÃO DE SUBCONJUNTOS}
+    \caption{AFD CONSTRUÍDO A PARTIR DO AFN DA FIGURA~\ref{fig:afn-exemplo} PELA CONSTRUÇÃO DE SUBCONJUNTOS}
     \label{fig:afd-construido}
-    \fonte{\citeonline{hopcroft2006}}
+    \includegraphics[width=0.85\textwidth]{img/dfa_construida_a_partir_da_nfa.png}
+    \fonte{\citeonline[p. 63]{hopcroft2006}}
 \end{figure}
 
 Observa-se que o AFD resultante possui apenas três estados ($\{q_0\}$, $\{q_0, q_1\}$ e
@@ -710,7 +710,7 @@ ser facilmente versionado, comparado ou processado por ferramentas automatizadas
 
 A terceira forma é a tabela de transição, que organiza a função $\delta$ em uma matriz
 bidimensional cujas linhas correspondem aos estados e cujas colunas correspondem aos símbolos do
-alfabeto \cite{hopcroft2006}. A Tabela~\ref{quad:tabela-transicao-afd} ilustra essa representação
+alfabeto \cite{hopcroft2006}. O Quadro~\ref{quad:tabela-transicao-afd} ilustra essa representação
 para o AFD da Figura~\ref{fig:afd-exemplo}, que reconhece cadeias contendo $01$ como subcadeia.
 A seta ($\rightarrow$) marca o estado inicial e o asterisco ($*$) destaca o estado de
 aceitação, conforme convenção adotada por \citeonline{hopcroft2006}.
@@ -733,7 +733,7 @@ aceitação, conforme convenção adotada por \citeonline{hopcroft2006}.
         $* q_1$                     & $q_1$      & $q_1$      \\
         \hline
     \end{tabular}
-    \fonte{Adaptado de \citeonline{hopcroft2006}}
+    \fonte{Adaptado de \citeonline[p. 49]{hopcroft2006}}
 \end{quadro}
 
 A leitura da tabela é direta: cada célula $(q, a)$ contém o estado $\delta(q, a)$ para o qual o
@@ -972,17 +972,17 @@ a parte de síntese constitui o \textit{back-end}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{img/fases_de_um_compilador.png}
     \caption{FASES DE UM COMPILADOR}
     \label{fig:fases-compilador}
-    \fonte{Aho et al. (2008)}
+    \includegraphics[width=0.7\textwidth]{img/fases_de_um_compilador.png}
+    \fonte{\citeonline[p. 4]{aho2008}}
 \end{figure}
 
 A etapa de análise costuma ser subdividida em três fases. A análise léxica (também
 chamada de \textit{scanning} ou leitura) percorre o fluxo de caracteres do programa fonte e os
 agrupa em sequências significativas, denominadas lexemas; para cada lexema, produz um
 \textit{token}, isto é, um par formado por um nome simbólico e, eventualmente, um valor de
-atributo associado. A análise sintática recebe o fluxo de tokens produzido pela
+atributo associado. A análise sintática recebe o fluxo de \textit{tokens} produzido pela
 fase léxica e o organiza em uma estrutura hierárquica, em geral uma árvore de sintaxe, que torna
 explícita a estrutura gramatical do programa. Por fim, a análise semântica percorre essa
 árvore para verificar a consistência de tipos e o cumprimento de outras regras da linguagem que
@@ -1029,10 +1029,10 @@ acesso uniforme às informações sobre os identificadores do programa \cite{aho
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{img/interacao_lexico_sintatico.png}
     \caption{INTERAÇÕES ENTRE O ANALISADOR LÉXICO E O ANALISADOR SINTÁTICO}
     \label{fig:interacao-lexico-sintatico}
-    \fonte{Aho et al. (2008)}
+    \includegraphics[width=0.7\textwidth]{img/interacao_lexico_sintatico.png}
+    \fonte{\citeonline[p. 70]{aho2008}}
 \end{figure}
 
 A separação entre análise léxica e análise sintática, embora pudesse, em princípio, ser dispensada,
@@ -1046,7 +1046,7 @@ codificação de caracteres ficam restritas ao analisador léxico, sem afetar as
 compilador.
 
 A discussão sobre análise léxica apoia-se em três termos relacionados, porém distintos. Um
-token é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
+\textit{token} é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
 o nome representa, de forma abstrata, uma classe de unidade léxica, como uma palavra-chave
 específica ou a categoria genérica de identificador. Um padrão é uma descrição da forma
 que os lexemas associados a um \textit{token} podem assumir, em geral expressa por meio de uma
@@ -1440,8 +1440,8 @@ desse trabalho. Esta seção apresenta as principais classes de ferramentas util
 construção de compiladores, em particular daqueles destinados a DSLs, organizadas conforme a
 classificação proposta por Fowler \cite{fowler2010}.
 
-A primeira e mais tradicional classe de ferramentas é a dos \textbf{geradores de analisadores
-sintáticos}, também chamados de \textit{parser generators}. Nessa abordagem, o implementador
+A primeira e mais tradicional classe de ferramentas é a dos geradores de analisadores
+sintáticos, também chamados de \textit{parser generators}. Nessa abordagem, o implementador
 descreve a linguagem por meio de uma gramática livre de contexto, escrita em uma notação
 próxima da BNF apresentada na Seção~\ref{sec:sintatica}, eventualmente acrescida de ações
 semânticas associadas a cada produção. A ferramenta toma essa especificação como entrada e
@@ -1534,13 +1534,13 @@ contribui com um vocabulário próprio de erros, e cada uma demanda mecanismos e
 detectá-los e para recuperar-se deles a fim de prosseguir o processamento.
 
 Independentemente da fase em que ocorrem, os erros relatados por um compilador são tanto mais
-úteis quanto melhor satisfazem três critérios fundamentais. O primeiro é a \textbf{precisão da
-localização}, isto é, a indicação inequívoca, em termos de linha e coluna do arquivo fonte, do
+úteis quanto melhor satisfazem três critérios fundamentais. O primeiro é a precisão da
+localização, isto é, a indicação inequívoca, em termos de linha e coluna do arquivo fonte, do
 ponto do programa em que o erro foi detectado. O segundo é a clareza da mensagem, ou
 seja, a expressão do erro em uma linguagem natural compreensível para o usuário, evitando jargão
 técnico desnecessário e, sempre que possível, indicando o que se esperava encontrar e o que foi
-de fato encontrado. O terceiro é a \textbf{capacidade de detectar múltiplos erros em uma única
-execução}, evitando que o usuário tenha de repetir o ciclo de compilação diversas vezes para
+de fato encontrado. O terceiro é a capacidade de detectar múltiplos erros em uma única
+execução, evitando que o usuário tenha de repetir o ciclo de compilação diversas vezes para
 descobrir, sucessivamente, defeitos que poderiam ter sido reportados em conjunto.
 
 A recuperação após o primeiro erro, requisito para que o compilador prossiga a análise e detecte
@@ -1993,44 +1993,47 @@ técnicos mais relevantes para o presente trabalho. Complementarmente, o
 Quadro~\ref{quad:comparativo-qualitativo} evidencia de que modo cada estudo fundamenta uma
 decisão de projeto da ferramenta proposta.
 
-\begin{quadro}[h]
+\begin{quadro}[htbp]
     \centering
     \caption{COMPARAÇÃO DE RECURSOS TÉCNICOS ENTRE OS TRABALHOS RELACIONADOS}
     \label{quad:comparativo-recursos}
     \footnotesize
-    \setlength{\tabcolsep}{3pt}
+    \setlength{\tabcolsep}{2pt}
     \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
-    \begin{tabularx}{\textwidth}{|>{\hsize=1.4\hsize\raggedright\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|>{\hsize=0.72\hsize\centering\arraybackslash}X|}
+    \begin{tabularx}{\textwidth}{|>{\hsize=1.28\hsize\raggedright\arraybackslash}X|>{\hsize=0.80\hsize\centering\arraybackslash}X|>{\hsize=0.95\hsize\centering\arraybackslash}X|>{\hsize=1.15\hsize\centering\arraybackslash}X|>{\hsize=0.97\hsize\centering\arraybackslash}X|>{\hsize=0.95\hsize\centering\arraybackslash}X|>{\hsize=0.90\hsize\centering\arraybackslash}X|>{\hsize=1.00\hsize\centering\arraybackslash}X|}
         \hline
         \textbf{Trabalho}
             & \textbf{\makecell{DSL\\textual}}
-            & \textbf{\makecell{Compilador /\\diagnóstico}}
+            & \textbf{\makecell{Versiona-\\mento}}
+            & \textbf{\makecell{Compilador\\/ diagnóstico}}
             & \textbf{\makecell{Simulação\\visual}}
-            & \textbf{\makecell{Simulação\\passo\\a passo}}
+            & \textbf{\makecell{Simulação\\passo a\\passo}}
+            & \textbf{\makecell{Voltada\\ao ensino}}
             & \textbf{Plataforma} \\
         \hline
         Writing a Lexer
-            & Não & Não & Não & Linha de comando & Rust (Nativo) \\
+            & Não & Sim & Não & Não & Linha de comando & Não & Rust (Nativo) \\
         \hline
         JFLAP
-            & Não & Não & Sim & Sim & Desktop (Java) \\
+            & Não & Não & Não & Sim & Sim & Sim & Desktop (Java) \\
         \hline
         GAM
-            & Não & Não & Sim & Parcial & Desktop (C++/GTK) \\
+            & Não & Não & Não & Sim & Parcial & Sim & Desktop (C++/GTK) \\
         \hline
         Simulador UFSC
-            & Não & Não & Sim & Sim & Web (Navegador) \\
+            & Não & Não & Não & Sim & Sim & Sim & Web (Navegador) \\
         \hline
         AutomatoGraph
-            & Não & Não & Parcial & Parcial & Desktop (Java) \\
+            & Não & Não & Não & Parcial & Parcial & Sim & Desktop (Java) \\
         \hline
         \textbf{Este trabalho}
-            & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Desktop} \\
+            & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Desktop} \\
         \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{quadro}
+\FloatBarrier
 
 Ao analisar criticamente o cenário delineado nos Quadros~\ref{quad:comparativo-recursos}
 e~\ref{quad:comparativo-qualitativo}, observa-se que nenhuma das ferramentas focadas
@@ -2039,7 +2042,7 @@ qualquer tipo de edição textual estruturada ou suporte nativo a versionamento 
 estudante fica restrito a cliques do \textit{mouse}, impossibilitado de utilizar ferramentas
 de gerência de configuração como o Git.
 
-Além disso, o vácuo de retroalimentação se torna evidente na ausência completa de uma
+Além disso, a ausência de retroalimentação imediata se torna evidente na falta completa de uma
 infraestrutura de compilador nessas soluções didáticas: nenhuma delas possui análise léxica,
 sintática ou semântica capaz de interceptar erros conceituais na raiz (como transições para
 estados não declarados) antes da execução. Embora o JFLAP e o Simulador UFSC entreguem uma
@@ -2068,27 +2071,27 @@ software em uma única plataforma de experimentação.
         \textbf{Trabalho} & \textbf{Contribuição / Lacuna identificada para o projeto} \\
         \hline
         Writing a Lexer
-            & \textbf{Contribuição:} Demonstra a viabilidade prática e a segurança de tipos
+            & Contribuição: Demonstra a viabilidade prática e a segurança de tipos
             da linguagem Rust para modelar e codificar estados de autômatos formalmente. \\
         \hline
         JFLAP
-            & \textbf{Lacuna:} Interface de modelagem puramente visual baseada em cliques;
+            & Lacuna: Interface de modelagem puramente visual baseada em cliques;
             impede o armazenamento estruturado em texto e o versionamento por código. \\
         \hline
         GAM
-            & \textbf{Lacuna:} Restrição de escopo severa (limite de 10 estados e 3 símbolos),
+            & Lacuna: Restrição de escopo severa (limite de 10 estados e 3 símbolos),
             o que inviabiliza o mapeamento de exemplos complexos da literatura. \\
         \hline
         Simulador UFSC
-            & \textbf{Contribuição:} Apresenta excelente portabilidade via ambiente web, mas
+            & Contribuição: Apresenta excelente portabilidade via ambiente web, mas
             perpetua a dependência da construção no domínio puramente gráfico. \\
         \hline
         AutomatoGraph
-            & \textbf{Contribuição:} Reforça a equivalência formal ao gerar gramáticas
+            & Contribuição: Reforça a equivalência formal ao gerar gramáticas
             automáticas, mas carece de animação interativa do diagrama em tempo real. \\
         \hline
         \textbf{Este trabalho}
-            & \textbf{Decisão de projeto:} Une o rigor da descrição declarativa textual
+            & Decisão de projeto: Une o rigor da descrição declarativa textual
             (Git-friendly) à esteira de compilação pedagógica e à animação visual síncrona. \\
         \hline
     \end{tabularx}
@@ -2163,7 +2166,7 @@ Figura~\ref{fig:gramatica-dsl}. A linguagem é livre de contexto e foi projetada
 analisável por um \textit{parser} descendente preditivo com um símbolo de
 \textit{lookahead}.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \caption{GRAMÁTICA DA DSL AUTOSIM EM NOTAÇÃO EBNF}
     \label{fig:gramatica-dsl}
@@ -2189,6 +2192,7 @@ comando_simulacao ::= "simular" ident "com" cadeia_literal
     \end{lstlisting}
     \fonte{Os autores (\the\year)}
 \end{figure}
+\FloatBarrier
 
 Os terminais da gramática são definidos conforme as expressões regulares
 apresentadas no Quadro~\ref{quad:terminais-dsl}.
@@ -2373,15 +2377,15 @@ reservadas utilizam o atributo \texttt{ignore(case)} para garantir insensibilida
 maiúsculas e minúsculas. São reconhecidas as seguintes categorias de \textit{tokens}:
 
 \begin{itemize}
-    \item \textbf{Palavras reservadas}: \texttt{alfabeto}, \texttt{automato},
+    \item Palavras reservadas: \texttt{alfabeto}, \texttt{automato},
           \texttt{AFD}, \texttt{AFN}, \texttt{estados}, \texttt{inicial},
           \texttt{finais}, \texttt{transicoes}, \texttt{simular}, \texttt{com},
           \texttt{epsilon}, \texttt{eps};
-    \item \textbf{Símbolos}: \texttt{ChaveAberta} (\{), \texttt{ChaveFechada} (\}),
+    \item Símbolos: \texttt{ChaveAberta} (\{), \texttt{ChaveFechada} (\}),
           \texttt{Vírgula} (,), \texttt{Seta} (\texttt{-{}-{}});
-    \item \textbf{Literais}: \texttt{CharLiteral} (\texttt{'a'}), \texttt{StringLiteral}
+    \item Literais: \texttt{CharLiteral} (\texttt{'a'}), \texttt{StringLiteral}
           (\texttt{"ab"});
-    \item \textbf{Identificadores}: \texttt{Ident} (\texttt{q0}, \texttt{exemplo}).
+    \item Identificadores: \texttt{Ident} (\texttt{q0}, \texttt{exemplo}).
 \end{itemize}
 
 Espaços em branco e comentários (iniciados por \texttt{//}) são reconhecidos por padrões
@@ -2523,14 +2527,14 @@ para AFNs, pode conter múltiplos estados.
 A simulação avança em passos lógicos, cada um correspondendo a uma operação atômica:
 
 \begin{enumerate}
-    \item \textbf{Fecho-$\varepsilon$}: se o $\varepsilon$-fechamento do conjunto
+    \item Fecho-$\varepsilon$: se o $\varepsilon$-fechamento do conjunto
           corrente de estados expande o conjunto (incorporando novos estados
           alcançáveis por transições $\varepsilon$), um passo de fecho é executado;
-    \item \textbf{Consumo de caractere}: caso o fecho-$\varepsilon$ já esteja
+    \item Consumo de caractere: caso o fecho-$\varepsilon$ já esteja
           saturado e ainda haja caracteres na entrada, o simulador consome o
           próximo caractere, calculando o conjunto de estados alcançáveis a partir
           do conjunto corrente por meio de transições rotuladas com esse caractere;
-    \item \textbf{Término}: quando não há mais caracteres a consumir e o
+    \item Término: quando não há mais caracteres a consumir e o
           fecho-$\varepsilon$ está saturado, a simulação termina. Se algum dos
           estados do conjunto corrente pertence ao conjunto de estados finais, a
           cadeia é aceita; caso contrário, é rejeitada.
@@ -2562,12 +2566,12 @@ três áreas principais.
 A janela da aplicação organiza-se verticalmente em:
 
 \begin{itemize}
-    \item \textbf{Cabeçalho}: exibe o nome e o tipo do autômato selecionado, com um
+    \item Cabeçalho: exibe o nome e o tipo do autômato selecionado, com um
           menu suspenso para escolher qual simulação executar;
-    \item \textbf{Canvas central}: ocupa a maior parte da janela e renderiza o diagrama
+    \item Canvas central: ocupa a maior parte da janela e renderiza o diagrama
           de estados do autômato, a cadeia de entrada com destaque para os caracteres
           já consumidos e o histórico das configurações percorridas;
-    \item \textbf{Barra de controle}: oferece botões para avançar (\texttt{Passo}),
+    \item Barra de controle: oferece botões para avançar (\texttt{Passo}),
           retroceder (\texttt{Voltar}), reprodução automática (\texttt{Rodar/Pausar})
           e reinicialização (\texttt{Reset}), além de exibir o progresso da simulação
           e o veredito final (aceita ou rejeita).
@@ -2670,9 +2674,9 @@ da cobertura de testes.
         \hline
         \textbf{Categoria} & \textbf{Quantidade} & \textbf{Principais verificações} \\
         \hline
-        Análise Léxica    & 11  & Palavras reservadas, case-insensitive, literais, epsilon, comentários, erros \\
+        Análise Léxica    & 11  & Palavras reservadas, \textit{case-insensitive}, literais, epsilon, comentários, erros \\
         \hline
-        Análise Sintática & 12  & Parsing completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
+        Análise Sintática & 12  & \textit{Parsing} completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
         \hline
         Análise Semântica & 14  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
         \hline
@@ -2689,27 +2693,27 @@ Os 11 testes do analisador léxico verificam o reconhecimento correto de cada ca
 de \textit{token} e o tratamento de casos especiais:
 
 \begin{itemize}
-    \item \textbf{Palavras reservadas} (1 teste): verifica que cada palavra-chave produz
+    \item Palavras reservadas (1 teste): verifica que cada palavra-chave produz
           o \textit{token} correspondente;
-    \item \textbf{Case-insensitive} (1 teste): verifica que variações de caixa alta e
+    \item \textit{Case-insensitive} (1 teste): verifica que variações de caixa alta e
           baixa são igualmente reconhecidas (ex.: \texttt{ALFABETO}, \texttt{Automato},
           \texttt{afd});
-    \item \textbf{Aliases de epsilon} (1 teste): verifica que \texttt{epsilon},
+    \item Aliases de epsilon (1 teste): verifica que \texttt{epsilon},
           \texttt{eps}, \texttt{EPSILON} e \texttt{Eps} produzem o mesmo
           \textit{token} \texttt{Epsilon};
-    \item \textbf{Símbolos} (1 teste): verifica o reconhecimento de \texttt{\{},
+    \item Símbolos (1 teste): verifica o reconhecimento de \texttt{\{},
           \texttt{\}}, \texttt{,} e \texttt{->};
-    \item \textbf{Literais caractere e string} (2 testes): verifica a correta extração
+    \item Literais caractere e string (2 testes): verifica a correta extração
           do caractere interno em \texttt{'a'} e da string em \texttt{"ab"};
-    \item \textbf{Identificadores} (1 teste): verifica que \texttt{q0} e
+    \item Identificadores (1 teste): verifica que \texttt{q0} e
           \texttt{exemplo\_afd} são reconhecidos como \texttt{Ident};
-    \item \textbf{Comentários} (1 teste): verifica que comentários iniciados por
+    \item Comentários (1 teste): verifica que comentários iniciados por
           \texttt{//} são ignorados;
-    \item \textbf{Espaços em branco} (1 teste): verifica que espaços, tabulações e
+    \item Espaços em branco (1 teste): verifica que espaços, tabulações e
           quebras de linha são ignorados;
-    \item \textbf{Programa completo} (1 teste): verifica a sequência de \textit{tokens}
+    \item Programa completo (1 teste): verifica a sequência de \textit{tokens}
           de um arquivo completo;
-    \item \textbf{Token inválido} (1 teste): verifica que um caractere não reconhecido
+    \item \textit{Token} inválido (1 teste): verifica que um caractere não reconhecido
           (como \texttt{\%}) produz um erro com o \textit{span} correto (9..10).
 \end{itemize}
 
@@ -2722,33 +2726,33 @@ Os 12 testes do analisador sintático verificam a construção correta da AST a 
 entradas válidas e o tratamento adequado de entradas malformadas:
 
 \begin{itemize}
-    \item \textbf{Alfabeto apenas} (1 teste): verifica que um programa contendo somente
+    \item Alfabeto apenas (1 teste): verifica que um programa contendo somente
           a declaração do alfabeto produz uma AST vazia para autômatos e simulações;
-    \item \textbf{Alfabeto vazio} (1 teste): verifica que \texttt{alfabeto \{ \}} é
+    \item Alfabeto vazio (1 teste): verifica que \texttt{alfabeto \{ \}} é
           aceito;
-    \item \textbf{Vírgula final} (1 teste): verifica que uma vírgula após o último
+    \item Vírgula final (1 teste): verifica que uma vírgula após o último
           elemento da lista é aceita;
-    \item \textbf{AFD completo} (1 teste): verifica que todos os campos de um AFD
+    \item AFD completo (1 teste): verifica que todos os campos de um AFD
           (estados, inicial, finais, transições) são corretamente extraídos;
-    \item \textbf{AFN com epsilon} (1 teste): verifica que transições $\varepsilon$
+    \item AFN com epsilon (1 teste): verifica que transições $\varepsilon$
           são corretamente classificadas como \texttt{Symbol::Epsilon};
-    \item \textbf{Transições vazias} (1 teste): verifica que um bloco de transições
+    \item Transições vazias (1 teste): verifica que um bloco de transições
           vazio é aceito;
-    \item \textbf{Múltiplos autômatos} (1 teste): verifica que dois autômatos no mesmo
+    \item Múltiplos autômatos (1 teste): verifica que dois autômatos no mesmo
           arquivo são ambos reconhecidos;
-    \item \textbf{Múltiplas simulações} (1 teste): verifica que múltiplos comandos de
+    \item Múltiplas simulações (1 teste): verifica que múltiplos comandos de
           simulação são registrados;
-    \item \textbf{Case-insensitive} (1 teste): verifica que palavras em maiúsculas são
-          aceitas pelo parser;
-    \item \textbf{Erro: palavra-chave ausente} (1 teste): verifica que a ausência da
+    \item \textit{Case-insensitive} (1 teste): verifica que palavras em maiúsculas são
+          aceitas pelo \textit{parser};
+    \item Erro: palavra-chave ausente (1 teste): verifica que a ausência da
           palavra \texttt{inicial} gera mensagem de erro;
-    \item \textbf{Erro: símbolo inválido no alfabeto} (1 teste): verifica que um
+    \item Erro: símbolo inválido no alfabeto (1 teste): verifica que um
           identificador onde se esperava um caractere literal produz erro;
-    \item \textbf{Erro: tipo de autômato ausente} (1 teste): verifica que a omissão de
+    \item Erro: tipo de autômato ausente (1 teste): verifica que a omissão de
           \texttt{AFD} ou \texttt{AFN} gera erro;
-    \item \textbf{Erro: bloco não terminado} (1 teste): verifica que um bloco sem
+    \item Erro: bloco não terminado (1 teste): verifica que um bloco sem
           fechamento produz mensagem de erro;
-    \item \textbf{Erro: símbolo de transição inválido} (1 teste): verifica que um
+    \item Erro: símbolo de transição inválido (1 teste): verifica que um
           identificador no lugar de um literal de caractere na transição gera erro.
 \end{itemize}
 
@@ -2761,35 +2765,35 @@ Os 14 testes do analisador semântico cobrem as verificações de consistência 
 dos autômatos:
 
 \begin{itemize}
-    \item \textbf{AFD válido} (1 teste): verifica que um AFD semanticamente correto
+    \item AFD válido (1 teste): verifica que um AFD semanticamente correto
           produz uma tabela de símbolos completa;
-    \item \textbf{AFN com epsilon válido} (1 teste): verifica que AFNs com transições
+    \item AFN com epsilon válido (1 teste): verifica que AFNs com transições
           $\varepsilon$ são aceitos;
-    \item \textbf{Simulação válida} (1 teste): verifica que uma referência a autômato
+    \item Simulação válida (1 teste): verifica que uma referência a autômato
           existente no comando \texttt{simular} é aceita;
-    \item \textbf{Símbolo duplicado no alfabeto} (1 teste): verifica que a repetição
+    \item Símbolo duplicado no alfabeto (1 teste): verifica que a repetição
           de um símbolo no alfabeto é detectada;
-    \item \textbf{Estado duplicado} (1 teste): verifica que a declaração do mesmo
+    \item Estado duplicado (1 teste): verifica que a declaração do mesmo
           estado duas vezes é reportada;
-    \item \textbf{Autômato duplicado} (1 teste): verifica que dois autômatos com o
+    \item Autômato duplicado (1 teste): verifica que dois autômatos com o
           mesmo nome são detectados;
-    \item \textbf{Estado inicial não declarado} (1 teste): verifica que uma referência
+    \item Estado inicial não declarado (1 teste): verifica que uma referência
           a estado inexistente como inicial é reportada;
-    \item \textbf{Estado final não declarado} (1 teste): similar ao anterior para
+    \item Estado final não declarado (1 teste): similar ao anterior para
           estados finais;
-    \item \textbf{Estado de transição não declarado} (1 teste): verifica a detecção de
+    \item Estado de transição não declarado (1 teste): verifica a detecção de
           estados não declarados usados em transições;
-    \item \textbf{Símbolo fora do alfabeto} (1 teste): verifica que um símbolo não
+    \item Símbolo fora do alfabeto (1 teste): verifica que um símbolo não
           pertencente ao alfabeto é rejeitado;
-    \item \textbf{Simulação de autômato inexistente} (1 teste): verifica que referência
+    \item Simulação de autômato inexistente (1 teste): verifica que referência
           a autômato não declarado é detectada;
-    \item \textbf{AFD não-determinístico} (1 teste): verifica que transições
+    \item AFD não-determinístico (1 teste): verifica que transições
           conflitantes em AFD são reportadas;
-    \item \textbf{AFD com transição epsilon} (1 teste): verifica que transições
+    \item AFD com transição epsilon (1 teste): verifica que transições
           $\varepsilon$ em AFD são rejeitadas;
-    \item \textbf{AFN permite não-determinismo} (1 teste): verifica que transições
+    \item AFN permite não-determinismo (1 teste): verifica que transições
           conflitantes em AFN são permitidas;
-    \item \textbf{Acumulação de múltiplos erros} (1 teste): verifica que o analisador
+    \item Acumulação de múltiplos erros (1 teste): verifica que o analisador
           não interrompe a análise no primeiro erro, acumulando ao menos 3 erros
           simultâneos.
 \end{itemize}

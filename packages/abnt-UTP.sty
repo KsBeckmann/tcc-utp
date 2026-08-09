@@ -22,6 +22,15 @@
 % Configuração da página
 \usepackage[a4paper,vmargin={3.0cm,2.0cm},hmargin={3.0cm,2.0cm}]{geometry}
 
+% Entrelinhamento 1,5 no corpo do texto (Normas Técnicas UTP, p. 17)
+% O \OnehalfSpacing do memoir/abnTeX2 equivale a ~1,25 do baselineskip (~18pt em
+% corpo 12), o que a professora apontou como abaixo do exigido. \setSpacing{1,5}
+% entrega o 1,5 literal (~21,6pt). O \AtBeginDocument garante que este valor
+% prevaleça sobre o \OnehalfSpacing definido pela classe abntex2.
+% As exceções previstas na norma (citações longas, notas de rodapé, legendas e
+% lista de referências) continuam em espaço simples.
+\AtBeginDocument{\setSpacing{1.5}}
+
 % Pacotes básicos 
 \usepackage[brazil]{babel}
 \usepackage[T1]{fontenc}  
@@ -36,7 +45,7 @@
     alf,
     abnt-and-type=e,
     abnt-etal-text=it,
-    abnt-etal-cite=2,
+    abnt-etal-cite=3,   % et al. só a partir de 4 autores (Normas UTP, p. 56)
     abnt-etal-list=3,
     abnt-emphasize=bf
 ]{abntex2cite}
@@ -55,6 +64,12 @@
 \usepackage[caption=false]{subfig}
 \usepackage[pdftex]{graphicx}
 \graphicspath{{img/}}           % Caminho padrão para localização das imagens
+
+% Controle de posicionamento de floats. Fornece \FloatBarrier, usado para
+% impedir que uma ilustração seja adiada para o topo da página seguinte e acabe
+% no meio de um parágrafo (Normas Técnicas UTP, p. 21: a ilustração deve ser
+% "inserida o mais próximo possível do trecho a que se refere").
+\usepackage{placeins}
 
 % Algoritmos
 \usepackage{listings}
@@ -407,7 +422,18 @@
 
 % Renomeia as legendas
 \captionsetup[figure]{name={FIGURA}}
-\captionsetup[table]{name={TABELA}}
+% O trabalho não usa nenhum float "table" - todos os elementos desse tipo são
+% quadros (Normas Técnicas UTP, p. 26). Manter a linha abaixo ativa gera
+% "Package caption Warning: Unused \captionsetup[table]". Descomentar apenas se
+% voltar a existir uma tabela de verdade (dados com tratamento estatístico).
+% \captionsetup[table]{name={TABELA}}
+
+% NOTA: legendas e fontes de ilustrações já saem em espaço simples sem nenhum
+% ajuste aqui. O memoir aplica \m@m@float@spacing (= 1) dentro de todo float
+% via o gancho cmd/@floatboxreset/after, e nem o \OnehalfSpacing da classe nem
+% o \setSpacing acima alteram esse valor. Não usar \SingleSpacing dentro de
+% legenda: ele faz \@ifstar e um \vskip\baselineskip, o que quebra o
+% agrupamento (erro "Extra \endgroup" no \end{quadro}).
 \renewcommand*{\figureautorefname}{Figura}
 \renewcommand*{\tableautorefname}{Tabela}
 \renewcommand*{\chapterautorefname}{Capítulo}
