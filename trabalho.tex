@@ -76,10 +76,9 @@ como requisito à obtenção do grau de Bacharel.}
 \imprimircapa
 \imprimirfolhaderosto
 
-%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-\begin{agradecimentos}
-    
-\end{agradecimentos}
+% Agradecimentos: elemento OPCIONAL (Normas UTP p.35 e p.130). Removido em
+% 09/08/2026 por decisão do grupo - o bloco estava vazio e gerava uma página
+% só com o título "AGRADECIMENTOS", sem texto.
 
 % Resumo do trabalho
 \begin{resumo}
@@ -2342,7 +2341,8 @@ Este capítulo descreve a implementação da ferramenta Autosim, detalhando cada
 pipeline de compilação e da interface gráfica interativa. A implementação foi realizada
 integralmente na linguagem Rust, utilizando as bibliotecas Logos \cite{logos2021} para
 análise léxica, Chumsky \cite{chumsky2022} para análise sintática, Iced \cite{iced2022}
-para a interface gráfica e Ariadne para o diagnóstico de erros.
+para a interface gráfica e Ariadne para o diagnóstico de erros. O código-fonte completo
+da ferramenta está disponível publicamente em repositório aberto \cite{autosim2026}.
 
 \section{Visão Geral do Pipeline}
 \label{sec:impl-pipeline}
@@ -2572,9 +2572,10 @@ A janela da aplicação organiza-se verticalmente em:
           de estados do autômato, a cadeia de entrada com destaque para os caracteres
           já consumidos e o histórico das configurações percorridas;
     \item Barra de controle: oferece botões para avançar (\texttt{Passo}),
-          retroceder (\texttt{Voltar}), reprodução automática (\texttt{Rodar/Pausar})
-          e reinicialização (\texttt{Reset}), além de exibir o progresso da simulação
-          e o veredito final (aceita ou rejeita).
+          retroceder (\texttt{Voltar}), reprodução automática (\texttt{Rodar/Pausar}),
+          reinicialização (\texttt{Reset}) e recentralização da visão
+          (\texttt{Centralizar}), além de exibir o progresso da simulação, o nível de
+          ampliação corrente e o veredito final (aceita ou rejeita).
 \end{itemize}
 
 \subsection{Renderização do Diagrama de Estados}
@@ -2603,6 +2604,15 @@ As transições são renderizadas como arestas rotuladas entre os estados. Quand
 múltiplos símbolos compartilham a mesma origem e destino, os rótulos são concatenados.
 Transições ativas (executadas no passo corrente) são destacadas com espessura maior e
 cor brilhante.
+
+Para acomodar autômatos com muitos estados, cujo arranjo pode exceder os limites da
+janela, o diagrama é desenhado sob uma câmera que oferece navegação livre por meio do
+\textit{mouse}. O usuário desloca a visão (\textit{pan}) arrastando com o botão
+esquerdo e ajusta a ampliação (\textit{zoom}) com a roda de rolagem, que é ancorada na
+posição do cursor e limitada à faixa de 20\% a 400\%. O botão \texttt{Centralizar}
+restaura a visão original. A câmera é aplicada apenas ao diagrama de estados; a cadeia
+de entrada e o histórico de configurações permanecem fixos na tela, funcionando como um
+painel de informações sempre visível.
 
 \subsection{Simulação Visual Passo a Passo}
 \label{sec:impl-visual}
@@ -2651,7 +2661,7 @@ visualmente organizadas sobre cada erro, facilitando a correção do código-fon
 
 Este capítulo apresenta os resultados obtidos com a implementação da ferramenta Autosim.
 A validação foi realizada por meio de uma suíte de testes automatizados, cobrindo as três
-fases de análise (léxica, sintática e semântica), totalizando 37 casos de teste. Além
+fases de análise (léxica, sintática e semântica), totalizando 42 casos de teste. Além
 dos testes, foram conduzidas simulações com autômatos clássicos da literatura para
 verificar a correção do simulador e a qualidade dos diagnósticos de erro.
 
@@ -2674,13 +2684,13 @@ da cobertura de testes.
         \hline
         \textbf{Categoria} & \textbf{Quantidade} & \textbf{Principais verificações} \\
         \hline
-        Análise Léxica    & 11  & Palavras reservadas, \textit{case-insensitive}, literais, epsilon, comentários, erros \\
+        Análise Léxica    & 12  & Palavras reservadas, \textit{case-insensitive}, literais, epsilon, comentários, erros \\
         \hline
-        Análise Sintática & 12  & \textit{Parsing} completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
+        Análise Sintática & 15  & \textit{Parsing} completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
         \hline
-        Análise Semântica & 14  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
+        Análise Semântica & 15  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
         \hline
-        \textbf{Total}    & \textbf{37} &  \\
+        \textbf{Total}    & \textbf{42} &  \\
         \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
@@ -2689,7 +2699,7 @@ da cobertura de testes.
 \section{Testes do Analisador Léxico}
 \label{sec:res-lexer}
 
-Os 11 testes do analisador léxico verificam o reconhecimento correto de cada categoria
+Os 12 testes do analisador léxico verificam o reconhecimento correto de cada categoria
 de \textit{token} e o tratamento de casos especiais:
 
 \begin{itemize}
@@ -2713,16 +2723,19 @@ de \textit{token} e o tratamento de casos especiais:
           quebras de linha são ignorados;
     \item Programa completo (1 teste): verifica a sequência de \textit{tokens}
           de um arquivo completo;
+    \item Programa de AFN com epsilon (1 teste): verifica que a análise léxica de um
+          arquivo descrevendo um AFN com transições $\varepsilon$ produz os
+          \textit{tokens} \texttt{AFN} e \texttt{Epsilon};
     \item \textit{Token} inválido (1 teste): verifica que um caractere não reconhecido
           (como \texttt{\%}) produz um erro com o \textit{span} correto (9..10).
 \end{itemize}
 
-Todos os 11 testes do analisador léxico são aprovados com sucesso.
+Todos os 12 testes do analisador léxico são aprovados com sucesso.
 
 \section{Testes do Analisador Sintático}
 \label{sec:res-parser}
 
-Os 12 testes do analisador sintático verificam a construção correta da AST a partir de
+Os 15 testes do analisador sintático verificam a construção correta da AST a partir de
 entradas válidas e o tratamento adequado de entradas malformadas:
 
 \begin{itemize}
@@ -2753,15 +2766,19 @@ entradas válidas e o tratamento adequado de entradas malformadas:
     \item Erro: bloco não terminado (1 teste): verifica que um bloco sem
           fechamento produz mensagem de erro;
     \item Erro: símbolo de transição inválido (1 teste): verifica que um
-          identificador no lugar de um literal de caractere na transição gera erro.
+          identificador no lugar de um literal de caractere na transição gera erro;
+    \item \textit{Spans} como índices de \textit{token} (1 teste): verifica que os
+          \textit{spans} armazenados na AST referem-se a índices de \textit{token}, e
+          não a deslocamentos de caractere, cuja conversão ocorre apenas na fase de
+          análise semântica.
 \end{itemize}
 
-Todos os 12 testes do analisador sintático são aprovados.
+Todos os 15 testes do analisador sintático são aprovados.
 
 \section{Testes do Analisador Semântico}
 \label{sec:res-sema}
 
-Os 14 testes do analisador semântico cobrem as verificações de consistência estrutural
+Os 15 testes do analisador semântico cobrem as verificações de consistência estrutural
 dos autômatos:
 
 \begin{itemize}
@@ -2798,7 +2815,7 @@ dos autômatos:
           simultâneos.
 \end{itemize}
 
-Todos os 14 testes do analisador semântico são aprovados. O teste de acumulação de
+Todos os 15 testes do analisador semântico são aprovados. O teste de acumulação de
 erros confirma que o analisador semântico é capaz de detectar e reportar, em uma única
 execução, problemas de diferentes naturezas (estado inicial ausente, estado final
 ausente, símbolo fora do alfabeto), evitando que o estudante precise corrigir um erro
@@ -2896,7 +2913,7 @@ navegação bidirecional durante a execução. Por fim, construiu-se uma interfa
 gráfica interativa que renderiza automaticamente o diagrama de estados a partir do
 texto fonte e anima a simulação passo a passo, com destaque visual para os estados
 ativos e as transições percorridas. A validação da ferramenta foi realizada por meio
-de 37 testes automatizados, distribuídos entre as fases léxica, sintática e
+de 42 testes automatizados, distribuídos entre as fases léxica, sintática e
 semântica, além de simulações com autômatos clássicos da literatura, com todos os
 resultados concordando com o esperado, o que confirma a correção do simulador e a
 qualidade dos diagnósticos gerados.
