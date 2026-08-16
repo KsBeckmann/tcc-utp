@@ -2717,6 +2717,23 @@ barra de controle.
 \end{figure}
 \FloatBarrier
 
+De forma complementar, a Figura~\ref{fig:screenshot-simulacao-rejeita} apresenta o
+mesmo AFD processando a cadeia \texttt{"bbb"}, que não pertence à linguagem
+reconhecida: o painel adota a paleta vermelha de rejeição, o autômato permanece no
+estado \texttt{q0} (não final) após consumir integralmente a entrada por meio da
+transição de laço $q_0 \xrightarrow{b} q_0$, e a barra de controle exibe o veredito
+\texttt{REJEITA}. O contraste entre as duas paletas (verde para aceitação e vermelha
+para rejeição) reforça visualmente o desfecho da simulação.
+
+\begin{figure}[h]
+    \centering
+    \caption{SIMULAÇÃO CONCLUÍDA COM VEREDITO DE REJEIÇÃO}
+    \label{fig:screenshot-simulacao-rejeita}
+    \includegraphics[width=\textwidth]{img/interface_simulacao_rejeita.png}
+    \fonte{Os autores (\the\year)}
+\end{figure}
+\FloatBarrier
+
 \section{Diagnóstico de Erros com Ariadne}
 \label{sec:impl-ariadne}
 
