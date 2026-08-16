@@ -302,7 +302,7 @@ representado, por convenção, pela letra grega $\Sigma$ \cite{sipser2012}. Os e
 alfabeto são denominados símbolos ou letras. Por exemplo, $\Sigma_1 = \{0, 1\}$ é o alfabeto
 binário, enquanto $\Sigma_2 = \{a, b, c, \ldots, z\}$ corresponde ao alfabeto latino minúsculo. A
 exigência de finitude é fundamental, pois garante que os autômatos, definidos nas seções
-seguintes, possam manipular o alfabeto de forma efetiva; a não vacuidade, por sua vez, assegura
+seguintes, possam manipular o alfabeto de forma efetiva; a exigência de que ele não seja vazio, por sua vez, assegura
 que sempre haja ao menos um símbolo disponível para a formação de palavras
 \cite{diverio2011,vieira2004}.
 
@@ -324,18 +324,18 @@ teórico e prático é infinita, o que motiva o desenvolvimento de mecanismos fo
 gramáticas e autômatos, capazes de descrevê-las de maneira finita.
 
 Por serem conjuntos, as linguagens herdam diretamente as operações da teoria de
-conjuntos \cite{diverio2011,vieira2004}. Dadas duas linguagens $L_1$ e $L_2$ sobre um mesmo alfabeto $\Sigma$,
+conjuntos. Dadas duas linguagens $L_1$ e $L_2$ sobre um mesmo alfabeto $\Sigma$,
 define-se a união $L_1 \cup L_2 = \{w \mid w \in L_1 \text{ ou } w \in L_2\}$, o
 conjunto das palavras que pertencem a pelo menos uma das duas; a interseção
 $L_1 \cap L_2 = \{w \mid w \in L_1 \text{ e } w \in L_2\}$, formada pelas palavras
 comuns a ambas; e a diferença $L_1 - L_2 = \{w \mid w \in L_1 \text{ e } w \notin L_2\}$,
-composta pelas palavras de $L_1$ que não ocorrem em $L_2$. Por exemplo, para
+composta pelas palavras de $L_1$ que não ocorrem em $L_2$ \cite{diverio2011,vieira2004}. Por exemplo, para
 $\Sigma = \{a, b\}$, $L_1 = \{\varepsilon, a, ab\}$ e $L_2 = \{a, b\}$, tem-se
 $L_1 \cup L_2 = \{\varepsilon, a, b, ab\}$, $L_1 \cap L_2 = \{a\}$ e
 $L_1 - L_2 = \{\varepsilon, ab\}$.
 
 Além dessas, duas operações específicas, derivadas da estrutura sequencial das
-palavras, desempenham papel central na teoria \cite{diverio2011,vieira2004}. A
+palavras, desempenham papel central na teoria. A
 concatenação de duas palavras $x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$
 produz a palavra $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular,
 $w\varepsilon = \varepsilon w = w$ para qualquer palavra $w$, o que faz de $\varepsilon$
@@ -345,7 +345,7 @@ A partir dela, define-se a potência de uma linguagem por $L^0 = \{\varepsilon\}
 $L^n = L^{n-1} L$ para $n \geq 1$. Por fim, o fecho de Kleene de uma linguagem $L$,
 denotado por $L^*$, corresponde ao conjunto de todas as palavras obtidas pela
 concatenação de zero ou mais elementos de $L$, isto é,
-$L^* = \bigcup_{n \in \mathbb{N}} L^n$. Essas operações constituem a base para a
+$L^* = \bigcup_{n \in \mathbb{N}} L^n$ \cite{diverio2011,vieira2004}. Essas operações constituem a base para a
 especificação concisa de linguagens, recurso amplamente explorado nas expressões
 regulares e gramáticas estudadas nas seções seguintes.
 
