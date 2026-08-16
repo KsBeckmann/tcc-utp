@@ -186,14 +186,14 @@ O estudo de linguagens formais e de autômatos finitos é um dos pilares da
 formação em Ciência da Computação, estando diretamente relacionado à compreensão
 das máquinas abstratas, dos limites da computação e da teoria por trás dos
 compiladores. Apesar de sua importância, essa disciplina é reconhecidamente
-desafiadora para muitos estudantes \cite{morazan2014}: exige lidar com um alto grau de abstração
-matemática, no qual conceitos como estados, transições, alfabetos e funções de
-transição precisam ser simultaneamente compreendidos em sua forma simbólica e
-interpretados em situações concretas. Esse distanciamento entre o formalismo
-simbólico e a intuição prática faz com que a aprendizagem dependa fortemente de
-representações visuais e da experimentação, o que evidencia a necessidade de
-ferramentas didáticas que aproximem a teoria da prática computacional de forma
-interativa.
+desafiadora para muitos estudantes, que a percebem como difícil ou mesmo esmagadora
+e periférica à Ciência da Computação. \citeonline{morazan2014} atribuem essa
+percepção a uma causa precisa: ao contrário do que ocorre em disciplinas de
+programação, o estudante é solicitado a projetar autômatos e gramáticas, além de
+provar sua correção, sem qualquer possibilidade de experimentar sua construção ou de
+obter retroalimentação imediata sobre ela. Esse distanciamento entre o formalismo
+simbólico e a prática computacional evidencia a necessidade de ferramentas didáticas
+que permitam descrever, validar e executar tais construções de forma interativa.
 
 Nesse contexto, ferramentas disponíveis atualmente para apoiar esse aprendizado, como
 o JFLAP \cite{rodger2006jflap}, adotam uma abordagem exclusivamente visual
@@ -207,7 +207,7 @@ problema.
 
 Diante desse cenário, este trabalho propõe o desenvolvimento de uma ferramenta
 educacional que adota uma abordagem baseada em texto formal e compilação
-pedagógica. A principal contribuição inédita desta solução é o acoplamento direto entre
+pedagógica. A principal contribuição desta solução é o acoplamento direto entre
 uma \textit{Domain-Specific Language} (DSL), ou seja, uma linguagem de domínio específico
 textual, e a geração automática de uma interface gráfica interativa sincronizada. Isso diferencia a ferramenta do JFLAP de duas
 formas fundamentais: primeiro, substitui a modelagem puramente visual e propensa a
@@ -224,6 +224,11 @@ e erro visual, ele interage com diagnósticos formais de um compilador, conectan
 nativamente a teoria de autômatos à prática de compiladores em um único instrumento
 educacional. A solução unificada busca guiar o aprendizado através do rigor linguístico
 e da depuração contextual.
+
+O objetivo geral deste trabalho é desenvolver essa ferramenta educacional, que integra
+a descrição textual de autômatos, sua compilação pedagógica e sua simulação visual em
+um único ambiente. Para alcançá-lo, foram estabelecidos os seguintes objetivos
+específicos:
 
 \begin{alineas}
     \item projetar uma DSL textual com sintaxe declarativa própria para a descrição formal de AFDs e
@@ -318,19 +323,30 @@ sequência de $a$'s seguida de igual número de $b$'s. A maior parte das linguag
 teórico e prático é infinita, o que motiva o desenvolvimento de mecanismos formais, como
 gramáticas e autômatos, capazes de descrevê-las de maneira finita.
 
-Por serem conjuntos, as linguagens admitem as operações usuais de união,
-interseção e diferença. Além dessas, três operações específicas, derivadas da
-estrutura sequencial das palavras, desempenham papel central na teoria
-\cite{diverio2011,vieira2004}. A concatenação de duas palavras
-$x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$ produz a palavra
-$xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular, $w\varepsilon = \varepsilon w = w$
-para qualquer palavra $w$, o que faz de $\varepsilon$ o elemento neutro dessa operação. A
-concatenação estende-se naturalmente a linguagens: dadas $L_1$ e $L_2$, define-se
-$L_1 L_2 = \{xy \mid x \in L_1 \text{ e } y \in L_2\}$. Por fim, o fecho de Kleene de uma
-linguagem $L$, denotado por $L^*$, corresponde ao conjunto de todas as palavras obtidas pela
-concatenação de zero ou mais elementos de $L$, isto é, $L^* = \bigcup_{n \in \mathbb{N}} L^n$,
-onde $L^0 = \{\varepsilon\}$ e $L^n = L^{n-1} L$ para $n \geq 1$. Essas operações constituem a
-base para a especificação concisa de linguagens, recurso amplamente explorado nas expressões
+Por serem conjuntos, as linguagens herdam diretamente as operações da teoria de
+conjuntos \cite{diverio2011,vieira2004}. Dadas duas linguagens $L_1$ e $L_2$ sobre um mesmo alfabeto $\Sigma$,
+define-se a união $L_1 \cup L_2 = \{w \mid w \in L_1 \text{ ou } w \in L_2\}$, o
+conjunto das palavras que pertencem a pelo menos uma das duas; a interseção
+$L_1 \cap L_2 = \{w \mid w \in L_1 \text{ e } w \in L_2\}$, formada pelas palavras
+comuns a ambas; e a diferença $L_1 - L_2 = \{w \mid w \in L_1 \text{ e } w \notin L_2\}$,
+composta pelas palavras de $L_1$ que não ocorrem em $L_2$. Por exemplo, para
+$\Sigma = \{a, b\}$, $L_1 = \{\varepsilon, a, ab\}$ e $L_2 = \{a, b\}$, tem-se
+$L_1 \cup L_2 = \{\varepsilon, a, b, ab\}$, $L_1 \cap L_2 = \{a\}$ e
+$L_1 - L_2 = \{\varepsilon, ab\}$.
+
+Além dessas, duas operações específicas, derivadas da estrutura sequencial das
+palavras, desempenham papel central na teoria \cite{diverio2011,vieira2004}. A
+concatenação de duas palavras $x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$
+produz a palavra $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular,
+$w\varepsilon = \varepsilon w = w$ para qualquer palavra $w$, o que faz de $\varepsilon$
+o elemento neutro dessa operação. A concatenação estende-se naturalmente a linguagens:
+dadas $L_1$ e $L_2$, define-se $L_1 L_2 = \{xy \mid x \in L_1 \text{ e } y \in L_2\}$.
+A partir dela, define-se a potência de uma linguagem por $L^0 = \{\varepsilon\}$ e
+$L^n = L^{n-1} L$ para $n \geq 1$. Por fim, o fecho de Kleene de uma linguagem $L$,
+denotado por $L^*$, corresponde ao conjunto de todas as palavras obtidas pela
+concatenação de zero ou mais elementos de $L$, isto é,
+$L^* = \bigcup_{n \in \mathbb{N}} L^n$. Essas operações constituem a base para a
+especificação concisa de linguagens, recurso amplamente explorado nas expressões
 regulares e gramáticas estudadas nas seções seguintes.
 
 \section{Gramáticas Formais}
@@ -353,7 +369,7 @@ variável de partida), e prossegue pela aplicação sucessiva das regras até qu
 sequência de terminais.
 
 Formalmente, uma gramática é uma quádrupla $G = (V, \Sigma, R, S)$, na qual
-\cite{lewis1998,vieira2004}:
+\cite{sipser2012,diverio2011,vieira2004}:
 \begin{itemize}
     \item $V$ é um conjunto finito de variáveis (símbolos não-terminais);
     \item $\Sigma$ é um alfabeto de símbolos terminais, com $V \cap \Sigma = \varnothing$;
@@ -1848,10 +1864,11 @@ e analisa os cinco trabalhos mais relevantes identificados na revisão bibliogr�
 conforme sua plataforma e abordagem, evidenciando em cada caso as contribuições e as limitações
 que motivam o desenvolvimento da ferramenta proposta.
 
-\section{\textit{Writing a Lexer in Rust}}
+\section{Análise Léxica em Rust}
 \label{sec:rel-lexer-rust}
 
-O trabalho intitulado \textit{Writing a Lexer in Rust}, publicado na forma de artigo técnico e
+O trabalho intitulado \textit{Exploiting Finite State Automata for Efficient Lexical Analysis: A
+Rust Implementation}, publicado na forma de artigo técnico e
 tutorial prático por Bruzzone \cite{bruzzone2023}, apresenta uma implementação de analisador
 léxico em Rust fundamentada diretamente na teoria dos autômatos finitos. O autor parte da
 constatação de que analisadores léxicos são, em essência, autômatos finitos não-determinísticos
@@ -1882,11 +1899,11 @@ visual interativa do autômato descrito.
 O JFLAP (\textit{Java Formal Languages and Automata Package}) é, sem dúvida, a ferramenta
 educacional mais amplamente utilizada para o ensino de linguagens formais e autômatos no mundo.
 Desenvolvida por Susan H. Rodger e colaboradores na Duke University, com origens que remontam
-ao início da década de 1990, a ferramenta acumula décadas de desenvolvimento contínuo e tem
-sido adotada em universidades de mais de cem países \cite{rodger2006jflap}. Sua versão mais
-recente, 7.1, permite a criação e simulação de autômatos finitos determinísticos e
-não-determinísticos, autômatos de pilha, máquinas de Turing, gramáticas livres de contexto e
-sistemas-L, constituindo um ambiente abrangente para toda a hierarquia de Chomsky.
+ao início da década de 1990, a ferramenta acumula décadas de desenvolvimento contínuo
+\cite{rodger2006jflap}. O JFLAP permite a criação e simulação de autômatos finitos
+determinísticos e não-determinísticos, autômatos de pilha, máquinas de Turing, gramáticas livres
+de contexto e sistemas-L, constituindo um ambiente abrangente para toda a hierarquia de Chomsky
+\cite{rodger2006jflap}.
 
 A abordagem do JFLAP é exclusivamente gráfica e baseada em manipulação direta: o usuário
 constrói o autômato posicionando estados com o \textit{mouse} e conectando transições por meio
@@ -1912,16 +1929,16 @@ Computação está habitualmente exposto.
 \section{GAM}
 \label{sec:rel-gam}
 
-O GAM (\textit{Gerenciador de Autômatos e Máquinas}) é uma ferramenta educacional desenvolvida
+O GAM é uma ferramenta educacional desenvolvida
 na Universidade Federal de Lavras por Jukemura, Nascimento e Uchôa \cite{jukemura2005gam}, com
 o objetivo de apoiar estudantes e professores no estudo da teoria dos autômatos finitos. A
 ferramenta é implementada em C++ com a biblioteca gráfica GTK/GTKmm e executa em sistemas
 GNU/Linux e Windows, sendo distribuída livremente para uso acadêmico.
 
-O GAM oferece módulos para a entrada, edição e teste de diferentes tipos de máquinas abstratas,
-incluindo autômatos finitos determinísticos e não-determinísticos, autômatos de pilha e máquinas
-de Turing, além de suporte à conversão de AFN em AFD com visualização das etapas da construção
-de subconjuntos \cite{jukemura2005gam}. A interface gráfica permite a construção visual dos
+O GAM oferece módulos para a entrada, edição e teste de autômatos finitos determinísticos e
+não-determinísticos, além de conversões entre formalismos regulares, como a construção de
+subconjuntos (de AFN para AFD) e a conversão entre autômatos finitos e expressões regulares
+\cite{jukemura2005gam}. A interface gráfica permite a construção visual dos
 autômatos e a simulação do processamento de cadeias de entrada, com apresentação parcial das
 configurações intermediárias percorridas durante o reconhecimento.
 
@@ -2021,7 +2038,7 @@ decisão de projeto da ferramenta proposta.
             & \textbf{\makecell{Voltada\\ao ensino}}
             & \textbf{Plataforma} \\
         \hline
-        Writing a Lexer
+        Análise Léxica em Rust
             & Não & Sim & Não & Não & Linha de comando & Não & Rust (Nativo) \\
         \hline
         JFLAP
@@ -2079,7 +2096,7 @@ software em uma única plataforma de experimentação.
         \hline
         \textbf{Trabalho} & \textbf{Contribuição / Lacuna identificada para o projeto} \\
         \hline
-        Writing a Lexer
+        Análise Léxica em Rust
             & Contribuição: Demonstra a viabilidade prática e a segurança de tipos
             da linguagem Rust para modelar e codificar estados de autômatos formalmente. \\
         \hline
