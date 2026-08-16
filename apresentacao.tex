@@ -27,7 +27,7 @@
 \usepackage{booktabs}
 \usepackage{colortbl}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,positioning,automata}
 \usepackage{graphicx}
 
 % ----- Tema -----------------------------------------------------------------------------------
@@ -189,6 +189,54 @@
       \textbf{linguagens regulares}.
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Autômatos finitos --- um exemplo prático}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \vspace{10pt}
+      \begin{tikzpicture}[shorten >=1pt,node distance=2.4cm,on grid,>={Stealth[]},
+          every state/.style={draw=acento,thick,fill=acento!8,minimum size=8mm,font=\small}]
+        \node[state,initial,initial text={}] (q0) {$q_0$};
+        \node[state] (q1) [right=of q0] {$q_1$};
+        \node[state,accepting] (q2) [right=of q1] {$q_2$};
+        \path[->]
+          (q0) edge[loop above] node{$b$} (q0)
+          (q0) edge node{$a$} (q1)
+          (q1) edge[loop above] node{$a$} (q1)
+          (q1) edge node{$b$} (q2)
+          (q2) edge[loop above] node{$a,b$} (q2);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \footnotesize
+      Cada elemento de $M=(Q,\Sigma,\delta,q_0,F)$ no grafo:
+      \begin{itemize}\itemsep2pt
+        \item $Q=\{q_0,q_1,q_2\}$ --- os círculos;
+        \item $\Sigma=\{a,b\}$ --- os rótulos das arestas;
+        \item $q_0$ --- estado inicial (seta de entrada);
+        \item $F=\{q_2\}$ --- estados finais (círculo duplo);
+        \item $\delta$ --- as próprias arestas do grafo:
+      \end{itemize}
+      \vspace{-2pt}
+      \centering
+      \renewcommand{\arraystretch}{1.05}
+      $\begin{array}{c|cc}
+        \delta & a & b \\ \hline
+        q_0 & q_1 & q_0 \\
+        q_1 & q_1 & q_2 \\
+        q_2 & q_2 & q_2
+      \end{array}$
+    \end{column}
+  \end{columns}
+  \vspace{3pt}
+  \begin{block}{}
+    \scriptsize Reconhece as cadeias sobre $\Sigma$ que \textbf{contêm ``$ab$'' como subcadeia}.
+    \textcolor{green!50!black}{\textbf{Aceita:}} \texttt{ab}, \texttt{aab}, \texttt{bab}. \quad
+    \textcolor{red!70!black}{\textbf{Rejeita:}} $\varepsilon$, \texttt{ba}, \texttt{bbb}. \quad
+    Reaparece adiante --- na DSL e na simulação.
+  \end{block}
 \end{frame}
 
 \begin{frame}{Gramáticas e a Hierarquia de Chomsky}
