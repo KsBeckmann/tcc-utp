@@ -654,13 +654,13 @@ AFD equivalente, por sua vez, simula esse comportamento mantendo, em cada um de 
 realizada até aquele momento. Os estados do AFD são, portanto, subconjuntos do conjunto de
 estados do AFN \cite{hopcroft2006}.
 
-Formalmente, dado um AFN $N = (Q_N, \Sigma, \delta_N, q_0, F_N)$, constrói-se o AFD equivalente
+Formalmente, dado um AFN $N = (Q_N, \Sigma, \delta_N, q_{0,N}, F_N)$, constrói-se o AFD equivalente
 $D = (Q_D, \Sigma, \delta_D, q_{0,D}, F_D)$ por meio das seguintes definições
 \cite{hopcroft2006}:
 \begin{itemize}
     \item $Q_D = \mathcal{P}(Q_N)$, ou seja, cada estado do AFD é um subconjunto de estados do
           AFN;
-    \item $q_{0,D} = \{q_0\}$, isto é, o estado inicial do AFD corresponde ao conjunto que
+    \item $q_{0,D} = \{q_{0,N}\}$, isto é, o estado inicial do AFD corresponde ao conjunto que
           contém apenas o estado inicial do AFN;
     \item $F_D = \{\, S \in Q_D \mid S \cap F_N \neq \varnothing \,\}$, ou seja, um subconjunto
           é considerado estado de aceitação do AFD se contiver ao menos um estado de aceitação
@@ -672,7 +672,7 @@ $D = (Q_D, \Sigma, \delta_D, q_{0,D}, F_D)$ por meio das seguintes definições
 
 Embora $\mathcal{P}(Q_N)$ contenha $2^{|Q_N|}$ elementos no caso geral, em geral apenas uma
 pequena fração desses subconjuntos é efetivamente alcançável a partir do estado inicial. Na
-prática, o procedimento é aplicado de forma incremental: parte-se de $\{q_0\}$ e, a cada passo,
+prática, o procedimento é aplicado de forma incremental: parte-se de $\{q_{0,N}\}$ e, a cada passo,
 computam-se as transições para os subconjuntos ainda não explorados, até que nenhum novo
 subconjunto seja gerado. A correção da construção é assegurada pelo seguinte teorema, demonstrado
 em \citeonline{hopcroft2006}: \textit{uma linguagem $L \subseteq \Sigma^*$ é reconhecida por
