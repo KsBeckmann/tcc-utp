@@ -186,8 +186,9 @@ O estudo de linguagens formais e de autômatos finitos é um dos pilares da
 formação em Ciência da Computação, estando diretamente relacionado à compreensão
 das máquinas abstratas, dos limites da computação e da teoria por trás dos
 compiladores. Apesar de sua importância, essa disciplina é reconhecidamente
-desafiadora para muitos estudantes, que a percebem como difícil ou mesmo esmagadora
-e periférica à Ciência da Computação. \citeonline{morazan2014} atribuem essa
+desafiadora para muitos estudantes que, conforme relatam \citeonline{morazan2014},
+chegam a percebê-la como excessivamente difícil e distante das demais atividades do
+curso. Os autores atribuem essa
 percepção a uma causa precisa: ao contrário do que ocorre em disciplinas de
 programação, o estudante é solicitado a projetar autômatos e gramáticas, além de
 provar sua correção, sem qualquer possibilidade de experimentar sua construção ou de
@@ -1558,8 +1559,13 @@ violações de restrições próprias do domínio que a linguagem modela. Cada f
 contribui com um vocabulário próprio de erros, e cada uma demanda mecanismos específicos para
 detectá-los e para recuperar-se deles a fim de prosseguir o processamento.
 
-Independentemente da fase em que ocorrem, os erros relatados por um compilador são tanto mais
-úteis quanto melhor satisfazem três critérios fundamentais. O primeiro é a precisão da
+Independentemente da fase em que ocorrem, a utilidade de um erro depende diretamente da
+qualidade com que é relatado. \citeonline{aho2008} estabelecem como objetivos do tratamento de
+erros em um compilador relatar a presença de erros de forma clara e precisa, recuperar-se de
+cada erro com rapidez suficiente para detectar os erros subsequentes e acrescentar sobrecarga
+mínima ao processamento de programas corretos. A partir desses objetivos, e considerando o
+público em fase de aprendizagem a que se dirige a ferramenta proposta, adotam-se neste trabalho
+três critérios para avaliar a qualidade de um diagnóstico. O primeiro é a precisão da
 localização, isto é, a indicação inequívoca, em termos de linha e coluna do arquivo fonte, do
 ponto do programa em que o erro foi detectado. O segundo é a clareza da mensagem, ou
 seja, a expressão do erro em uma linguagem natural compreensível para o usuário, evitando jargão
@@ -1896,8 +1902,8 @@ visual interativa do autômato descrito.
 \section{JFLAP}
 \label{sec:rel-jflap}
 
-O JFLAP (\textit{Java Formal Languages and Automata Package}) é, sem dúvida, a ferramenta
-educacional mais amplamente utilizada para o ensino de linguagens formais e autômatos no mundo.
+O JFLAP (\textit{Java Formal Languages and Automata Package}) é uma das ferramentas
+educacionais mais difundidas para o ensino de linguagens formais e autômatos.
 Desenvolvida por Susan H. Rodger e colaboradores na Duke University, com origens que remontam
 ao início da década de 1990, a ferramenta acumula décadas de desenvolvimento contínuo
 \cite{rodger2006jflap}. O JFLAP permite a criação e simulação de autômatos finitos
