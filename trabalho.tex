@@ -987,8 +987,8 @@ a linguagem da máquina hospedeira, técnica conhecida como compilação \textit
 busca obter simultaneamente a portabilidade da interpretação e o desempenho da compilação
 \cite{aho2008}.
 
-Internamente, um compilador está longe de ser uma caixa-preta monolítica. Aho et al.
-\cite{aho2008} descrevem o processo de compilação como uma sequência de fases, cada uma
+Internamente, um compilador está longe de ser uma caixa-preta monolítica. \citeonline{aho2008}
+descrevem o processo de compilação como uma sequência de fases, cada uma
 transformando uma representação do programa fonte em outra, mais próxima do programa objeto,
 conforme ilustra a Figura~\ref{fig:fases-compilador}. Essas fases agrupam-se em duas grandes
 etapas: a análise, responsável por compreender a estrutura e o significado do programa
@@ -1062,7 +1062,7 @@ acesso uniforme às informações sobre os identificadores do programa \cite{aho
 \end{figure}
 
 A separação entre análise léxica e análise sintática, embora pudesse, em princípio, ser dispensada,
-é justificada por três razões práticas, conforme apresenta Aho et al. \cite{aho2008}. A primeira
+é justificada por três razões práticas, conforme apresentam \citeonline{aho2008}. A primeira
 é a simplicidade de projeto: tratar comentários e espaços em branco já no nível léxico evita
 poluir a gramática da fase sintática com construções acessórias. A segunda é a eficiência, pois
 técnicas especializadas de leitura, como o uso de \textit{buffers} duplos com sentinelas, podem
@@ -1206,7 +1206,7 @@ vez.
 Espera-se de um analisador sintático mais do que a simples aceitação ou rejeição da entrada.
 Ele deve sinalizar erros de forma clara e precisa, identificar o local de cada erro no programa
 fonte e, sempre que possível, recuperar-se de modo a permitir a detecção de erros subsequentes
-em uma única invocação do compilador \cite{aho2008}. Aho et al. \cite{aho2008} discutem quatro
+em uma única invocação do compilador \cite{aho2008}. Os autores discutem quatro
 estratégias gerais de recuperação de erros sintáticos. A recuperação em \textit{modo pânico}
 descarta \textit{tokens} da entrada até encontrar um \textit{token} de sincronismo, como
 ponto-e-vírgula ou chave de fechamento, retomando a análise a partir desse ponto; é simples e
@@ -1254,7 +1254,7 @@ ferramentas para a detecção precoce de erros e tem aplicações que vão além
 da compilação, como a verificação de \textit{bytecodes} Java antes de sua execução em uma
 máquina virtual.
 
-Aho et al. \cite{aho2008} distinguem duas formas complementares de verificação de tipos. Na
+\citeonline{aho2008} distinguem duas formas complementares de verificação de tipos. Na
 síntese de tipos, o tipo de uma expressão é construído a partir dos tipos de suas
 subexpressões, com base em regras locais; essa abordagem exige, em geral, que todos os nomes
 utilizados sejam declarados antes de seu uso, de modo que o compilador disponha sempre da
@@ -1386,7 +1386,7 @@ ou, na sigla consagrada em inglês, \textit{Domain-Specific Language} (DSL). Est
 o conceito de DSL, suas principais variantes e a relação que mantém com o ferramental de
 compiladores discutido nas seções precedentes.
 
-Fowler \cite{fowler2010} define uma DSL como uma linguagem de programação de expressividade
+\citeonline{fowler2010} definem uma DSL como uma linguagem de programação de expressividade
 limitada, voltada para um domínio específico. A definição é deliberadamente curta, mas seus
 quatro elementos centrais merecem atenção. Em primeiro lugar, uma DSL é uma \textit{linguagem
 de programação}, no sentido de que se destina a ser escrita e lida por seres humanos para
@@ -1408,7 +1408,7 @@ escopo. Não se trata de uma deficiência, mas de uma decisão de projeto, pois 
 generalidade é o preço pago para obter um vocabulário e uma sintaxe mais alinhados ao problema
 que se quer resolver.
 
-Fowler \cite{fowler2010} distingue duas grandes categorias de DSLs conforme a estratégia de
+\citeonline{fowler2010} distinguem duas grandes categorias de DSLs conforme a estratégia de
 implementação adotada. Uma DSL externa é uma linguagem com sintaxe própria, independente
 da sintaxe de qualquer linguagem hospedeira, e cujo processamento exige a construção de um
 analisador, em geral por meio das técnicas clássicas de análise léxica e sintática descritas nas
@@ -1430,7 +1430,7 @@ subjacente. A DSL externa tem o custo inicial mais alto, uma vez que demanda a c
 completo em relação a qualquer linguagem hospedeira, o que costuma resultar em uma notação mais
 próxima do vocabulário do domínio \cite{fowler2010}.
 
-Independentemente da categoria, Fowler \cite{fowler2010} argumenta que toda DSL bem estruturada
+Independentemente da categoria, \citeonline{fowler2010} argumentam que toda DSL bem estruturada
 se organiza em torno de dois elementos. O primeiro é a representação textual, isto é, a
 sintaxe concreta que o usuário efetivamente lê e escreve. O segundo é o modelo semântico,
 uma estrutura de objetos, em geral construída em uma linguagem de propósito geral, que captura
@@ -1464,7 +1464,7 @@ ser provida pelo próprio implementador. Por essa razão, ao longo das décadas 
 conjunto de ferramentas e bibliotecas voltadas justamente a automatizar partes substanciais
 desse trabalho. Esta seção apresenta as principais classes de ferramentas utilizadas na
 construção de compiladores, em particular daqueles destinados a DSLs, organizadas conforme a
-classificação proposta por Fowler \cite{fowler2010}.
+classificação proposta por \citeonline{fowler2010}.
 
 A primeira e mais tradicional classe de ferramentas é a dos geradores de analisadores
 sintáticos, também chamados de \textit{parser generators}. Nessa abordagem, o implementador
@@ -1585,7 +1585,7 @@ Para erros semânticos, a recuperação é, em geral, mais simples, pois a estru
 foi reconhecida pela fase sintática, restando apenas anotar o erro detectado e prosseguir a
 verificação dos demais nós da árvore.
 
-No contexto de DSLs, Fowler \cite{fowler2010} observa que a qualidade do diagnóstico está
+No contexto de DSLs, \citeonline{fowler2010} observam que a qualidade do diagnóstico está
 intimamente ligada à escolha da estratégia de implementação discutida na Seção~\ref{sec:contrucao-compiladores}.
 Geradores automáticos de \textit{parsers} costumam produzir mensagens genéricas, expressas em
 termos de \textit{tokens} e estados internos do analisador, que pouco ajudam o usuário final.
@@ -1617,7 +1617,7 @@ concisa e expressiva a descrição de soluções em um domínio particular. Quan
 constituído pelos próprios objetos de estudo de uma disciplina acadêmica, a DSL passa a
 desempenhar, além do papel técnico habitual, uma função pedagógica, isto é, a de servir como
 linguagem por meio da qual o estudante exerce, formaliza e verifica os conceitos que aprende.
-Esta seção examina, com base no trabalho de Morazán e Antunez \cite{morazan2014}, o uso de DSLs
+Esta seção examina, com base no trabalho de \citeonline{morazan2014}, o uso de DSLs
 no ensino de linguagens formais e teoria da computação, situando essa prática como contexto
 imediato do presente trabalho.
 
@@ -1626,13 +1626,13 @@ em ferramentas gráficas que permitem ao estudante construir autômatos e gramá
 manipulando diretamente seus elementos visuais, dos quais o exemplo mais difundido é o JFLAP
 \cite{rodger2006jflap}. Esse tipo de abordagem oferece, sem dúvida, ganhos importantes, em
 especial a redução do esforço inicial necessário para que o estudante visualize um autômato e
-acompanhe sua execução. No entanto, conforme apontam Morazán e Antunez \cite{morazan2014}, a
+acompanhe sua execução. No entanto, conforme apontam \citeonline{morazan2014}, a
 ênfase exclusiva em ferramentas gráficas tende a separar o estudo de linguagens formais do
 restante das atividades de programação que o estudante realiza ao longo do curso, tratando o
 autômato como um diagrama a ser desenhado, e não como um objeto computacional a ser construído
 e manipulado por meio de código.
 
-A alternativa proposta por Morazán e Antunez \cite{morazan2014} consiste em oferecer ao estudante
+A alternativa proposta por \citeonline{morazan2014} consiste em oferecer ao estudante
 uma DSL textual em que autômatos finitos, autômatos de pilha, máquinas de Turing e gramáticas
 sejam descritos diretamente como termos da linguagem, podendo então ser construídos, compostos,
 testados e executados como qualquer outro programa. Os autores argumentam que essa abordagem
@@ -1875,7 +1875,7 @@ que motivam o desenvolvimento da ferramenta proposta.
 
 O trabalho intitulado \textit{Exploiting Finite State Automata for Efficient Lexical Analysis: A
 Rust Implementation}, publicado na forma de artigo técnico e
-tutorial prático por Bruzzone \cite{bruzzone2023}, apresenta uma implementação de analisador
+tutorial prático por \citeonline{bruzzone2023}, apresenta uma implementação de analisador
 léxico em Rust fundamentada diretamente na teoria dos autômatos finitos. O autor parte da
 constatação de que analisadores léxicos são, em essência, autômatos finitos não-determinísticos
 aplicados ao reconhecimento de \textit{tokens}, e propõe uma implementação em que cada categoria
@@ -1890,7 +1890,7 @@ particularmente adequados para representar estados e transições de autômatos 
 eficiente, antecipando argumentos desenvolvidos com maior profundidade no
 Capítulo~\ref{cap:rust} deste trabalho.
 
-No entanto, o escopo do trabalho de Bruzzone \cite{bruzzone2023} restringe-se à fase de análise
+No entanto, o escopo do trabalho de \citeonline{bruzzone2023} restringe-se à fase de análise
 léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de
 compilação nem para qualquer forma de simulação visual ou interativa. Trata-se, portanto, de
 uma contribuição de natureza técnica e didática voltada a programadores que desejam compreender
@@ -1916,8 +1916,8 @@ constrói o autômato posicionando estados com o \textit{mouse} e conectando tra
 de arestas rotuladas, sem qualquer forma de representação textual da estrutura produzida
 \cite{rodger2006jflap}. A simulação passo a passo destaca visualmente os estados e as
 transições percorridos durante o reconhecimento de uma cadeia, o que confere à ferramenta
-inegável valor pedagógico para a visualização do comportamento dos autômatos. Rodger e Finley
-\cite{rodger2006jflap} documentam ainda recursos avançados, como a conversão automática de AFN
+inegável valor pedagógico para a visualização do comportamento dos autômatos.
+\citeonline{rodger2006jflap} documentam ainda recursos avançados, como a conversão automática de AFN
 em AFD pela construção de subconjuntos, a minimização de AFDs e a conversão entre gramáticas e
 autômatos, todos apresentados com animações visuais.
 
@@ -1936,7 +1936,7 @@ Computação está habitualmente exposto.
 \label{sec:rel-gam}
 
 O GAM é uma ferramenta educacional desenvolvida
-na Universidade Federal de Lavras por Jukemura, Nascimento e Uchôa \cite{jukemura2005gam}, com
+na Universidade Federal de Lavras por \citeonline{jukemura2005gam}, com
 o objetivo de apoiar estudantes e professores no estudo da teoria dos autômatos finitos. A
 ferramenta é implementada em C++ com a biblioteca gráfica GTK/GTKmm e executa em sistemas
 GNU/Linux e Windows, sendo distribuída livremente para uso acadêmico.
@@ -1988,8 +1988,8 @@ por compiladores.
 \section{AutomatoGraph}
 \label{sec:rel-automatograph}
 
-O AutomatoGraph é uma ferramenta educacional desenvolvida em Java por Kienetz e Canal
-\cite{kienetz2016automatograph}, com o objetivo de auxiliar estudantes no estudo de autômatos
+O AutomatoGraph é uma ferramenta educacional desenvolvida em Java por
+\citeonline{kienetz2016automatograph}, com o objetivo de auxiliar estudantes no estudo de autômatos
 finitos determinísticos no contexto da disciplina de Linguagens Formais e Autômatos. Em
 contraste com as ferramentas anteriores, que oferecem suporte a múltiplos tipos de máquinas
 abstratas, o AutomatoGraph restringe-se deliberadamente aos AFDs, aprofundando o suporte a esse
