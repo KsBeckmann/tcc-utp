@@ -489,11 +489,13 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \begin{itemize}
     \item Executa a função de transição sobre a cadeia, registrando \textbf{todas as configurações
           intermediárias}.
-    \item \textbf{Representação unificada} por conjuntos de estados (\texttt{BTreeSet}):
+    \item Exibe um \textbf{caminho único} do autômato, e não a nuvem de estados simultâneos:
           \begin{itemize}
-            \item AFD $\to$ conjunto com exatamente um estado;
-            \item AFN $\to$ conjunto com múltiplos estados (busca em largura, com fecho-$\varepsilon$).
+            \item cadeia aceita $\to$ o \textbf{caminho aceitador};
+            \item cadeia rejeitada $\to$ o caminho que \textbf{mais se aproxima} da aceitação.
           \end{itemize}
+    \item Escolha por \textbf{busca em largura} sobre pares (estado, símbolos consumidos):
+          maximiza os símbolos lidos e, no empate, minimiza a distância a um estado final.
     \item Guarda o \textbf{histórico completo} $\Rightarrow$ navegação \textbf{bidirecional}
           (avançar / retroceder) durante a execução.
   \end{itemize}

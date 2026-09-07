@@ -2574,44 +2574,83 @@ O simulador é o componente responsável por executar a função de transição 
 sobre uma cadeia de entrada, produzindo a sequência de configurações intermediárias
 percorridas durante o reconhecimento.
 
-\subsection{Representação de Estados}
+\subsection{Estratégia de Exibição}
 \label{sec:impl-estados}
 
-O simulador adota uma representação unificada baseada em conjuntos de estados,
-independentemente de o autômato ser determinístico ou não. O estado corrente é
-sempre um \texttt{BTreeSet<String>} contendo todos os estados em que o autômato pode
-encontrar-se simultaneamente. Para AFDs, esse conjunto contém exatamente um elemento, ao passo que, para AFNs, pode conter múltiplos estados.
+Um autômato não determinístico pode encontrar-se em vários estados ao mesmo tempo, e a
+forma usual de simulá-lo consiste em propagar o conjunto de todos esses estados a cada
+passo, à maneira da construção de subconjuntos apresentada na
+Seção~\ref{sec:equivalencia}. Essa estratégia é fiel ao formalismo, mas produz uma
+exibição em que vários estados se acendem simultaneamente, sem indicar qual deles de
+fato conduz ao reconhecimento da cadeia.
+
+O simulador da ferramenta adota, por isso, uma estratégia distinta: em vez de propagar
+a nuvem de estados, ele seleciona previamente um único caminho do autômato e o percorre
+passo a passo. A configuração exibida em cada instante contém, assim, um só estado, o
+que torna a execução legível como uma trajetória sobre o diagrama. Quando a cadeia
+pertence à linguagem, o caminho exibido é aceitador, isto é, parte do estado inicial,
+consome todos os símbolos da entrada e termina em um estado final. Quando não pertence,
+exibe-se o caminho que mais se aproxima da aceitação, segundo o critério descrito na
+subseção seguinte.
+
+\subsection{Seleção do Caminho}
+\label{sec:impl-caminho}
+
+A escolha do caminho é feita por uma busca em largura sobre o espaço de configurações
+formado pelos pares (estado, quantidade de símbolos já consumidos). A partir do par
+inicial, a busca segue dois tipos de aresta: as transições $\varepsilon$, que mudam o
+estado sem avançar na entrada, e as transições rotuladas com o próximo símbolo da
+cadeia, que avançam uma posição. Como cada par é visitado uma única vez, os ciclos de
+transições $\varepsilon$ não provocam repetição indefinida.
+
+Entre todos os pares alcançados, elege-se o melhor por dois critérios, aplicados nesta
+ordem:
+
+\begin{enumerate}
+    \item maior quantidade de símbolos consumidos da entrada;
+    \item menor distância até um estado final no grafo do autômato.
+\end{enumerate}
+
+Esses dois critérios bastam para produzir os dois comportamentos desejados, sem que
+seja necessário distinguir previamente os casos de aceitação e de rejeição. Se a cadeia
+pertence à linguagem, existe um par que consumiu a entrada inteira e repousa sobre um
+estado final: o primeiro critério o coloca à frente de qualquer par que tenha consumido
+menos, e o segundo o coloca à frente dos demais pares que também consumiram tudo, por
+estar à distância zero de um estado final. O caminho reconstruído é, portanto,
+necessariamente aceitador. Se a cadeia não pertence, os mesmos critérios elegem o
+caminho que chega mais longe na entrada e, entre os que empatam nesse ponto, aquele que
+termina mais próximo de um estado final.
+
+A distância mencionada no segundo critério é calculada uma única vez, antes da busca,
+por uma segunda busca em largura sobre o grafo invertido do autômato, partindo
+simultaneamente de todos os estados finais. Estados que não alcançam nenhum estado
+final ficam ausentes do resultado e são tratados como infinitamente distantes.
+
+Por fim, o caminho é reconstruído a partir do par eleito, seguindo os apontadores de
+origem registrados durante a busca. Como a busca é feita em largura, o caminho obtido é
+também o mais curto entre os que levam àquele par.
 
 \subsection{Passo de Simulação}
 \label{sec:impl-passo}
 
-A simulação avança em passos lógicos, cada um correspondendo a uma operação atômica:
+Determinado o caminho, a simulação consiste em percorrê-lo. Cada passo corresponde a um
+de dois tipos de transição:
 
 \begin{enumerate}
-    \item Fecho-$\varepsilon$: se o $\varepsilon$-fechamento do conjunto
-          corrente de estados expande o conjunto (incorporando novos estados
-          alcançáveis por transições $\varepsilon$), um passo de fecho é executado;
-    \item Consumo de caractere: caso o fecho-$\varepsilon$ já esteja
-          saturado e ainda haja caracteres na entrada, o simulador consome o
-          próximo caractere, calculando o conjunto de estados alcançáveis a partir
-          do conjunto corrente por meio de transições rotuladas com esse caractere;
-    \item Término: quando não há mais caracteres a consumir e o
-          fecho-$\varepsilon$ está saturado, a simulação termina. Se algum dos
-          estados do conjunto corrente pertence ao conjunto de estados finais, a
-          cadeia é aceita; caso contrário, é rejeitada.
+    \item Transição $\varepsilon$: o autômato muda de estado sem consumir símbolo da
+          entrada;
+    \item Consumo de caractere: o autômato muda de estado e avança uma posição na
+          cadeia.
 \end{enumerate}
+
+A simulação termina quando o último passo do caminho é executado. A cadeia é aceita se
+o caminho consumiu a entrada por inteiro e terminou em um estado final; caso contrário,
+é rejeitada. Quando a rejeição decorre da ausência de transição disponível, e não do
+esgotamento da entrada, o simulador informa a posição do símbolo em que o caminho ficou
+preso, de modo que a interface possa destacá-lo.
 
 O histórico completo de configurações é armazenado em um vetor, permitindo navegação
 tanto para frente quanto para trás durante a simulação visual.
-
-\subsection{Algoritmo de Fecho-\texorpdfstring{$\varepsilon$}{epsilon}}
-\label{sec:impl-fecho}
-
-O $\varepsilon$-fechamento é implementado por um algoritmo iterativo que parte do
-conjunto de estados corrente e, enquanto houver transições $\varepsilon$ partindo de
-algum estado do conjunto que levem a estados ainda não incluídos, adiciona esses novos
-estados ao conjunto. O processo continua até que nenhum novo estado seja acrescentado
-(ponto fixo).
 
 \section{Interface Gráfica}
 \label{sec:impl-ui}
@@ -2784,7 +2823,8 @@ visualmente organizadas sobre cada erro, facilitando a correção do código-fon
 
 Este capítulo apresenta os resultados obtidos com a implementação da ferramenta Autosim.
 A validação foi realizada por meio de uma suíte de testes automatizados, cobrindo as três
-fases de análise (léxica, sintática e semântica), totalizando 42 casos de teste. Além
+fases de análise (léxica, sintática e semântica) e o simulador, totalizando 51 casos de
+teste. Além
 dos testes, foram conduzidas simulações com autômatos clássicos da literatura para
 verificar a correção do simulador e a qualidade dos diagnósticos de erro.
 
@@ -2813,7 +2853,9 @@ da cobertura de testes.
         \hline
         Análise Semântica & 15  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
         \hline
-        \textbf{Total}    & \textbf{42} &  \\
+        Simulação         & 9   & Caminho aceitador, uso de epsilon, cadeia vazia, rejeição por falta de transição, navegação \\
+        \hline
+        \textbf{Total}    & \textbf{51} &  \\
         \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
@@ -3031,13 +3073,14 @@ realizada com a biblioteca Logos, análise sintática, com base na biblioteca Ch
 e análise semântica, capaz de detectar erros estruturais e conceituais com mensagens
 de diagnóstico localizadas e coloridas. Complementarmente, desenvolveu-se um
 simulador que processa cadeias de entrada sobre os autômatos descritos na DSL,
-registrando o histórico completo das configurações intermediárias e permitindo
-navegação bidirecional durante a execução. Por fim, construiu-se uma interface
+exibindo o caminho aceitador quando a cadeia é reconhecida e, quando não é, aquele
+que mais se aproxima da aceitação, com histórico completo das configurações
+intermediárias e navegação bidirecional durante a execução. Por fim, construiu-se uma interface
 gráfica interativa que renderiza automaticamente o diagrama de estados a partir do
-texto fonte e anima a simulação passo a passo, com destaque visual para os estados
-ativos e as transições percorridas. A validação da ferramenta foi realizada por meio
-de 42 testes automatizados, distribuídos entre as fases léxica, sintática e
-semântica, além de simulações com autômatos clássicos da literatura, com todos os
+texto fonte e anima a simulação passo a passo, com destaque visual para o estado
+corrente e as transições percorridas. A validação da ferramenta foi realizada por meio
+de 51 testes automatizados, distribuídos entre as fases léxica, sintática e
+semântica e o simulador, além de simulações com autômatos clássicos da literatura, com todos os
 resultados concordando com o esperado, o que confirma a correção do simulador e a
 qualidade dos diagnósticos gerados.
 
