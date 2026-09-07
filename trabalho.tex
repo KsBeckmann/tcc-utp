@@ -291,8 +291,8 @@ forma sistemática, fixando a notação e a terminologia adotadas nos capítulos
 
 Um conjunto é uma coleção de elementos, que podem ser de qualquer natureza, como
 números, letras, símbolos ou mesmo outros conjuntos. Para indicar que um elemento $a$ pertence a um conjunto
-$C$, escreve-se $a \in C$; o símbolo $\notin$ denota a relação inversa. Por exemplo, dado
-$C = \{a, b, c\}$, tem-se $a \in C$ e $d \notin C$. Conjuntos podem ser finitos ou infinitos; no
+$C$, escreve-se $a \in C$. O símbolo $\notin$ denota a relação inversa. Por exemplo, dado
+$C = \{a, b, c\}$, tem-se $a \in C$ e $d \notin C$. Conjuntos podem ser finitos ou infinitos. No
 segundo caso, é usual o emprego de reticências para indicar a continuação dos elementos, como em
 $\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}$. O conjunto que não contém qualquer elemento é
 denominado conjunto vazio e é representado pelo símbolo $\varnothing$ \cite{sipser2012}.
@@ -303,7 +303,7 @@ representado, por convenção, pela letra grega $\Sigma$ \cite{sipser2012}. Os e
 alfabeto são denominados símbolos ou letras. Por exemplo, $\Sigma_1 = \{0, 1\}$ é o alfabeto
 binário, enquanto $\Sigma_2 = \{a, b, c, \ldots, z\}$ corresponde ao alfabeto latino minúsculo. A
 exigência de finitude é fundamental, pois garante que os autômatos, definidos nas seções
-seguintes, possam manipular o alfabeto de forma efetiva; a exigência de que ele não seja vazio, por sua vez, assegura
+seguintes, possam manipular o alfabeto de forma efetiva. A exigência de que ele não seja vazio, por sua vez, assegura
 que sempre haja ao menos um símbolo disponível para a formação de palavras
 \cite{diverio2011,vieira2004}.
 
@@ -338,7 +338,7 @@ $L_1 - L_2 = \{\varepsilon, ab\}$.
 Além dessas, duas operações específicas, derivadas da estrutura sequencial das
 palavras, desempenham papel central na teoria. A
 concatenação de duas palavras $x = a_1 a_2 \cdots a_m$ e $y = b_1 b_2 \cdots b_n$
-produz a palavra $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$; em particular,
+produz a palavra $xy = a_1 a_2 \cdots a_m b_1 b_2 \cdots b_n$. Em particular,
 $w\varepsilon = \varepsilon w = w$ para qualquer palavra $w$, o que faz de $\varepsilon$
 o elemento neutro dessa operação. A concatenação estende-se naturalmente a linguagens:
 dadas $L_1$ e $L_2$, define-se $L_1 L_2 = \{xy \mid x \in L_1 \text{ e } y \in L_2\}$.
@@ -482,7 +482,7 @@ operação em um estado especial, denominado estado inicial, e processa uma cade
 entrada lendo seus símbolos um a um, da esquerda para a direita. A cada símbolo lido, o autômato
 transita para um novo estado, conforme determinado pela rotulação das arestas. Encerrado o
 processamento da cadeia, se o autômato encontrar-se em um dos estados designados como
-estados finais (ou de aceitação), diz-se que a cadeia foi aceita; caso
+estados finais (ou de aceitação), diz-se que a cadeia foi aceita. Caso
 contrário, é rejeitada \cite{hopcroft2006,sipser2012}. O termo
 \textit{determinístico} reflete a característica de que, para cada combinação de estado atual e
 símbolo de entrada, existe uma única transição possível.
@@ -982,7 +982,7 @@ tem acesso direto à estrutura do programa fonte enquanto o avalia \cite{aho2008
 estratégias não são mutuamente exclusivas, e muitas implementações modernas combinam-nas em
 arranjos híbridos. O processador de Java, por exemplo, primeiro compila o programa fonte para
 uma forma intermediária portável (os \textit{bytecodes}), que é então interpretada por uma
-máquina virtual; certas máquinas virtuais ainda recompilam dinamicamente trechos do código para
+máquina virtual. Certas máquinas virtuais ainda recompilam dinamicamente trechos do código para
 a linguagem da máquina hospedeira, técnica conhecida como compilação \textit{just-in-time}, que
 busca obter simultaneamente a portabilidade da interpretação e o desempenho da compilação
 \cite{aho2008}.
@@ -1006,7 +1006,7 @@ a parte de síntese constitui o \textit{back-end}.
 
 A etapa de análise costuma ser subdividida em três fases. A análise léxica (também
 chamada de \textit{scanning} ou leitura) percorre o fluxo de caracteres do programa fonte e os
-agrupa em sequências significativas, denominadas lexemas; para cada lexema, produz um
+agrupa em sequências significativas, denominadas lexemas. Para cada lexema, produz um
 \textit{token}, isto é, um par formado por um nome simbólico e, eventualmente, um valor de
 atributo associado. A análise sintática recebe o fluxo de \textit{tokens} produzido pela
 fase léxica e o organiza em uma estrutura hierárquica, em geral uma árvore de sintaxe, que torna
@@ -1072,8 +1072,8 @@ codificação de caracteres ficam restritas ao analisador léxico, sem afetar as
 compilador.
 
 A discussão sobre análise léxica apoia-se em três termos relacionados, porém distintos. Um
-\textit{token} é um par formado por um nome simbólico e, opcionalmente, um valor de atributo;
-o nome representa, de forma abstrata, uma classe de unidade léxica, como uma palavra-chave
+\textit{token} é um par formado por um nome simbólico e, opcionalmente, um valor de atributo.
+O nome representa, de forma abstrata, uma classe de unidade léxica, como uma palavra-chave
 específica ou a categoria genérica de identificador. Um padrão é uma descrição da forma
 que os lexemas associados a um \textit{token} podem assumir, em geral expressa por meio de uma
 expressão regular. Um lexema é uma sequência concreta de caracteres do programa fonte
@@ -1089,7 +1089,7 @@ ocorrências, e o analisador léxico precisa fornecer informação adicional às
 isso, associa-se ao \textit{token} um valor de atributo, que descreve o lexema
 específico encontrado. No caso de identificadores, esse atributo costuma ser um apontador para
 a entrada correspondente na tabela de símbolos, onde se mantêm informações como o nome, o tipo
-e a posição do identificador no programa fonte; no caso de constantes numéricas, o atributo
+e a posição do identificador no programa fonte. No caso de constantes numéricas, o atributo
 pode ser o próprio valor numérico ou um apontador para uma representação interna desse valor
 \cite{aho2008}.
 
@@ -1100,8 +1100,8 @@ posteriores, pois o lexema é localmente válido, embora gramaticalmente inadequ
 seja um \texttt{if} grafado de forma equivocada \cite{aho2008}. Quando, porém, nenhum padrão
 casa com o prefixo restante da entrada, o analisador léxico precisa recorrer a alguma estratégia
 de recuperação. A mais simples, conhecida como recuperação em \textit{modo de pânico}, consiste
-em descartar caracteres da entrada até que um \textit{token} bem formado possa ser reconhecido;
-estratégias mais elaboradas tentam reparar o erro por meio de uma única transformação local
+em descartar caracteres da entrada até que um \textit{token} bem formado possa ser reconhecido.
+Estratégias mais elaboradas tentam reparar o erro por meio de uma única transformação local
 (remoção, inserção, substituição ou transposição de caracteres), partindo da hipótese, empírica,
 de que a maioria dos erros léxicos envolve um único caractere \cite{aho2008}.
 
@@ -1193,11 +1193,11 @@ Existem duas grandes famílias de algoritmos de análise sintática empregados e
 reais: a análise descendente (\textit{top-down}) e a análise ascendente
 (\textit{bottom-up}) \cite{aho2008}. Os métodos descendentes constroem a árvore de derivação
 da raiz para as folhas, partindo do símbolo inicial da gramática e tentando reescrevê-lo até
-obter a cadeia da entrada; nessa família, destacam-se os analisadores preditivos e, em
+obter a cadeia da entrada. Nessa família, destacam-se os analisadores preditivos e, em
 particular, os analisadores LL, em geral implementados manualmente como um conjunto de funções
 mutuamente recursivas, técnica conhecida como descida recursiva. Os métodos ascendentes, por
 sua vez, constroem a árvore das folhas para a raiz, agrupando progressivamente os
-\textit{tokens} da entrada em estruturas maiores até alcançar o símbolo inicial; os
+\textit{tokens} da entrada em estruturas maiores até alcançar o símbolo inicial. Os
 analisadores LR, mais expressivos que os LL, costumam ser construídos por meio de ferramentas
 automáticas, como Yacc e Bison, devido à complexidade das tabelas que utilizam \cite{aho2008}.
 Em ambas as estratégias, a entrada é consumida da esquerda para a direita, um símbolo de cada
@@ -1209,13 +1209,13 @@ fonte e, sempre que possível, recuperar-se de modo a permitir a detecção de e
 em uma única invocação do compilador \cite{aho2008}. Os autores discutem quatro
 estratégias gerais de recuperação de erros sintáticos. A recuperação em \textit{modo pânico}
 descarta \textit{tokens} da entrada até encontrar um \textit{token} de sincronismo, como
-ponto-e-vírgula ou chave de fechamento, retomando a análise a partir desse ponto; é simples e
+ponto-e-vírgula ou chave de fechamento, retomando a análise a partir desse ponto. É simples e
 robusta, embora possa ocultar erros próximos. A recuperação em nível de frase tenta corrigir o
 erro localmente por meio de pequenas substituições, inserções ou exclusões de \textit{tokens}.
 A estratégia de produções de erro estende a gramática com regras que reconhecem construções
 erradas comuns, permitindo emitir mensagens de erro especializadas. Por fim, a correção global
-busca a menor sequência de transformações capaz de tornar a entrada sintaticamente válida;
-embora teoricamente atraente, é dispendiosa demais para uso em compiladores reais.
+busca a menor sequência de transformações capaz de tornar a entrada sintaticamente válida.
+Embora teoricamente atraente, é dispendiosa demais para uso em compiladores reais.
 
 Para os fins deste trabalho, a análise sintática é a fase responsável por reconhecer a
 estrutura gramatical da linguagem de domínio específico proposta, transformando a sequência de
@@ -1238,7 +1238,7 @@ A parcela mais visível do trabalho do analisador semântico é a verificação 
 Para realizá-la, o compilador atribui uma expressão de tipo a cada componente do programa fonte
 e verifica se essas expressões satisfazem o conjunto de regras lógicas que constitui o
 sistema de tipos da linguagem. Exige-se tipicamente, por exemplo, que o índice usado
-para acessar um arranjo seja inteiro, que os operandos de um operador aritmético tenham tipos
+para acessar um vetor seja inteiro, que os operandos de um operador aritmético tenham tipos
 compatíveis e que o valor retornado por uma função tenha o tipo declarado em sua assinatura
 \cite{aho2008}. Quando alguma dessas condições é violada, o compilador emite uma mensagem de
 erro de tipo, evitando que o programa avance para fases posteriores em estado inconsistente.
@@ -1246,7 +1246,7 @@ erro de tipo, evitando que o programa avance para fases posteriores em estado in
 A verificação de tipos pode ser feita estaticamente, em tempo de compilação, ou dinamicamente,
 em tempo de execução. Um sistema de tipos é dito seguro quando a verificação estática
 realizada pelo compilador é suficiente para garantir que erros de tipo nunca ocorrerão durante
-a execução do programa objeto, dispensando, portanto, verificações dinâmicas dispendiosas; uma
+a execução do programa objeto, dispensando, portanto, verificações dinâmicas dispendiosas. Uma
 implementação de linguagem é dita fortemente tipada (\textit{strongly typed}) quando o
 compilador efetivamente assegura essa propriedade para todos os programas que aceita
 \cite{aho2008}. A verificação estática de tipos é, em geral, considerada uma das principais
@@ -1256,11 +1256,11 @@ máquina virtual.
 
 \citeonline{aho2008} distinguem duas formas complementares de verificação de tipos. Na
 síntese de tipos, o tipo de uma expressão é construído a partir dos tipos de suas
-subexpressões, com base em regras locais; essa abordagem exige, em geral, que todos os nomes
+subexpressões, com base em regras locais. Essa abordagem exige, em geral, que todos os nomes
 utilizados sejam declarados antes de seu uso, de modo que o compilador disponha sempre da
 informação necessária à composição dos tipos. Na inferência de tipos, por outro lado,
 o tipo de uma construção é deduzido a partir do modo como ela é utilizada, por meio de
-variáveis de tipo e regras de unificação; essa abordagem é típica de linguagens funcionais
+variáveis de tipo e regras de unificação. Essa abordagem é típica de linguagens funcionais
 como ML e Haskell, que verificam os tipos sem exigir declarações explícitas. Em qualquer um dos
 dois modelos, o objetivo final é o mesmo, isto é, associar a cada expressão um tipo único e
 bem definido antes da geração de código.
@@ -1362,7 +1362,7 @@ um conjunto de ponteiros para os filhos e, eventualmente, atributos específicos
 como o nome de um identificador ou o valor de uma constante \cite{aho2008}. As fases
 subsequentes do compilador percorrem essa estrutura, lendo e anotando os nós conforme suas
 necessidades. A análise semântica, por exemplo, anota cada nó com seu tipo inferido e, quando
-necessário, insere nós adicionais representando conversões implícitas; o gerador de código
+necessário, insere nós adicionais representando conversões implícitas. O gerador de código
 intermediário, por sua vez, percorre a árvore anotada e emite, para cada nó, as instruções
 correspondentes na linguagem intermediária.
 
@@ -1423,7 +1423,7 @@ sintática que oferecem.
 
 Cada uma das duas estratégias apresenta vantagens distintas. A DSL interna tem custo de
 implementação reduzido, pois reaproveita o compilador, o sistema de tipos e o ecossistema de
-ferramentas da linguagem hospedeira; em compensação, sua sintaxe está limitada por aquilo que a
+ferramentas da linguagem hospedeira. Em compensação, sua sintaxe está limitada por aquilo que a
 hospedeira permite expressar, e o usuário do domínio acaba exposto a detalhes da linguagem
 subjacente. A DSL externa tem o custo inicial mais alto, uma vez que demanda a construção de um
 \textit{front-end} dedicado, mas oferece liberdade total na escolha da sintaxe e isolamento
@@ -2394,8 +2394,8 @@ da ferramenta está disponível publicamente em repositório aberto \cite{autosi
 \label{sec:impl-pipeline}
 
 O processamento de um arquivo-fonte \texttt{.asl} segue o pipeline ilustrado na
-Figura~\ref{fig:pipeline-autosim}. Cada fase do pipeline é executada sequencialmente;
-em caso de erro em qualquer fase, as mensagens de diagnóstico são exibidas via
+Figura~\ref{fig:pipeline-autosim}. Cada fase do pipeline é executada sequencialmente.
+Em caso de erro em qualquer fase, as mensagens de diagnóstico são exibidas via
 Ariadne e a execução é interrompida antes da fase seguinte.
 
 \begin{figure}[h]
@@ -2444,8 +2444,24 @@ Quando um caractere não pertence a nenhum padrão definido, o Logos retorna um 
 contendo a posição (linha e coluna) do caractere inválido. A ferramenta converte essa
 informação em uma mensagem de diagnóstico por meio da biblioteca Ariadne, que exibe o
 trecho do código-fonte com realce colorido, uma seta apontando para a posição do erro e
-uma mensagem descritiva. Por exemplo, para o caractere \texttt{\%} não reconhecido, a
-mensagem gerada é: "token inválido \texttt{\%}".
+uma mensagem descritiva.
+
+O diagnóstico gerado nessa situação é apresentado na
+Figura~\ref{fig:erro-lexico-token-invalido}, que corresponde ao processamento do
+arquivo \texttt{error\_line3.asl}, no qual o caractere \texttt{@} ocorre na linha 3,
+coluna 22. A mensagem identifica o arquivo e a posição exata da ocorrência, reproduz a
+linha do código-fonte com o caractere inválido em destaque e ancora, logo abaixo dele,
+o rótulo "token desconhecido", de modo que o estudante localize o problema sem
+necessidade de inspecionar manualmente o arquivo.
+
+\begin{figure}[h]
+    \centering
+    \caption{MENSAGEM DE ERRO LÉXICO GERADA PELA BIBLIOTECA ARIADNE}
+    \label{fig:erro-lexico-token-invalido}
+    \includegraphics[width=0.8\textwidth]{img/erro_lexico_token_invalido.png}
+    \fonte{Os autores (\the\year)}
+\end{figure}
+\FloatBarrier
 
 \section{Analisador Sintático}
 \label{sec:impl-parser}
@@ -2564,8 +2580,7 @@ percorridas durante o reconhecimento.
 O simulador adota uma representação unificada baseada em conjuntos de estados,
 independentemente de o autômato ser determinístico ou não. O estado corrente é
 sempre um \texttt{BTreeSet<String>} contendo todos os estados em que o autômato pode
-encontrar-se simultaneamente. Para AFDs, esse conjunto contém exatamente um elemento;
-para AFNs, pode conter múltiplos estados.
+encontrar-se simultaneamente. Para AFDs, esse conjunto contém exatamente um elemento, ao passo que, para AFNs, pode conter múltiplos estados.
 
 \subsection{Passo de Simulação}
 \label{sec:impl-passo}
@@ -2670,7 +2685,7 @@ janela, o diagrama é desenhado sob uma câmera que oferece navegação livre po
 \textit{mouse}. O usuário desloca a visão (\textit{pan}) arrastando com o botão
 esquerdo e ajusta a ampliação (\textit{zoom}) com a roda de rolagem, que é ancorada na
 posição do cursor e limitada à faixa de 20\% a 400\%. O botão \texttt{Centralizar}
-restaura a visão original. A câmera é aplicada apenas ao diagrama de estados; a cadeia
+restaura a visão original. A câmera é aplicada apenas ao diagrama de estados. A cadeia
 de entrada e o histórico de configurações permanecem fixos na tela, funcionando como um
 painel de informações sempre visível.
 
@@ -2984,7 +2999,7 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
         \texttt{sema\_nondeterministic.asl} & AFD não-determinístico & Transição conflitante \\
         \texttt{parse\_error.asl} & Falta \texttt{inicial} & "esperava 'inicial'" \\
         \texttt{symbol\_error.asl} & Caractere inválido & "token inválido" \\
-        \texttt{error\_line3.asl} & Símbolo não esperado & Erro sintático localizado \\
+        \texttt{error\_line3.asl} & Caractere inválido & "token inválido '@'" (linha 3) \\
         \hline
     \end{tabular}
     \fonte{Os autores (\the\year)}
