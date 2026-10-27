@@ -3,7 +3,7 @@
 % "Ferramenta Baseada em DSL para o Apoio ao Ensino de Autômatos Finitos com Simulação Visual"
 % João Thomaz Vieira e Klaus Siegfried Beckmann — Orientador: Prof. Diógenes Cogo Furlan — UTP 2026
 %
-% Compilar: pdflatex apresentacao.tex  (2x, para o índice/roteiro)
+% Compilar: pdflatex apresentacao.tex  (2x)
 %
 % ROTEIRO DE TEMPO (~35 min, faixa alvo 30–40):
 %   1. Introdução .................. ~5 min
@@ -32,6 +32,7 @@
 
 % ----- Tema -----------------------------------------------------------------------------------
 \usetheme{Madrid}
+\setbeamertemplate{section in toc}[sections numbered]
 \usecolortheme{whale}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
@@ -41,13 +42,6 @@
 \setbeamercolor{structure}{fg=acento}
 \setbeamercolor{block title}{bg=acento,fg=white}
 \setbeamercolor{block body}{bg=acento!8}
-
-% Slide de abertura de cada seção com o roteiro destacado
-\AtBeginSection[]{%
-  \begin{frame}{Roteiro}
-    \tableofcontents[currentsection]
-  \end{frame}%
-}
 
 % ----- Estilo de código: DSL Autosim (.asl) ---------------------------------------------------
 \lstdefinelanguage{asl}{
@@ -85,6 +79,7 @@
   \titlepage
 \end{frame}}
 
+% Seções numeradas iguais aos capítulos da monografia
 \begin{frame}{Roteiro}
   \tableofcontents
 \end{frame}
@@ -162,7 +157,7 @@
 \end{frame}
 
 % =================================================================================================
-\section{Fundamentação Teórica}
+\section{Autômatos Finitos e Linguagens Formais}
 
 \begin{frame}{Autômatos finitos}
   \begin{columns}[T]
@@ -261,6 +256,8 @@
   \textbf{autômatos finitos} — o formalismo central deste trabalho.
 \end{frame}
 
+\section{Compiladores e Linguagens de Domínio Específico}
+
 \begin{frame}{Compiladores: as fases de análise}
   Um compilador traduz um programa-fonte verificando sua consistência em fases sucessivas:
   \vspace{6pt}
@@ -302,6 +299,8 @@
     \emph{A Autosim é uma \textbf{DSL externa}} — com sintaxe própria e um compilador implementado em Rust.
   \end{center}
 \end{frame}
+
+\section{Rust como Linguagem de Implementação}
 
 \begin{frame}{Por que Rust?}
   \begin{itemize}
@@ -360,7 +359,7 @@
 \end{frame}
 
 % =================================================================================================
-\section{Projeto da DSL (Autosim)}
+\section{Projeto da DSL}
 
 \begin{frame}[fragile]{A linguagem: um exemplo}
   DSL externa, sintaxe em \textbf{português}; cada arquivo \texttt{.asl} tem um alfabeto comum
@@ -533,7 +532,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \end{frame}
 
 % =================================================================================================
-\section{Demonstração e Resultados}
+\section{Resultados}
 
 \begin{frame}{Interface — visão geral}
   \begin{center}
