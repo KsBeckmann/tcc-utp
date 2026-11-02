@@ -43,6 +43,13 @@
 \setbeamercolor{block title}{bg=acento,fg=white}
 \setbeamercolor{block body}{bg=acento!8}
 
+% Slide de abertura de cada seção com o roteiro destacado
+\AtBeginSection[]{%
+  \begin{frame}{Roteiro}
+    \tableofcontents[currentsection]
+  \end{frame}%
+}
+
 % ----- Estilo de código: DSL Autosim (.asl) ---------------------------------------------------
 \lstdefinelanguage{asl}{
   morekeywords={alfabeto,automato,AFD,AFN,estados,inicial,finais,transicoes,simular,com,epsilon,eps},
@@ -172,7 +179,7 @@
       \end{itemize}
       \vspace{4pt}
       No \textbf{AFN}, a transição leva a um \emph{conjunto} de estados
-      ($\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to 2^{Q}$), admitindo
+      ($\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to \mathcal{P}(Q)$), admitindo
       transições vazias~$\varepsilon$.
     \end{column}
     \begin{column}{0.42\textwidth}
@@ -408,6 +415,8 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
           verificação semântica (um único conjunto de referência).
     \item \textbf{Classificação explícita AFD/AFN} — permite verificações específicas por tipo
           (ex.: determinismo só para AFD).
+    \item \textbf{Sintaxe em português} — reduz a barreira linguística e mantém o foco nos
+          conceitos de autômatos.
     \item \textbf{Case-insensitive} — \texttt{AFD}, \texttt{afd}, \texttt{Afd} são equivalentes;
           reduz a carga cognitiva do estudante.
     \item \textbf{Suporte a transições $\varepsilon$} — palavras-chave \texttt{epsilon} / \texttt{eps}
@@ -669,7 +678,8 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
         \begin{itemize}\footnotesize
           \item Editor com realce na própria interface.
           \item Alfabetos distintos por autômato.
-          \item Conversão AFN$\to$AFD, minimização e extração de gramáticas.
+          \item Conversão AFN$\to$AFD, minimização e conversão para expressões regulares.
+          \item Descrição e simulação de gramáticas formais.
           \item Modo CLI para automação.
           \item Autômatos com pilha e \textbf{máquinas de Turing} (níveis superiores da Hierarquia de Chomsky).
           \item \textbf{Estudos controlados com estudantes} (impacto pedagógico).
