@@ -83,20 +83,23 @@ como requisito à obtenção do grau de Bacharel.}
 % Resumo do trabalho
 \begin{resumo}
     O ensino de autômatos finitos em cursos de Ciência da Computação enfrenta dificuldades
-    relacionadas à abstração dos conceitos teóricos, uma vez que as ferramentas existentes adotam
-    abordagens exclusivamente visuais, sem oferecer representação textual formal, versionamento ou
-    diagnósticos de erro precisos. Este trabalho propõe o desenvolvimento de uma ferramenta
-    educacional composta por uma Linguagem de Domínio Específico (DSL) textual para a descrição 
-    declarativa de Autômatos Finitos Determinísticos (AFD) e Não-Determinísticos (AFN), acompanhada
-    de um compilador que realiza análise léxica, sintática e semântica, fornecendo mensagens de erro
-    com indicação de localização e natureza do problema. A ferramenta integra ainda uma interface
-    gráfica interativa que renderiza visualmente o autômato descrito e anima o processo de simulação
-    passo a passo, destacando os estados e transições percorridos durante o reconhecimento de
-    cadeias de entrada. A validação do protótipo é realizada por meio de testes com autômatos
-    clássicos da literatura, incluindo casos com erros propositais para avaliar a qualidade dos
-    diagnósticos gerados. Espera-se que a ferramenta contribua para a compreensão prática do
-    funcionamento de autômatos finitos, conectando a teoria de autômatos à prática de compiladores
-    em um único instrumento educacional.
+    relacionadas à abstração dos conceitos teóricos e à falta de retroalimentação imediata,
+    uma vez que as ferramentas existentes adotam abordagens exclusivamente visuais, sem oferecer
+    representação textual formal, versionamento ou diagnósticos de erro precisos. Este trabalho
+    apresenta a Autosim, uma ferramenta educacional composta por uma Linguagem de Domínio
+    Específico (DSL) textual, em português, para a descrição declarativa de Autômatos Finitos
+    Determinísticos (AFD) e Não-Determinísticos (AFN) com transições $\varepsilon$, cuja
+    gramática foi formalizada em EBNF. A ferramenta inclui um compilador, implementado em Rust,
+    que realiza análise léxica, sintática e semântica e fornece mensagens de erro com indicação
+    de linha, coluna e natureza do problema, além de uma interface gráfica interativa que
+    renderiza automaticamente o diagrama de estados a partir do texto e anima a simulação passo
+    a passo, destacando os estados e as transições percorridos durante o reconhecimento de
+    cadeias de entrada. A validação foi realizada por meio de 51 testes automatizados, cobrindo
+    as fases de análise e o simulador, de simulações com autômatos clássicos da literatura e de
+    cenários com erros propositais; todos os resultados concordaram com o esperado, confirmando
+    a correção do simulador e a qualidade dos diagnósticos gerados. A ferramenta conecta, em um
+    único instrumento, a teoria de autômatos à prática de compiladores, oferecendo ao estudante
+    um ambiente para descrever, validar e executar autômatos finitos.
     
     \palavraschave{autômatos finitos; linguagem de domínio específico; compiladores; simulação visual; ensino de computação}
 \end{resumo}
@@ -158,6 +161,7 @@ como requisito à obtenção do grau de Bacharel.}
     \item[$\Rightarrow^*$]            Derivação em zero ou mais passos
     \item[$\delta$]                   Função de transição
     \item[$\hat{\delta}$]             Função de transição estendida a cadeias
+    \item[$E(q)$]                     $\varepsilon$-fecho do estado $q$
     \item[$L(M)$]                     Linguagem reconhecida pelo autômato $M$
     \item[$L(G)$]                     Linguagem gerada pela gramática $G$
 \end{simbolos}
@@ -218,13 +222,13 @@ de compilador real (com análises léxica, sintática e semântica) focada no di
 detalhado de erros conceituais (como transições para estados não declarados ou
 determinismo violado), fornecendo mensagens com linha e coluna exatas.
 
-Do ponto de vista pedagógico, a ferramenta resolve o problema específico da
+Do ponto de vista pedagógico, a ferramenta busca mitigar o problema específico da
 ausência de retroalimentação imediata que ocorre na transição entre o formalismo matemático
-e a prática computacional. Em vez de o estudante testar sua máquina por tentativa
-e erro visual, ele interage com diagnósticos formais de um compilador, conectando
-nativamente a teoria de autômatos à prática de compiladores em um único instrumento
-educacional. A solução unificada busca guiar o aprendizado através do rigor linguístico
-e da depuração contextual.
+e a prática computacional. Em vez de testar sua máquina por tentativa e erro visual, o
+estudante passa a interagir com os diagnósticos formais de um compilador, o que aproxima a
+teoria de autômatos da prática de compiladores em um único instrumento educacional. A
+solução unificada busca, assim, guiar o aprendizado por meio do rigor linguístico e da
+depuração contextual.
 
 O objetivo geral deste trabalho é desenvolver essa ferramenta educacional, que integra
 a descrição textual de autômatos, sua compilação pedagógica e sua simulação visual em
@@ -233,17 +237,17 @@ específicos:
 
 \begin{alineas}
     \item projetar uma DSL textual com sintaxe declarativa própria para a descrição formal de AFDs e
-    AFNs, com a gramática formalizada nas notações \textit{Backus-Naur Form} (BNF) e
-    \textit{Extended Backus-Naur Form} (EBNF), ou seja, forma de Backus-Naur e sua
-    versão estendida;
+    AFNs, com a gramática formalizada na notação \textit{Extended Backus-Naur Form}
+    (EBNF), ou seja, a forma de Backus-Naur estendida;
     \item implementar um compilador pedagógico para a DSL com análise léxica, sintática e semântica,
     focado na detecção precoce de erros de consistência formal e na geração de mensagens de diagnóstico localizadas;
     \item desenvolver um simulador capaz de processar cadeias de entrada sobre os autômatos
     descritos na DSL, determinando aceitação ou rejeição e registrando detalhadamente as configurações intermediárias;
     \item construir uma interface gráfica interativa que renderize automaticamente o diagrama de estados a partir do 
     texto fonte e anime a simulação passo a passo, permitindo o rastreamento síncrono da execução;
-    \item validar a capacidade diagnóstica e pedagógica da ferramenta por meio de testes com autômatos clássicos da literatura 
-    e cenários com falhas estruturais induzidas.
+    \item validar a correção do simulador e a capacidade diagnóstica do compilador por meio de
+    testes automatizados, de simulações com autômatos clássicos da literatura e de cenários
+    com falhas estruturais induzidas.
 \end{alineas}
 
 Este trabalho está organizado como segue.
@@ -624,6 +628,28 @@ $\hat{\delta}(q_0, 001) = \{q_0, q_2\}$. Como $q_2 \in F$, a cadeia é aceita. P
 processar a cadeia $010$, obtém-se ao final $\hat{\delta}(q_0, 010) = \{q_0, q_1\}$, conjunto que
 não contém o estado final $q_2$, de modo que a cadeia é rejeitada.
 
+Uma extensão usual desse modelo admite transições $\varepsilon$ (transições vazias), que
+permitem ao autômato mudar de estado sem consumir nenhum símbolo da entrada
+\cite{hopcroft2006,sipser2012}. Nesse modelo, denominado AFN-$\varepsilon$, a função de
+transição passa a ser $\delta : Q \times (\Sigma \cup \{\varepsilon\}) \to \mathcal{P}(Q)$.
+Para tratar essas transições, define-se o $\varepsilon$-fecho de um estado $q$, denotado
+$E(q)$, como o conjunto de todos os estados alcançáveis a partir de $q$ seguindo apenas
+transições $\varepsilon$, incluindo o próprio $q$ \cite{hopcroft2006}. A função estendida
+aplica o $\varepsilon$-fecho no início e após a leitura de cada símbolo:
+\begin{align*}
+    \hat{\delta}(q, \varepsilon) &= E(q), \\
+    \hat{\delta}(q, wa)          &= \bigcup_{p \in \hat{\delta}(q, w)} \;
+                                    \bigcup_{r \in \delta(p, a)} E(r),
+\end{align*}
+e a cadeia $w$ é aceita, como antes, quando $\hat{\delta}(q_0, w) \cap F \neq \varnothing$.
+As transições $\varepsilon$ não ampliam o poder de reconhecimento do modelo: todo
+AFN-$\varepsilon$ pode ser convertido em um AFN sem transições $\varepsilon$ e, portanto, em
+um AFD que reconhece a mesma linguagem \cite{hopcroft2006}. Seu interesse é sobretudo
+prático, pois simplificam a descrição e a composição de autômatos. Um exemplo é o
+AFN-$\varepsilon$ da Listagem~\ref{lst:exemplo-afn}, no Capítulo~\ref{cap:projeto}, que
+reconhece a linguagem $a^*b^*$ com uma única transição $\varepsilon$ entre um estado que lê
+os símbolos $a$ e outro que lê os símbolos $b$.
+
 Embora o não-determinismo confira maior flexibilidade aparente na descrição de linguagens,
 demonstra-se que toda linguagem reconhecida por um AFN também pode ser reconhecida por algum
 AFD \cite{hopcroft2006,sipser2012}. Esse resultado, fundamentado na chamada construção
@@ -856,7 +882,7 @@ AFN em AFD. Essas operações estendem a noção básica de simulação para um 
 recursos didáticos, ao qual se pode atribuir o termo \textit{ambiente de experimentação}. A
 ferramenta proposta neste trabalho posiciona-se nesse espectro, oferecendo, em primeiro plano,
 a simulação visual passo a passo de autômatos finitos descritos por meio de uma linguagem de
-domínio específico, conforme será detalhado no Capítulo~\ref{cap:compiladores}.
+domínio específico, conforme será detalhado no Capítulo~\ref{cap:implementacao}.
 
 \section{Aplicações de Autômatos}
 \label{sec:aplicacoes_automatos}
@@ -914,7 +940,7 @@ de \textit{software}.
 Para o presente trabalho, a aplicação de maior interesse é a análise léxica, pois constitui o
 elo direto entre a teoria dos autômatos finitos e a construção de compiladores e
 interpretadores para linguagens de programação. A linguagem de domínio específico proposta
-nesta monografia, descrita no Capítulo~\ref{cap:compiladores}, será analisada
+nesta monografia, descrita no Capítulo~\ref{cap:projeto}, é analisada
 lexicamente por um autômato finito gerado a partir das regras léxicas da própria linguagem,
 em uma aplicação concreta dos conceitos apresentados neste capítulo.
 
@@ -1116,7 +1142,7 @@ subconjuntos) capaz de reconhecer eficientemente os lexemas durante a varredura 
 fonte \cite{aho2008}. Essa cadeia, de \textit{regex} a \textit{token}, fornece a base teórica
 para os geradores automáticos de analisadores léxicos, como o Lex e o Flex, e também para
 bibliotecas modernas que empregam técnicas equivalentes em linguagens contemporâneas. A
-ferramenta proposta neste trabalho, descrita no Capítulo~\ref{cap:compiladores}, fará uso direto
+ferramenta proposta neste trabalho, descrita no Capítulo~\ref{cap:projeto}, faz uso direto
 dessa correspondência ao analisar lexicamente sua linguagem de domínio específico, em uma
 aplicação concreta dos conceitos discutidos nesta seção.
 
@@ -1491,7 +1517,7 @@ construir \textit{parsers} mais complexos a partir desses elementos por meio de 
 compilador, expressa diretamente pelas funções e operadores da biblioteca. Essa estratégia é
 particularmente comum em linguagens funcionais, como Haskell e Scala, mas também encontra
 expressão em linguagens modernas com bom suporte a tipos algébricos, sendo amplamente utilizada
-no ecossistema Rust por meio de bibliotecas como nom e pest. Sua principal vantagem é a
+no ecossistema Rust por meio de bibliotecas como nom e chumsky. Sua principal vantagem é a
 ausência de qualquer etapa adicional de geração de código, o que integra perfeitamente o
 analisador ao restante do compilador, em uma única linguagem e em um único processo de
 compilação. A contrapartida é que o desempenho e a clareza dos diagnósticos podem depender de
@@ -1526,11 +1552,12 @@ público-alvo, as exigências de desempenho do analisador e a familiaridade da e
 diferentes técnicas \cite{fowler2010}. Para os fins do presente trabalho, em que a DSL proposta
 é compacta, voltada exclusivamente à descrição de autômatos finitos, e cujo compilador integra
 um sistema mais amplo escrito em uma única linguagem hospedeira, a estratégia adotada
-contempla, de modo combinado, o uso de uma biblioteca de \textit{parser combinators} para a
-construção do \textit{front-end} e a escrita manual das demais etapas. Essa combinação preserva
-a integração natural com o restante da ferramenta, tal como apresentada no Capítulo~\ref{cap:rust},
-sem introduzir dependências de geradores externos ou de plataformas de \textit{language
-engineering}.
+combina três recursos: um gerador de analisadores léxicos embutido na própria linguagem
+hospedeira, que produz o \textit{lexer} a partir de anotações no código-fonte; uma biblioteca
+de \textit{parser combinators} para a análise sintática; e a escrita manual da análise
+semântica e das demais etapas. Essa combinação preserva a integração natural com o restante da
+ferramenta, tal como apresentada no Capítulo~\ref{cap:rust}, sem introduzir etapas externas de
+geração de código nem dependências de plataformas de \textit{language engineering}.
 
 \section{Diagnóstico de Erros}
 \label{sec:diagnostico-erro}
@@ -1607,7 +1634,7 @@ são apresentados em conjunto ao usuário, e somente quando uma fase produz erro
 continuação do processamento é que o restante do compilador deixa de ser executado. Esse
 tratamento dá ao usuário uma visão panorâmica dos defeitos do programa em cada execução, em
 linha com os critérios de qualidade enumerados anteriormente, e prepara o terreno para os
-recursos visuais de apoio descritos no Capítulo~\ref{cap:projeto}.
+recursos visuais de apoio descritos no Capítulo~\ref{cap:implementacao}.
 
 \section{DSL no ensino}
 \label{sec:dsl-ensino}
@@ -1845,13 +1872,12 @@ implementação descrita no Capítulo~\ref{cap:implementacao}.
     \fonte{Os autores (\the\year)}
 \end{quadro}
 
-A escolha entre as três bibliotecas será orientada, durante a fase de implementação, pelos
-requisitos estabelecidos para o compilador da DSL: em especial, a necessidade de mensagens de
-erro com indicação precisa de localização e natureza do problema, conforme descrito na
-Seção~\ref{sec:diagnostico-erro}, e a integração natural com o restante da ferramenta, escrita
-integralmente em Rust. A análise comparativa apresentada nesta seção fornece o embasamento
-necessário para essa decisão, que será documentada e justificada no
-Capítulo~\ref{cap:implementacao}.
+A escolha entre as três bibliotecas foi orientada pelos requisitos estabelecidos para o
+compilador da DSL: em especial, a necessidade de mensagens de erro com indicação precisa de
+localização e natureza do problema, conforme descrito na Seção~\ref{sec:diagnostico-erro}, e
+a integração natural com o restante da ferramenta, escrita integralmente em Rust. A análise
+comparativa apresentada nesta seção fornece o embasamento para essa decisão, cuja
+justificativa é apresentada no Capítulo~\ref{cap:implementacao}.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2319,19 +2345,21 @@ Essa decisão está alinhada com o caráter educacional da ferramenta.
 \subsection{Insensibilidade a Maiúsculas e Minúsculas}
 \label{sec:dsl-case}
 
-Todas as palavras reservadas e identificadores são insensíveis a maiúsculas e
-minúsculas. Isso elimina erros comuns de digitação e torna a linguagem mais
-tolerante para estudantes em fase de aprendizado, sem comprometer a clareza da
-descrição.
+Todas as palavras reservadas são insensíveis a maiúsculas e minúsculas. Isso
+elimina erros comuns de digitação e torna a linguagem mais tolerante para
+estudantes em fase de aprendizado, sem comprometer a clareza da descrição. Os
+identificadores, por outro lado, diferenciam maiúsculas de minúsculas, de modo
+que \texttt{q0} e \texttt{Q0} designam estados distintos, preservando a
+correspondência exata entre os nomes declarados e os nomes referenciados.
 
 \section{Suporte a Transições \texorpdfstring{$\varepsilon$}{epsilon}}
 \label{sec:dsl-epsilon}
 
 A DSL oferece suporte nativo a transições $\varepsilon$ (vazias), características
 de AFNs. O usuário pode empregar tanto a palavra \texttt{epsilon} quanto sua
-abreviação \texttt{eps} como símbolo de transição. O tratamento de
-$\varepsilon$-fechamento é realizado durante a simulação, conforme descrito no
-Capítulo~\ref{cap:implementacao}. A Listagem~\ref{lst:exemplo-afn} ilustra um
+abreviação \texttt{eps} como símbolo de transição. Durante a simulação, cada transição
+$\varepsilon$ é percorrida como um passo próprio, que muda o estado sem consumir símbolo
+da entrada, conforme descrito no Capítulo~\ref{cap:implementacao}. A Listagem~\ref{lst:exemplo-afn} ilustra um
 AFN-$\varepsilon$ que reconhece a linguagem $a^*b^*$.
 
 \begin{lstlisting}[caption={EXEMPLO DE AFN COM TRANSIÇÕES $\varepsilon$}, label={lst:exemplo-afn}, language={}, numbers=left, frame=single]
@@ -2471,6 +2499,16 @@ biblioteca de combinadores de \textit{parsers} para Rust. A gramática da DSL é
 diretamente em código Rust por meio da composição de funções combinadoras, cada uma
 responsável por reconhecer uma construção específica da linguagem.
 
+A escolha do Chumsky, entre as alternativas comparadas no
+Quadro~\ref{tab:comparacao-parsers}, decorre dos requisitos de diagnóstico estabelecidos na
+Seção~\ref{sec:diagnostico-erro}. Diferentemente do nom, cuja geração de mensagens de erro
+precisas exige esforço adicional do implementador, e do pest, que reduz o controle sobre as
+mensagens ao gerar o analisador a partir de uma gramática externa, o Chumsky foi projetado
+com foco na qualidade dos diagnósticos: propaga automaticamente a localização dos erros e
+oferece recuperação nativa, permitindo reportar múltiplos erros em uma única execução. Além
+disso, por ser uma biblioteca de combinadores, mantém a gramática no próprio código Rust,
+integrada ao restante da ferramenta, sem etapas externas de geração de código.
+
 \subsection{Árvore Sintática Abstrata (AST)}
 \label{sec:impl-ast}
 
@@ -2488,10 +2526,13 @@ palavras-chave. As principais estruturas são:
     \item \texttt{Simulation}: associa o nome de um autômato a uma cadeia de entrada.
 \end{itemize}
 
-Cada nó da AST preserva sua posição no texto-fonte original por meio de um span
-(\texttt{Range<usize>}), que registra os índices de caractere de início e fim. Essa
-informação é essencial para a geração de mensagens de erro localizadas nas fases
-posteriores.
+Cada nó da AST preserva sua posição no texto-fonte por meio de um \textit{span}
+(\texttt{Range<usize>}). Como o analisador sintático opera sobre a sequência de
+\textit{tokens} produzida pelo analisador léxico, e não diretamente sobre os caracteres,
+esse \textit{span} registra os índices de início e fim do nó nessa sequência de
+\textit{tokens}. Na geração das mensagens de erro, tanto sintáticas quanto semânticas,
+esses índices são convertidos em posições de caractere a partir das posições registradas
+pelo analisador léxico, o que permite indicar a linha e a coluna exatas do problema.
 
 \subsection{Estrutura da Gramática}
 \label{sec:impl-gramatica}
@@ -2709,10 +2750,10 @@ as seguintes regras:
 
 Cada estado é desenhado como um círculo preenchido com o nome em texto branco. Estados
 de aceitação são representados com um círculo duplo (anel concêntrico). O estado
-inicial é indicado por uma seta apontando da esquerda. Durante a simulação, os estados
-ativos (que fazem parte do conjunto corrente) são destacados com uma cor de realce
-(azul durante a execução, verde para aceitação, vermelho para rejeição) e um efeito
-pulsante.
+inicial é indicado por uma seta apontando da esquerda. Durante a simulação, o estado
+corrente do caminho exibido é destacado com uma cor de realce (azul durante a execução,
+verde para aceitação, vermelho para rejeição) e, enquanto a execução está em andamento,
+com um efeito pulsante.
 
 As transições são renderizadas como arestas rotuladas entre os estados. Quando
 múltiplos símbolos compartilham a mesma origem e destino, os rótulos são concatenados.
@@ -2748,7 +2789,7 @@ A simulação visual sincroniza o estado do simulador com a renderização do ca
 cada passo, o canvas é atualizado para refletir:
 
 \begin{itemize}
-    \item O conjunto de estados ativos (destacado visualmente);
+    \item O estado corrente do caminho (destacado visualmente);
     \item A transição executada no último passo (aresta destacada);
     \item A cadeia de entrada com caracteres já consumidos em verde, o caractere
           corrente em azul e os caracteres não lidos em cinza;
@@ -2801,7 +2842,7 @@ Todas as fases do pipeline utilizam a biblioteca Ariadne para a geração de men
 de erro. O diagnóstico inclui:
 
 \begin{itemize}
-    \item O caminho do arquivo e o número da linha;
+    \item O caminho do arquivo e a posição do erro (linha e coluna);
     \item Um trecho do código-fonte com realce da região problemática;
     \item Uma seta primária apontando para a localização exata do erro;
     \item Setas secundárias para informações complementares (como a declaração
@@ -2831,8 +2872,9 @@ verificar a correção do simulador e a qualidade dos diagnósticos de erro.
 \section{Estratégia de Testes}
 \label{sec:res-estrategia}
 
-Os testes foram organizados em três categorias, cada uma correspondendo a uma fase do
-pipeline de compilação. Todos os testes são executados automaticamente pelo comando
+Os testes foram organizados em quatro categorias: três delas correspondem às fases de
+análise do pipeline de compilação (léxica, sintática e semântica), e a quarta, ao
+simulador. Todos os testes são executados automaticamente pelo comando
 \texttt{cargo test} e seguem o padrão de testes unitários do ecossistema Rust
 \cite{klabnik2019}. O Quadro~\ref{quad:resumo-testes} apresenta um resumo quantitativo
 da cobertura de testes.
@@ -2934,8 +2976,8 @@ entradas válidas e o tratamento adequado de entradas malformadas:
           identificador no lugar de um literal de caractere na transição gera erro;
     \item \textit{Spans} como índices de \textit{token} (1 teste): verifica que os
           \textit{spans} armazenados na AST referem-se a índices de \textit{token}, e
-          não a deslocamentos de caractere, cuja conversão ocorre apenas na fase de
-          análise semântica.
+          não a deslocamentos de caractere, sendo a conversão realizada apenas na
+          geração das mensagens de erro.
 \end{itemize}
 
 Todos os 15 testes do analisador sintático são aprovados.
@@ -2985,6 +3027,47 @@ erros confirma que o analisador semântico é capaz de detectar e reportar, em u
 execução, problemas de diferentes naturezas (estado inicial ausente, estado final
 ausente, símbolo fora do alfabeto), evitando que o estudante precise corrigir um erro
 de cada vez.
+
+\section{Testes do Simulador}
+\label{sec:res-simulador}
+
+Os 9 testes do simulador verificam a estratégia de caminho único descrita na
+Seção~\ref{sec:impl-simulador}. Os casos utilizam os próprios arquivos de exemplo
+distribuídos com a ferramenta, de modo que esses exemplos funcionem também como massa
+de teste. Em vários deles, o caminho produzido é submetido a uma verificação de boa
+formação, que confirma que ele parte do estado inicial, que cada passo corresponde a uma
+transição existente no autômato e que o veredito decorre do próprio caminho, isto é, que
+a cadeia é aceita se, e somente se, o caminho consome toda a entrada e termina em um
+estado final. Os testes são:
+
+\begin{itemize}
+    \item Caminho aceitador (1 teste): verifica que, para uma cadeia aceita por um AFN
+          com múltiplos caminhos possíveis, o caminho exibido consome toda a entrada e
+          termina em um estado final;
+    \item Um único estado por configuração (1 teste): verifica que cada configuração do
+          histórico contém exatamente um estado, e não o conjunto de estados simultâneos;
+    \item Uso de transição $\varepsilon$ (1 teste): verifica que o caminho percorre uma
+          transição $\varepsilon$ quando ela é necessária para a aceitação, como em
+          \texttt{aabb} no AFN-$\varepsilon$ da Listagem~\ref{lst:exemplo-afn};
+    \item Cadeia vazia (1 teste): verifica que a cadeia vazia é aceita, sem nenhum passo,
+          quando o estado inicial é final;
+    \item Rejeição por falta de transição (1 teste): verifica que, para a cadeia
+          \texttt{ba}, o caminho avança o máximo possível e o simulador informa a posição
+          do símbolo em que ficou preso;
+    \item Rejeição com a entrada consumida (1 teste): verifica que, quando a entrada é
+          lida por inteiro sem atingir um estado final, o caminho termina no estado mais
+          próximo da aceitação;
+    \item Navegação passo a passo (1 teste): verifica que avançar, retroceder e
+          reiniciar a simulação percorrem e desfazem o mesmo caminho;
+    \item Exemplos válidos (1 teste): verifica que todas as simulações declaradas nos
+          arquivos de exemplo sem erros propositais produzem caminhos bem formados;
+    \item Vereditos dos exemplos (1 teste): verifica que os vereditos de aceitação e
+          rejeição conferem com a linguagem descrita por cada autômato de exemplo.
+\end{itemize}
+
+Todos os 9 testes do simulador são aprovados. Em conjunto, eles confirmam que a escolha
+de um único caminho preserva a correção do reconhecimento: o caminho exibido é aceitador
+sempre que a cadeia pertence à linguagem, e o veredito obtido coincide com o esperado.
 
 \section{Simulações com Autômatos Clássicos}
 \label{sec:res-classicos}
