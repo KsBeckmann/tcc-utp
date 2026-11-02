@@ -395,12 +395,12 @@ simular exemplo_afd com "bbb"     // rejeita
   símbolo de \emph{lookahead}:
   \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 programa            ::= declaracao_alfabeto item*
-declaracao_alfabeto ::= "alfabeto" "{" char_literal ("," char_literal)* [","] "}"
+declaracao_alfabeto ::= "alfabeto" "{" [ char_literal ("," char_literal)* [","] ] "}"
 item                ::= declaracao_automato | comando_simulacao
 declaracao_automato ::= "automato" tipo_automato ident "{"
-                            "estados" "{" ident ("," ident)* [","] "}"
+                            "estados" "{" [ ident ("," ident)* [","] ] "}"
                             "inicial" ident
-                            "finais"  "{" ident ("," ident)* [","] "}"
+                            "finais"  "{" [ ident ("," ident)* [","] ] "}"
                             "transicoes" "{" transicao* "}" "}"
 tipo_automato       ::= "AFD" | "AFN"
 transicao           ::= ident "->" ident "com" (char_literal | "epsilon" | "eps")

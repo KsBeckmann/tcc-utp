@@ -2231,14 +2231,14 @@ analisável por um \textit{parser} descendente preditivo com um símbolo de
     \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,frame=single]
 programa        ::= declaracao_alfabeto item*
 
-declaracao_alfabeto ::= "alfabeto" "{" char_literal ("," char_literal)* [","] "}"
+declaracao_alfabeto ::= "alfabeto" "{" [ char_literal ("," char_literal)* [","] ] "}"
 
 item            ::= declaracao_automato | comando_simulacao
 
 declaracao_automato ::= "automato" tipo_automato ident "{"
-                            "estados" "{" ident ("," ident)* [","] "}"
+                            "estados" "{" [ ident ("," ident)* [","] ] "}"
                             "inicial" ident
-                            "finais" "{" ident ("," ident)* [","] "}"
+                            "finais" "{" [ ident ("," ident)* [","] ] "}"
                             "transicoes" "{" transicao* "}"
                         "}"
 
