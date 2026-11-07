@@ -50,7 +50,7 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] p. 86: trocar "três categorias" por quatro, conforme o Quadro 8
 
 ### Tempo verbal
-- [ ] pp. 59–60: atualizar as escolhas descritas no futuro, considerando as bibliotecas efetivamente usadas no cap. 7
+- [x] pp. 59–60: atualizar as escolhas descritas no futuro, considerando as bibliotecas efetivamente usadas no cap. 7
 
 ### Conclusão (pp. 92–93)
 - [ ] Acrescentar as dificuldades efetivamente encontradas e como foram enfrentadas
@@ -67,7 +67,7 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [ ] p. 75: corrigir o token Seta, exibido como dois traços, para `->`
 
 ### Referências
-- [ ] pp. 74–75 e 85: incluir citação e referência da biblioteca Ariadne
+- [x] pp. 74–75 e 85: incluir citação e referência da biblioteca Ariadne
 - [ ] p. 94: completar a referência de Nunes (2017) com instituição e tipo de trabalho
 
 ## Entrega final (14/11, OneDrive)

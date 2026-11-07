@@ -1885,8 +1885,7 @@ para DSLs voltadas ao ensino, em que a qualidade das mensagens de erro é tão i
 a correção da análise.
 
 O Quadro~\ref{tab:comparacao-parsers} sintetiza as principais características das três
-bibliotecas, evidenciando os critérios mais relevantes para a escolha a ser realizada durante a
-implementação descrita no Capítulo~\ref{cap:implementacao}.
+bibliotecas, evidenciando os critérios que orientaram a escolha descrita a seguir.
 
 \begin{quadro}[h]
     \centering
@@ -1911,12 +1910,19 @@ implementação descrita no Capítulo~\ref{cap:implementacao}.
     \fonte{Os autores (\the\year)}
 \end{quadro}
 
-A escolha entre as três bibliotecas foi orientada pelos requisitos estabelecidos para o
-compilador da DSL: em especial, a necessidade de mensagens de erro com indicação precisa de
-localização e natureza do problema, conforme descrito na Seção~\ref{sec:diagnostico-erro}, e
-a integração natural com o restante da ferramenta, escrita integralmente em Rust. A análise
-comparativa apresentada nesta seção fornece o embasamento para essa decisão, cuja
-justificativa é apresentada no Capítulo~\ref{cap:implementacao}.
+Com base nesses critérios, a biblioteca chumsky foi adotada para a análise sintática do
+compilador da DSL. A decisão decorre dos requisitos estabelecidos para o compilador: em
+especial, a necessidade de mensagens de erro com indicação precisa de localização e natureza
+do problema, conforme descrito na Seção~\ref{sec:diagnostico-erro}, e a integração natural
+com o restante da ferramenta, escrita integralmente em Rust, sem uma gramática mantida fora
+do código. A aplicação do chumsky e a justificativa da escolha em relação ao nom e ao pest
+são retomadas na Seção~\ref{sec:impl-parser}.
+
+As demais etapas da ferramenta também se apoiam em bibliotecas do ecossistema Rust, cujo uso
+é descrito no Capítulo~\ref{cap:implementacao}: a análise léxica emprega a biblioteca Logos
+\cite{logos2021}, que gera o analisador léxico a partir de anotações no código-fonte; os
+diagnósticos de erro são formatados pela biblioteca Ariadne \cite{ariadne2021}; e a interface
+gráfica é construída com a biblioteca Iced \cite{iced2022}.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2499,7 +2505,7 @@ Este capítulo descreve a implementação da ferramenta Autosim, detalhando cada
 pipeline de compilação e da interface gráfica interativa. A implementação foi realizada
 integralmente na linguagem Rust, utilizando as bibliotecas Logos \cite{logos2021} para
 análise léxica, Chumsky \cite{chumsky2022} para análise sintática, Iced \cite{iced2022}
-para a interface gráfica e Ariadne para o diagnóstico de erros. O código-fonte completo
+para a interface gráfica e Ariadne \cite{ariadne2021} para o diagnóstico de erros. O código-fonte completo
 da ferramenta está disponível publicamente em repositório aberto \cite{autosim2026}.
 
 \section{Visão Geral do Pipeline}
@@ -2949,8 +2955,8 @@ para rejeição) reforça visualmente o desfecho da simulação.
 \section{Diagnóstico de Erros com Ariadne}
 \label{sec:impl-ariadne}
 
-Todas as fases do pipeline utilizam a biblioteca Ariadne para a geração de mensagens
-de erro. O diagnóstico inclui:
+Todas as fases do pipeline utilizam a biblioteca Ariadne \cite{ariadne2021} para a
+geração de mensagens de erro. O diagnóstico inclui:
 
 \begin{itemize}
     \item O caminho do arquivo e a posição do erro (linha e coluna), calculada pelo
