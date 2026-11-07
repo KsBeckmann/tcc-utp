@@ -13,8 +13,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Manter os benefícios pedagógicos (ainda não avaliados) como expectativas
 
 ### Sumário e formatação
-- [ ] Corrigir o Sumário: o título "Fundamentação Teórica" perdeu a numeração
-- [ ] Corrigir a folha 14: o título "Fundamentação Teórica" ficou no meio de uma folha em branco
+- [x] Corrigir o Sumário: o título "Fundamentação Teórica" perdeu a numeração
+- [x] Corrigir a folha 14: o título "Fundamentação Teórica" ficou no meio de uma folha em branco
 
 ### Introdução (pp. 11–13)
 - [ ] Explicitar a pergunta que orienta a pesquisa

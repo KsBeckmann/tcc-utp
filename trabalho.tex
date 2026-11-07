@@ -253,8 +253,7 @@ específicos:
 \end{alineas}
 
 Este trabalho está organizado como segue.
-O Capítulo~\ref{cap:automatos} apresenta os conceitos teóricos de autômatos finitos e linguagens formais.
-O Capítulo~\ref{cap:compiladores} aborda linguagens de domínio específico e as fases de compilação.
+O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica: os conceitos de autômatos finitos e linguagens formais (Seção~\ref{cap:automatos}) e as fases de compilação e as linguagens de domínio específico (Seção~\ref{cap:compiladores}).
 O Capítulo~\ref{cap:rust} apresenta a linguagem Rust e justifica sua adoção como plataforma de implementação da ferramenta proposta.
 O Capítulo~\ref{cap:relacionados} discute as ferramentas relacionadas e suas limitações.
 O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramática.
@@ -264,32 +263,27 @@ Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e t
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-% FUNDAMENTAÇÃO TEÓRICA (título de parte sem número)
-% Agrupa os capítulos teóricos: Autômatos Finitos e Linguagens Formais e Compiladores.
+% FUNDAMENTAÇÃO TEÓRICA
+% Agrupa os fundamentos teóricos: Autômatos Finitos e Linguagens Formais e Compiladores.
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-% O \part* do memoir chama \afterpartskip (que já contém um \newpage) antes de
-% devolver o controle para o documento. Se o \addcontentsline for escrito depois
-% do \part*, ele captura o número da página SEGUINTE (a do capítulo 2), e não o
-% da própria folha "FUNDAMENTAÇÃO TEÓRICA" -- daí o número errado no Sumário.
-% Para corrigir, o \addcontentsline é injetado antes desse \newpage, ainda na
-% página correta.
-\let\oldafterpartskip\afterpartskip
-\renewcommand{\afterpartskip}{%
-    \addcontentsline{toc}{part}{FUNDAMENTAÇÃO TEÓRICA}%
-    \oldafterpartskip}
-\part*{FUNDAMENTAÇÃO TEÓRICA}
-\let\afterpartskip\oldafterpartskip
+\chapter{Fundamentação Teórica}
+\label{cap:fundamentacao}
+Este capítulo reúne os fundamentos teóricos sobre os quais a ferramenta se apoia. A
+Seção~\ref{cap:automatos} apresenta os conceitos de linguagens formais e de autômatos
+finitos, que constituem o objeto modelado pela DSL, e a Seção~\ref{cap:compiladores}
+aborda as fases de compilação e as linguagens de domínio específico, que fornecem os
+meios para processar essa descrição textual.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
 % 2. Autômatos Finitos e Linguagens Formais (fundamentação teórica)
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-\chapter{Autômatos Finitos e Linguagens Formais}
+\section{Autômatos Finitos e Linguagens Formais}
 \label{cap:automatos}
 
-\section{Conceitos Fundamentais de Linguagens Formais}
+\subsection{Conceitos Fundamentais de Linguagens Formais}
 \label{sec:linguagens-formais}
 O estudo dos autômatos finitos exige a compreensão prévia de algumas estruturas matemáticas
 elementares: conjuntos, alfabetos, palavras e linguagens. Esta seção apresenta tais conceitos de
@@ -356,7 +350,7 @@ $L^* = \bigcup_{n \in \mathbb{N}} L^n$ \cite{diverio2011,vieira2004}. Essas oper
 especificação concisa de linguagens, recurso amplamente explorado nas expressões
 regulares e gramáticas estudadas nas seções seguintes.
 
-\section{Gramáticas Formais}
+\subsection{Gramáticas Formais}
 \label{sec:gramaticas-formais}
 Conforme observado na seção anterior, a maior parte das linguagens de interesse prático é
 infinita, o que torna inviável descrevê-las pela enumeração explícita de suas palavras. Faz-se
@@ -474,7 +468,7 @@ admitidas em cada classe e o modelo computacional que reconhece a linguagem corr
 As gramáticas regulares (Tipo 3), em particular, geram exatamente a classe das linguagens reconhecidas
 pelos autômatos finitos, formalismo apresentado nas próximas seções.
 
-\section{Autômato Finito Determinístico}
+\subsection{Autômato Finito Determinístico}
 \label{sec:afd}
 Conforme indicado ao final da seção anterior, as gramáticas regulares (Tipo 3 da Hierarquia de
 Chomsky) descrevem exatamente a classe das linguagens reconhecidas pelo modelo computacional
@@ -554,7 +548,7 @@ rejeitada por não terminar em estado final. Verifica-se que $L(M)$ corresponde 
 conjunto das cadeias sobre $\{0, 1\}$ que contêm a subcadeia $01$, em conformidade com a
 especificação informal apresentada.
 
-\section{Autômato Finito Não-Determinístico}
+\subsection{Autômato Finito Não-Determinístico}
 \label{sec:afn}
 O autômato finito determinístico apresentado na seção anterior caracteriza-se por possuir, para
 cada combinação de estado e símbolo de entrada, uma única transição definida. Em diversas
@@ -658,7 +652,7 @@ AFD \cite{hopcroft2006,sipser2012}. Esse resultado, fundamentado na chamada cons
 de subconjuntos, é apresentado na seção seguinte e justifica o fato de ambos os modelos
 definirem exatamente a mesma classe de linguagens: as linguagens regulares.
 
-\section{Equivalência entre AFD e AFN}
+\subsection{Equivalência entre AFD e AFN}
 \label{sec:equivalencia}
 Embora o autômato finito não-determinístico ofereça maior flexibilidade na descrição de
 linguagens, demonstra-se que essa flexibilidade não amplia a classe de linguagens reconhecíveis.
@@ -735,7 +729,7 @@ acessíveis costume ser comparável ao do AFN original \cite{hopcroft2006}. Essa
 contudo, não altera a equivalência em poder expressivo: ambos os modelos definem exatamente a
 classe das linguagens regulares.
 
-\section{Representações de Autômatos}
+\subsection{Representações de Autômatos}
 \label{sec:representacoes_automatos}
 A definição formal de autômato finito como uma quíntupla, apresentada nas seções anteriores, é
 suficiente para caracterizar matematicamente o objeto, mas não é necessariamente a forma mais
@@ -809,7 +803,7 @@ uma quarta forma de representação, baseada em uma linguagem de domínio espec�
 combina a precisão da notação formal com a estruturação tabular, permitindo simultaneamente a
 renderização do diagrama de estados e o processamento programático da descrição.
 
-\section{Simulação de Autômatos}
+\subsection{Simulação de Autômatos}
 \label{sec:simulacao_automatos}
 
 A definição formal de um autômato finito, vista nas seções anteriores, descreve sob a forma de
@@ -886,7 +880,7 @@ ferramenta proposta neste trabalho posiciona-se nesse espectro, oferecendo, em p
 a simulação visual passo a passo de autômatos finitos descritos por meio de uma linguagem de
 domínio específico, conforme será detalhado no Capítulo~\ref{cap:implementacao}.
 
-\section{Aplicações de Autômatos}
+\subsection{Aplicações de Autômatos}
 \label{sec:aplicacoes_automatos}
 
 Apesar de serem objetos teóricos, autômatos finitos não são uma abstração restrita ao ambiente
@@ -944,7 +938,7 @@ elo direto entre a teoria dos autômatos finitos e a construção de compiladore
 interpretadores para linguagens de programação. A linguagem de domínio específico proposta
 nesta monografia, descrita no Capítulo~\ref{cap:projeto}, é analisada
 lexicamente por um autômato finito gerado a partir das regras léxicas da própria linguagem,
-em uma aplicação concreta dos conceitos apresentados neste capítulo.
+em uma aplicação concreta dos conceitos apresentados nesta seção.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -952,9 +946,9 @@ em uma aplicação concreta dos conceitos apresentados neste capítulo.
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
 
-\chapter{Compiladores e Linguagens de Domínio Específico}
+\section{Compiladores e Linguagens de Domínio Específico}
 \label{cap:compiladores}
-Este capítulo apresenta os fundamentos teóricos de compiladores e linguagens de domínio 
+Esta seção apresenta os fundamentos teóricos de compiladores e linguagens de domínio 
 específico que embasam a ferramenta proposta. Inicia-se com os conceitos gerais de compiladores 
 e sua distinção em relação a interpretadores (Seção~\ref{sec:conceitos-compiladores}), 
 seguindo-se a descrição detalhada das três fases do \textit{front-end}: análise léxica 
@@ -968,7 +962,7 @@ essencial de qualidade (Seção~\ref{sec:diagnostico-erro}) e, por fim, examina-
 no contexto do ensino de linguagens formais (Seção~\ref{sec:dsl-ensino}), perspectiva que 
 motiva diretamente o desenvolvimento do presente trabalho.
 
-\section{Conceitos Fundamentais de Compiladores}
+\subsection{Conceitos Fundamentais de Compiladores}
 \label{sec:conceitos-compiladores}
 Antes de tratar das fases específicas de análise que utilizam autômatos finitos, é necessário
 situar o que é um compilador e qual o seu papel no processo de tradução de programas. Esta seção
@@ -1057,11 +1051,11 @@ necessário.
 
 Para os fins deste trabalho, interessa particularmente o \textit{front-end} do compilador e,
 dentro dele, a fase de análise léxica, que constitui a aplicação direta dos autômatos finitos
-discutidos no Capítulo~\ref{cap:automatos}. Os mecanismos pelos quais expressões regulares são
+discutidos na Seção~\ref{cap:automatos}. Os mecanismos pelos quais expressões regulares são
 convertidas em autômatos para o reconhecimento de \textit{tokens}, bem como as estratégias de
 implementação desses autômatos em código, são o tema da seção seguinte.
 
-\section{Análise Léxica}
+\subsection{Análise Léxica}
 \label{sec:lexica}
 A análise léxica é a primeira fase do \textit{front-end} de um compilador e tem como tarefa
 principal ler o fluxo bruto de caracteres do programa fonte, agrupá-lo em sequências
@@ -1135,8 +1129,8 @@ de que a maioria dos erros léxicos envolve um único caractere \cite{aho2008}.
 
 Do ponto de vista de implementação, a especificação dos padrões dos \textit{tokens} costuma ser
 feita por meio de expressões regulares, e o reconhecimento, por meio de autômatos finitos
-construídos a partir delas. Essa relação entre expressões regulares e autômatos, estabelecida no
-Capítulo~\ref{cap:automatos}, é exatamente o que torna a análise léxica uma aplicação direta da
+construídos a partir delas. Essa relação entre expressões regulares e autômatos, estabelecida na
+Seção~\ref{cap:automatos}, é exatamente o que torna a análise léxica uma aplicação direta da
 teoria de linguagens regulares: cada padrão corresponde a uma expressão regular, o conjunto
 desses padrões é convertido em um autômato finito não determinístico (em geral pelo método de
 Thompson), o qual é então transformado em um autômato finito determinístico (pela construção de
@@ -1148,7 +1142,7 @@ ferramenta proposta neste trabalho, descrita no Capítulo~\ref{cap:projeto}, faz
 dessa correspondência ao analisar lexicamente sua linguagem de domínio específico, em uma
 aplicação concreta dos conceitos discutidos nesta seção.
 
-\section{Análise Sintática}
+\subsection{Análise Sintática}
 \label{sec:sintatica}
 A análise sintática, também denominada \textit{parsing}, é a segunda fase do \textit{front-end}
 de um compilador e tem por finalidade verificar se a sequência de \textit{tokens} produzida pela
@@ -1201,7 +1195,7 @@ da adição.
 \end{figure}
 
 A especificação da sintaxe das linguagens de programação utiliza, em geral, gramáticas livres
-de contexto, formalismo apresentado no Capítulo~\ref{cap:automatos}. A motivação dessa escolha é
+de contexto, formalismo apresentado na Seção~\ref{cap:automatos}. A motivação dessa escolha é
 direta: as gramáticas regulares, embora suficientes para descrever os padrões léxicos, não
 conseguem expressar construções recursivamente aninhadas, como expressões parentizadas ou blocos
 de comandos balanceados, que são comuns em linguagens de programação. As gramáticas livres de
@@ -1252,7 +1246,7 @@ forma não ambígua, o autômato finito especificado pelo usuário. As decisões
 gramática dessa linguagem, bem como o método de análise adotado em sua implementação, serão
 detalhados em capítulo posterior.
 
-\section{Análise Semântica}
+\subsection{Análise Semântica}
 \label{sec:semantica}
 A análise semântica é a terceira fase do \textit{front-end} e tem por objetivo verificar a
 consistência do programa em relação a regras que não podem ser expressas pela gramática livre de
@@ -1324,7 +1318,7 @@ compiladores convencionais, seguem o mesmo princípio geral, isto é, identifica
 estruturais antes que o autômato seja submetido à simulação descrita na
 Seção~\ref{sec:simulacao_automatos}.
 
-\section{AST (Árvore Sintática Abstrata)}
+\subsection{AST (Árvore Sintática Abstrata)}
 \label{sec:ast}
 A árvore de derivação produzida pela análise sintática, também chamada de árvore
 sintática concreta, espelha fielmente a aplicação das produções da gramática durante o
@@ -1402,7 +1396,7 @@ estados finais. É sobre essa estrutura, e não sobre o texto fonte, que operam 
 semântica, descrita na Seção~\ref{sec:semantica}, quanto a etapa subsequente de simulação
 visual, conforme apresentada na Seção~\ref{sec:simulacao_automatos}.
 
-\section{Linguagens de Domínio Específico (DSL)}
+\subsection{Linguagens de Domínio Específico (DSL)}
 \label{sec:dsl}
 
 As seções anteriores apresentaram os fundamentos do processo de compilação tomando como cenário
@@ -1480,7 +1474,7 @@ correspondem precisamente ao processo de tradução da forma textual para esse m
 sintática abstrata, apresentada na Seção~\ref{sec:ast}, é a estrutura intermediária por meio da
 qual essa tradução se concretiza.
 
-\section{Construção de Compiladores (ferramentas)}
+\subsection{Construção de Compiladores (ferramentas)}
 \label{sec:contrucao-compiladores}
 
 A descrição apresentada nas seções anteriores dá conta de \textit{o que} cada fase de um
@@ -1561,7 +1555,7 @@ semântica e das demais etapas. Essa combinação preserva a integração natura
 ferramenta, tal como apresentada no Capítulo~\ref{cap:rust}, sem introduzir etapas externas de
 geração de código nem dependências de plataformas de \textit{language engineering}.
 
-\section{Diagnóstico de Erros}
+\subsection{Diagnóstico de Erros}
 \label{sec:diagnostico-erro}
 
 A capacidade de relatar erros de forma precisa e útil é, ao lado da própria tradução, uma das
@@ -1630,7 +1624,7 @@ Para a ferramenta proposta neste trabalho, o diagnóstico de erros é tratado co
 do projeto da DSL, e não como decoração posterior. Cada fase do compilador, da análise léxica à
 análise semântica, é instrumentada para registrar os erros encontrados em uma estrutura comum,
 preservando a localização exata no texto fonte e uma mensagem redigida em vocabulário próximo
-ao domínio dos autômatos finitos, com referências aos conceitos do Capítulo~\ref{cap:automatos},
+ao domínio dos autômatos finitos, com referências aos conceitos da Seção~\ref{cap:automatos},
 como estados, transições, alfabeto e estados finais. Após o término de cada fase, esses erros
 são apresentados em conjunto ao usuário, e somente quando uma fase produz erros que impeçam a
 continuação do processamento é que o restante do compilador deixa de ser executado. Esse
@@ -1638,10 +1632,10 @@ tratamento dá ao usuário uma visão panorâmica dos defeitos do programa em ca
 linha com os critérios de qualidade enumerados anteriormente, e prepara o terreno para os
 recursos visuais de apoio descritos no Capítulo~\ref{cap:implementacao}.
 
-\section{DSL no ensino}
+\subsection{DSL no ensino}
 \label{sec:dsl-ensino}
 
-As seções anteriores deste capítulo apresentaram as DSLs como ferramentas voltadas a tornar mais
+As subseções anteriores apresentaram as DSLs como ferramentas voltadas a tornar mais
 concisa e expressiva a descrição de soluções em um domínio particular. Quando esse domínio é
 constituído pelos próprios objetos de estudo de uma disciplina acadêmica, a DSL passa a
 desempenhar, além do papel técnico habitual, uma função pedagógica, isto é, a de servir como
@@ -1650,7 +1644,7 @@ Esta seção examina, com base no trabalho de \citeonline{morazan2014}, o uso de
 no ensino de linguagens formais e teoria da computação, situando essa prática como contexto
 imediato do presente trabalho.
 
-O ensino tradicional dos conteúdos discutidos no Capítulo~\ref{cap:automatos} costuma apoiar-se
+O ensino tradicional dos conteúdos discutidos na Seção~\ref{cap:automatos} costuma apoiar-se
 em ferramentas gráficas que permitem ao estudante construir autômatos e gramáticas
 manipulando diretamente seus elementos visuais, dos quais o exemplo mais difundido é o JFLAP
 \cite{rodger2006jflap}. Esse tipo de abordagem oferece, sem dúvida, ganhos importantes, em
@@ -1911,7 +1905,7 @@ léxica corresponde a um estado ou conjunto de estados explicitamente codificado
 do autômato.
 
 A relevância deste trabalho para o presente contexto reside justamente nessa ponte explícita
-entre a teoria dos autômatos, apresentada no Capítulo~\ref{cap:automatos}, e sua aplicação
+entre a teoria dos autômatos, apresentada na Seção~\ref{cap:automatos}, e sua aplicação
 prática em uma linguagem de programação moderna. O autor demonstra que as primitivas de Rust,
 em especial os tipos enumerados e o mecanismo de correspondência de padrões, são
 particularmente adequados para representar estados e transições de autômatos de forma segura e
