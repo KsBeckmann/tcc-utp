@@ -1164,8 +1164,9 @@ subconjuntos) capaz de reconhecer eficientemente os lexemas durante a varredura 
 fonte \cite{aho2008}. Essa cadeia, de \textit{regex} a \textit{token}, fornece a base teórica
 para os geradores automáticos de analisadores léxicos, como o Lex e o Flex, e também para
 bibliotecas modernas que empregam técnicas equivalentes em linguagens contemporâneas. A
-ferramenta proposta neste trabalho, descrita no Capítulo~\ref{cap:projeto}, faz uso direto
-dessa correspondência ao analisar lexicamente sua linguagem de domínio específico, em uma
+ferramenta proposta neste trabalho faz uso direto dessa correspondência ao analisar
+lexicamente sua linguagem de domínio específico, descrita no Capítulo~\ref{cap:projeto},
+por meio do analisador léxico apresentado na Seção~\ref{sec:impl-lexer}, em uma
 aplicação concreta dos conceitos discutidos nesta seção.
 
 \subsection{Análise Sintática}
@@ -1588,7 +1589,8 @@ combina três recursos: um gerador de analisadores léxicos embutido na própria
 hospedeira, que produz o \textit{lexer} a partir de anotações no código-fonte; uma biblioteca
 de \textit{parser combinators} para a análise sintática; e a escrita manual da análise
 semântica e das demais etapas. Essa combinação preserva a integração natural com o restante da
-ferramenta, tal como apresentada no Capítulo~\ref{cap:rust}, sem introduzir etapas externas de
+ferramenta, escrita inteiramente em Rust, linguagem apresentada no Capítulo~\ref{cap:rust},
+sem introduzir etapas externas de
 geração de código nem dependências de plataformas de \textit{language engineering}.
 
 \subsection{Diagnóstico de Erros}
@@ -1953,8 +1955,8 @@ entre a teoria dos autômatos, apresentada na Seção~\ref{cap:automatos}, e sua
 prática em uma linguagem de programação moderna. O autor demonstra que as primitivas de Rust,
 em especial os tipos enumerados e o mecanismo de correspondência de padrões, são
 particularmente adequados para representar estados e transições de autômatos de forma segura e
-eficiente, antecipando argumentos desenvolvidos com maior profundidade no
-Capítulo~\ref{cap:rust} deste trabalho.
+eficiente, em consonância com os argumentos desenvolvidos no Capítulo~\ref{cap:rust} deste
+trabalho.
 
 No entanto, o escopo do trabalho de \citeonline{bruzzone2023} restringe-se à fase de análise
 léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de

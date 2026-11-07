@@ -45,9 +45,9 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] pp. 78–83: distinguir o acompanhamento de um caminho escolhido da manutenção do conjunto de estados ativos, delimitando cada modo
 
 ### Remissões
-- [ ] pp. 30, 32 e 39: a linguagem do projeto é remetida ao cap. 3, mas está no cap. 6
-- [ ] p. 52: a interface é remetida ao cap. 6, mas a implementação está no cap. 7
-- [ ] p. 86: trocar "três categorias" por quatro, conforme o Quadro 8
+- [x] pp. 30, 32 e 39: a linguagem do projeto é remetida ao cap. 3, mas está no cap. 6
+- [x] p. 52: a interface é remetida ao cap. 6, mas a implementação está no cap. 7
+- [x] p. 86: trocar "três categorias" por quatro, conforme o Quadro 8
 
 ### Tempo verbal
 - [ ] pp. 59–60: atualizar as escolhas descritas no futuro, considerando as bibliotecas efetivamente usadas no cap. 7
