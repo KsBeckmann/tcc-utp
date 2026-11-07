@@ -212,7 +212,12 @@ há validação formal da estrutura com mensagens de erro claras e localizadas; 
 estudante que comete um erro na construção não recebe um diagnóstico preciso do
 problema.
 
-Diante desse cenário, este trabalho desenvolve a Autosim, uma ferramenta
+Diante desse cenário, a pergunta que orienta esta pesquisa é a seguinte: como uma
+linguagem textual de domínio específico, processada por um compilador com diagnósticos
+de erro localizados e acoplada a uma simulação visual, pode oferecer ao estudante
+retroalimentação imediata na construção e na execução de autômatos finitos?
+
+Para responder a essa questão, este trabalho desenvolve a Autosim, uma ferramenta
 educacional que adota uma abordagem baseada em texto formal e compilação
 pedagógica. A principal contribuição desta solução é o acoplamento direto entre
 uma \textit{Domain-Specific Language} (DSL), ou seja, uma linguagem de domínio específico
@@ -260,6 +265,9 @@ O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramátic
 O Capítulo~\ref{cap:implementacao} detalha a implementação do compilador e da interface gráfica.
 O Capítulo~\ref{cap:resultados} apresenta os testes e os resultados obtidos.
 Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e trabalhos futuros.
+Os Apêndices A a D compõem o manual de uso da ferramenta: o Apêndice A descreve a instalação,
+o Apêndice B a execução e a interface gráfica, o Apêndice C a escrita de programas na DSL e o
+Apêndice D a interpretação dos diagnósticos de erro.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -3215,7 +3223,254 @@ ensino.
 % -------------------------------------------------------------------------------------------------
 % APÊNDICES
 % -------------------------------------------------------------------------------------------------
-% \apendice[ape:exemplo]{Exemplo de Apêndice}
+\apendice{Instalação da Autosim}
+
+A Autosim é distribuída como um executável único, sem instalador, e pode ser obtida de
+duas formas: pelo pacote pré-compilado, que dispensa qualquer ferramenta de
+desenvolvimento, ou pela compilação a partir do código-fonte, que exige o ambiente da
+linguagem Rust. O código-fonte e os pacotes estão disponíveis no repositório
+\url{https://github.com/KsBeckmann/autosim}.
+
+\textbf{Pacote pré-compilado.} A página de versões do repositório
+(\url{https://github.com/KsBeckmann/autosim/releases}) oferece um pacote para cada sistema
+operacional:
+
+\begin{alineas}
+    \item \texttt{autosim-v1.0.0-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
+    \item \texttt{autosim-v1.0.0-windows-x86\_64.zip}, para Windows em processadores x86-64;
+    \item \texttt{autosim-v1.0.0-macos-aarch64.tar.gz}, para macOS em processadores Apple
+    Silicon.
+\end{alineas}
+
+Cada pacote contém o executável (\texttt{autosim} ou \texttt{autosim.exe}), o arquivo
+\texttt{README.md} e a pasta \texttt{examples}, com os programas de exemplo citados nos
+Apêndices B a D. Basta extrair o pacote em uma pasta qualquer; não há etapa de
+instalação. No Linux, a extração pode ser feita pelo terminal:
+
+\begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
+tar xzf autosim-v1.0.0-linux-x86_64.tar.gz
+cd autosim-v1.0.0-linux-x86_64
+\end{lstlisting}
+
+No macOS, como o executável não é assinado digitalmente, o sistema pode bloquear sua
+primeira execução. O bloqueio é removido com o comando
+\texttt{xattr -d com.apple.quarantine autosim}, executado na pasta extraída.
+
+\textbf{Compilação a partir do código-fonte.} Em qualquer sistema com o Rust instalado
+(versão 1.94 ou superior, obtida em \url{https://rustup.rs}), o gerenciador de pacotes
+Cargo baixa, compila e instala a ferramenta com um único comando:
+
+\begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
+cargo install --git https://github.com/KsBeckmann/autosim
+\end{lstlisting}
+
+O executável é instalado na pasta \texttt{\textasciitilde/.cargo/bin}, que o instalador do
+Rust inclui no caminho de busca do sistema, de modo que o comando \texttt{autosim} passa a
+estar disponível em qualquer pasta. Essa é também a forma de uso em sistemas sem pacote
+pré-compilado, como o macOS em processadores Intel.
+
+Em todos os casos, a interface gráfica requer um ambiente de janelas (X11 ou Wayland, no
+Linux). A instalação pode ser conferida com \texttt{autosim -{}-version}, que deve exibir
+\texttt{autosim 1.0.0}.
+
+\apendice{Execução e Uso da Interface Gráfica}
+
+A Autosim é executada pelo terminal, recebendo como argumento o caminho do arquivo
+\texttt{.asl} a ser processado:
+
+\begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
+autosim --path examples/example1.asl
+\end{lstlisting}
+
+No Windows, o comando correspondente é
+\texttt{.\textbackslash autosim.exe -{}-path examples\textbackslash example1.asl},
+executado no Prompt de Comando ou no PowerShell a partir da pasta extraída. Quando o executável foi obtido pelo
+pacote pré-compilado e não está no caminho de busca do sistema, no Linux e no macOS o
+comando deve ser precedido de \texttt{./}, como em \texttt{./autosim -{}-path
+examples/example1.asl}.
+
+Ao ser executada, a ferramenta analisa o arquivo. Se houver erros, os diagnósticos são
+exibidos no terminal, conforme descrito no Apêndice D, e a janela não é aberta. Se o
+arquivo for válido, mas não contiver nenhum comando \texttt{simular}, a ferramenta informa
+que não há simulação a exibir. Caso contrário, abre-se a interface gráfica, ilustrada nas
+Figuras~\ref{fig:screenshot-simulacao-aceita} e~\ref{fig:screenshot-simulacao-rejeita},
+que é organizada em três regiões:
+
+\begin{alineas}
+    \item \textbf{barra superior}: exibe o nome e o tipo (AFD ou AFN) do autômato em
+    simulação e um seletor que lista todos os comandos \texttt{simular} do arquivo,
+    permitindo alternar entre eles;
+    \item \textbf{barra de controles}: contém os botões \textit{Passo $\rightarrow$}, que avança um
+    passo na leitura da cadeia; \textit{$\leftarrow$ Voltar}, que desfaz o último passo;
+    \textit{Rodar}/\textit{Pausar}, que avança automaticamente um passo a cada 800
+    milissegundos; \textit{Reset}, que reinicia a simulação; e \textit{Centralizar},
+    que restaura o enquadramento do diagrama. Ao lado dos botões são exibidos o próximo
+    símbolo a ser lido (ou $\varepsilon$, quando o próximo passo é uma transição vazia), a
+    quantidade de símbolos já lidos, a situação da simulação e o nível de ampliação;
+    \item \textbf{diagrama de estados}: desenhado automaticamente a partir do texto, com o
+    estado corrente destacado. Ao final da leitura, o estado corrente é exibido em verde
+    e a situação passa a \textit{ACEITA}, se a cadeia pertence à linguagem, ou em
+    vermelho, com a situação \textit{REJEITA}, caso contrário. O diagrama pode ser
+    deslocado arrastando-o com o botão esquerdo do \textit{mouse} e ampliado ou reduzido
+    com a roda do \textit{mouse}, entre 20\% e 400\%.
+\end{alineas}
+
+Na parte inferior da área do diagrama, a cadeia de entrada, com a posição da leitura
+destacada, e o histórico dos passos executados permanecem fixos, independentemente do
+deslocamento e da ampliação, de modo que o estudante acompanha a
+simulação mesmo em autômatos grandes, como o do arquivo
+\texttt{examples/grande.asl}, com 14 estados.
+
+\apendice{Escrita de Programas na DSL}
+
+Um programa da Autosim é um arquivo de texto com a extensão \texttt{.asl}, que pode ser
+escrito em qualquer editor. Sua estrutura segue a gramática apresentada na
+Figura~\ref{fig:gramatica-dsl} e obedece a três regras gerais:
+
+\begin{alineas}
+    \item o programa começa obrigatoriamente pela declaração do alfabeto, feita uma única
+    vez e válida para todos os autômatos do arquivo;
+    \item após o alfabeto, declarações de autômatos e comandos de simulação podem aparecer
+    em qualquer quantidade e ordem, desde que cada autômato simulado esteja declarado no
+    arquivo;
+    \item as palavras reservadas não distinguem maiúsculas de minúsculas, e o trecho que
+    vai de \texttt{//} até o fim da linha é um comentário, ignorado pela ferramenta.
+\end{alineas}
+
+O modelo a seguir reúne todos os elementos de um programa; os trechos entre os sinais
+\texttt{<} e \texttt{>} devem ser substituídos pelos valores do autômato desejado:
+
+\begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
+alfabeto { <simbolo>, <simbolo>, ... }
+
+automato <AFD ou AFN> <nome> {
+    estados { <estado>, <estado>, ... }
+    inicial <estado>
+    finais { <estado>, ... }
+    transicoes {
+        <origem> -> <destino> com <simbolo>
+        ...
+    }
+}
+
+simular <nome> com "<cadeia>"
+\end{lstlisting}
+
+Na escrita de cada elemento, devem ser observadas as seguintes convenções:
+
+\begin{alineas}
+    \item cada símbolo do alfabeto e das transições é um único caractere entre aspas
+    simples, como \texttt{'a'} ou \texttt{'0'};
+    \item nomes de autômatos e de estados começam por letra ou sublinhado, seguidos de
+    letras, dígitos ou sublinhados, como \texttt{q0} ou \texttt{par\_de\_as};
+    \item cada transição ocupa uma linha, na forma \texttt{origem -> destino com
+    símbolo}, e todos os estados nela citados devem constar em \texttt{estados};
+    \item uma transição vazia usa a palavra \texttt{epsilon}, ou sua abreviação
+    \texttt{eps}, no lugar do símbolo, e só é permitida em autômatos do tipo AFN;
+    \item em um AFD, cada estado pode ter no máximo uma transição para cada símbolo;
+    \item a cadeia a ser simulada é escrita entre aspas duplas, e \texttt{\string"\string"} representa a
+    cadeia vazia.
+\end{alineas}
+
+As Listagens~\ref{lst:exemplo-afd} e~\ref{lst:exemplo-afn} são exemplos completos de um
+AFD e de um AFN com transições $\varepsilon$. A pasta \texttt{examples}, distribuída com a
+ferramenta, contém esses e outros programas que podem servir de ponto de partida, entre
+eles \texttt{example1.asl}, com um AFD simples; \texttt{afn\_epsilon.asl}, com um AFN que
+reconhece a linguagem $a^*b^*$; \texttt{afn\_caminhos\_multiplos.asl}, com um AFN em que a
+mesma cadeia admite vários caminhos; e \texttt{grande.asl}, com 14 estados. Os demais
+arquivos da pasta contêm erros propositais e ilustram os diagnósticos do Apêndice D.
+
+\apendice{Interpretação dos Diagnósticos de Erro}
+
+Quando o arquivo contém erros, a Autosim não abre a interface gráfica e exibe no
+terminal um diagnóstico para cada problema encontrado, no formato ilustrado na
+Figura~\ref{fig:erro-lexico-token-invalido}. Cada diagnóstico é composto por:
+
+\begin{alineas}
+    \item uma linha de título, iniciada por \texttt{Error:}, com a descrição do problema;
+    \item a localização, entre colchetes, no formato \texttt{arquivo:linha:coluna};
+    \item a linha do código-fonte em que o problema ocorre, precedida de seu número;
+    \item um rótulo ancorado sob o trecho exato do problema, em vermelho. Alguns
+    diagnósticos trazem um segundo rótulo, em amarelo, que aponta um trecho relacionado,
+    como a primeira de duas transições conflitantes.
+\end{alineas}
+
+A análise ocorre em três etapas, e um erro em uma etapa impede as seguintes: um
+caractere desconhecido interrompe o processamento antes da análise sintática, e um
+erro de estrutura impede a análise semântica. Por isso, ao corrigir um arquivo, convém
+tratar os erros na ordem em que aparecem e executar a ferramenta novamente após cada
+correção. Na análise semântica, ao contrário, todos os erros do arquivo são relatados de
+uma só vez. O Quadro~\ref{quad:diagnosticos} reúne as mensagens emitidas pela ferramenta,
+o que cada uma indica e como corrigi-la.
+
+\begin{quadro}[h]
+    \centering
+    \caption{MENSAGENS DE DIAGNÓSTICO DA AUTOSIM}
+    \label{quad:diagnosticos}
+    \footnotesize
+    \begin{tabular}{|p{0.36\textwidth}|p{0.55\textwidth}|}
+        \hline
+        \textbf{Mensagem} & \textbf{Significado e correção} \\
+        \hline
+        \multicolumn{2}{|l|}{\textit{Análise léxica}} \\
+        \hline
+        \texttt{token inválido `X`} & O caractere X não pertence à linguagem. Remover o
+        caractere ou substituí-lo pelo símbolo pretendido, como a vírgula em uma lista. \\
+        \hline
+        \multicolumn{2}{|l|}{\textit{Análise sintática}} \\
+        \hline
+        \texttt{esperava X, encontrou 'Y'} & A estrutura do programa exigia X naquele
+        ponto, como a palavra \texttt{inicial} após a lista de estados. Inserir o elemento
+        esperado ou corrigir a ordem das seções. \\
+        \hline
+        \texttt{esperava X, mas o arquivo terminou} & O arquivo terminou antes de completar
+        uma estrutura, em geral por falta de uma chave de fechamento. \\
+        \hline
+        \multicolumn{2}{|l|}{\textit{Análise semântica}} \\
+        \hline
+        \texttt{símbolo 'X' duplicado no alfabeto} & O símbolo foi listado mais de uma vez
+        em \texttt{alfabeto}. Remover a repetição. \\
+        \hline
+        \texttt{autômato 'X' declarado duas vezes} & Dois autômatos têm o mesmo nome.
+        Renomear um deles. \\
+        \hline
+        \texttt{estado 'X' declarado duas vezes} & O estado foi listado mais de uma vez em
+        \texttt{estados}. Remover a repetição. \\
+        \hline
+        \texttt{estado inicial 'X' não declarado} & O estado de \texttt{inicial} não consta
+        em \texttt{estados}. Declará-lo ou corrigir o nome. \\
+        \hline
+        \texttt{estado final 'X' não declarado} & Um estado de \texttt{finais} não consta
+        em \texttt{estados}. Declará-lo ou corrigir o nome. \\
+        \hline
+        \texttt{estado 'X' não declarado} & Uma transição parte de um estado ou chega a um
+        estado ausente de \texttt{estados}; o rótulo indica se é a origem ou o destino. \\
+        \hline
+        \texttt{símbolo 'X' não está no alfabeto} & A transição usa um símbolo não
+        declarado. Incluí-lo em \texttt{alfabeto} ou corrigir a transição. \\
+        \hline
+        \texttt{autômato 'X' não declarado} & O comando \texttt{simular} cita um autômato
+        inexistente. Corrigir o nome ou declarar o autômato. \\
+        \hline
+        \texttt{AFD não pode ter transição epsilon} & Um autômato declarado como AFD usa
+        \texttt{epsilon}. Remover a transição ou declarar o autômato como AFN. \\
+        \hline
+        \texttt{AFD 'X' não-determinístico: duas saídas de 'Q' com 'S'} & O estado Q tem
+        duas transições com o mesmo símbolo S, e o segundo rótulo indica a primeira delas.
+        Remover uma das transições ou declarar o autômato como AFN. \\
+        \hline
+    \end{tabular}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Além dessas mensagens, a ferramenta informa quando o arquivo indicado não pode ser lido,
+caso em que o caminho passado em \texttt{-{}-path} deve ser conferido, e quando o arquivo
+não contém nenhum comando \texttt{simular}, caso em que ao menos uma simulação deve ser
+acrescentada para que a interface gráfica seja aberta. Os arquivos
+\texttt{symbol\_error.asl}, \texttt{parse\_error.asl}, \texttt{sema\_error.asl},
+\texttt{sema\_dfa\_epsilon.asl} e \texttt{sema\_nondeterministic.asl}, da pasta
+\texttt{examples}, reproduzem esses erros e podem ser usados para observar cada
+diagnóstico.
 
 
 % -------------------------------------------------------------------------------------------------

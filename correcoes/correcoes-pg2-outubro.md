@@ -17,14 +17,14 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Corrigir a folha 14: o título "Fundamentação Teórica" ficou no meio de uma folha em branco
 
 ### Introdução (pp. 11–13)
-- [ ] Explicitar a pergunta que orienta a pesquisa
-- [ ] Anunciar os apêndices com os manuais
+- [x] Explicitar a pergunta que orienta a pesquisa
+- [x] Anunciar os apêndices com os manuais
 
 ### Apêndices (novos — o arquivo termina nas referências)
-- [ ] Instruções de instalação
-- [ ] Instruções de execução
-- [ ] Como escrever exemplos na DSL
-- [ ] Como interpretar os diagnósticos de erro
+- [x] Instruções de instalação
+- [x] Instruções de execução
+- [x] Como escrever exemplos na DSL
+- [x] Como interpretar os diagnósticos de erro
 
 ### Objetivos (p. 12)
 - [ ] Compatibilizar com a entrega: foi prometida formalização em BNF e EBNF, mas o cap. 6 só apresenta EBNF — incluir a BNF **ou** justificar o ajuste de escopo
