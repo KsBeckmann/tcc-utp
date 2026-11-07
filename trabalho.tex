@@ -90,7 +90,7 @@ como requisito à obtenção do grau de Bacharel.}
     textual a uma simulação visual. Este trabalho
     apresenta a Autosim, uma ferramenta educacional composta por uma Linguagem de Domínio
     Específico (DSL) textual, em português, para a descrição declarativa de Autômatos Finitos
-    Determinísticos (AFD) e Não-Determinísticos (AFN) com transições $\varepsilon$, cuja
+    Determinísticos (AFD) e Não Determinísticos (AFN) com transições $\varepsilon$, cuja
     gramática foi formalizada em EBNF. A ferramenta inclui um compilador, implementado em Rust,
     que realiza análise léxica, sintática e semântica e fornece mensagens de erro com indicação
     de linha, coluna e natureza do problema, além de uma interface gráfica interativa que
@@ -126,7 +126,7 @@ como requisito à obtenção do grau de Bacharel.}
 % - Inclua apenas as siglas que aparecem no trabalho
 \begin{siglas}
     \item[AFD]   Autômato Finito Determinístico
-    \item[AFN]   Autômato Finito Não-Determinístico
+    \item[AFN]   Autômato Finito Não Determinístico
     \item[AST]   \textit{Abstract Syntax Tree} (Árvore Sintática Abstrata)
     \item[BNF]   \textit{Backus-Naur Form} (Forma de Backus-Naur)
     \item[DSL]   \textit{Domain-Specific Language} (Linguagem de Domínio Específico)
@@ -388,7 +388,7 @@ seções subsequentes \cite{lewis1998,vieira2004}.
 Uma gramática descreve uma linguagem por meio de um conjunto finito de regras de
 produção, que indicam como certas sequências de símbolos podem ser substituídas por outras.
 Nessa estrutura, distinguem-se dois tipos de símbolos: os terminais, que compõem o
-alfabeto da linguagem gerada e aparecem nas palavras finais, e os não-terminais (ou
+alfabeto da linguagem gerada e aparecem nas palavras finais, e os não terminais (ou
 variáveis), símbolos auxiliares que servem de intermediários no processo de geração e
 não fazem parte das palavras produzidas \cite{lewis1998,sipser2012}. A geração de uma palavra
 inicia-se sempre a partir de uma variável especial, denominada símbolo inicial (ou
@@ -398,7 +398,7 @@ sequência de terminais.
 Formalmente, uma gramática é uma quádrupla $G = (V, \Sigma, R, S)$, na qual
 \cite{sipser2012,diverio2011,vieira2004}:
 \begin{itemize}
-    \item $V$ é um conjunto finito de variáveis (símbolos não-terminais);
+    \item $V$ é um conjunto finito de variáveis (símbolos não terminais);
     \item $\Sigma$ é um alfabeto de símbolos terminais, com $V \cap \Sigma = \varnothing$;
     \item $R$ é um conjunto finito de regras de produção, cada uma escrita na forma
           $\alpha \to \beta$, em que $\alpha, \beta \in (V \cup \Sigma)^*$ e o lado esquerdo
@@ -574,14 +574,14 @@ rejeitada por não terminar em estado final. Verifica-se que $L(M)$ corresponde 
 conjunto das cadeias sobre $\{0, 1\}$ que contêm a subcadeia $01$, em conformidade com a
 especificação informal apresentada.
 
-\subsection{Autômato Finito Não-Determinístico}
+\subsection{Autômato Finito Não Determinístico}
 \label{sec:afn}
 O autômato finito determinístico apresentado na seção anterior caracteriza-se por possuir, para
 cada combinação de estado e símbolo de entrada, uma única transição definida. Em diversas
 situações, no entanto, é mais natural descrever um reconhecedor permitindo que, em certos
 estados, mais de uma transição esteja disponível para o mesmo símbolo, ou ainda que, em outros,
 não haja qualquer transição definida \cite{hopcroft2006,sipser2012}. Tal flexibilidade dá origem
-ao autômato finito não-determinístico (AFN), modelo que, embora distinto em
+ao autômato finito não determinístico (AFN), modelo que, embora distinto em
 comportamento, reconhece a mesma classe de linguagens que os AFDs.
 
 A diferença essencial em relação ao AFD reside na natureza da função de transição. Enquanto, em
@@ -591,10 +591,10 @@ um símbolo a partir de um dado estado, o AFN pode prosseguir por qualquer um do
 indicados (caso haja mais de um) ou travar (caso o conjunto seja vazio). Intuitivamente,
 imagina-se que o autômato investiga simultaneamente todas as escolhas possíveis: o caminho
 computacional que, ao final da leitura, atinge um estado de aceitação determina a aceitação da
-cadeia, mesmo que outros caminhos tenham travado ou terminado em estados não-finais
+cadeia, mesmo que outros caminhos tenham travado ou terminado em estados não finais
 \cite{sipser2012}.
 
-Formalmente, um autômato finito não-determinístico é uma quíntupla
+Formalmente, um autômato finito não determinístico é uma quíntupla
 $N = (Q, \Sigma, \delta, q_0, F)$, na qual \cite{hopcroft2006,sipser2012}:
 \begin{itemize}
     \item $Q$ é um conjunto finito de estados;
@@ -639,7 +639,7 @@ Esse autômato é descrito formalmente como
 $N = (\{q_0, q_1, q_2\}, \{0, 1\}, \delta, q_0, \{q_2\})$, em que a função de transição é dada
 por $\delta(q_0, 0) = \{q_0, q_1\}$, $\delta(q_0, 1) = \{q_0\}$, $\delta(q_1, 1) = \{q_2\}$ e
 os demais valores correspondem ao conjunto vazio. As duas características que evidenciam o
-não-determinismo ficam aparentes nessa especificação: o estado $q_0$ admite duas transições
+não determinismo ficam aparentes nessa especificação: o estado $q_0$ admite duas transições
 distintas para o símbolo $0$ (o autômato pode permanecer em $q_0$ ou avançar para $q_1$),
 enquanto os estados $q_1$ e $q_2$ apresentam transições ausentes para certos símbolos.
 
@@ -672,7 +672,7 @@ AFN-$\varepsilon$ da Listagem~\ref{lst:exemplo-afn}, no Capítulo~\ref{cap:proje
 reconhece a linguagem $a^*b^*$ com uma única transição $\varepsilon$ entre um estado que lê
 os símbolos $a$ e outro que lê os símbolos $b$.
 
-Embora o não-determinismo confira maior flexibilidade aparente na descrição de linguagens,
+Embora o não determinismo confira maior flexibilidade aparente na descrição de linguagens,
 demonstra-se que toda linguagem reconhecida por um AFN também pode ser reconhecida por algum
 AFD \cite{hopcroft2006,sipser2012}. Esse resultado, fundamentado na chamada construção
 de subconjuntos, é apresentado na seção seguinte e justifica o fato de ambos os modelos
@@ -680,7 +680,7 @@ definirem exatamente a mesma classe de linguagens: as linguagens regulares.
 
 \subsection{Equivalência entre AFD e AFN}
 \label{sec:equivalencia}
-Embora o autômato finito não-determinístico ofereça maior flexibilidade na descrição de
+Embora o autômato finito não determinístico ofereça maior flexibilidade na descrição de
 linguagens, demonstra-se que essa flexibilidade não amplia a classe de linguagens reconhecíveis.
 Mais precisamente, vale o seguinte resultado central da teoria dos autômatos: uma linguagem $L$
 é reconhecida por algum AFD se, e somente se, é reconhecida por algum AFN
@@ -719,7 +719,7 @@ $D = (Q_D, \Sigma, \delta_D, q_{0,D}, F_D)$ por meio das seguintes definições
           das transições que o AFN executaria a partir de cada estado em $S$.
 \end{itemize}
 
-Embora $\mathcal{P}(Q_N)$ contenha $2^{|Q_N|}$ elementos no caso geral, em geral apenas uma
+Embora $\mathcal{P}(Q_N)$ contenha $2^{|Q_N|}$ elementos no caso geral, frequentemente apenas uma
 pequena fração desses subconjuntos é efetivamente alcançável a partir do estado inicial. Na
 prática, o procedimento é aplicado de forma incremental: parte-se de $\{q_{0,N}\}$ e, a cada passo,
 computam-se as transições para os subconjuntos ainda não explorados, até que nenhum novo
@@ -1144,7 +1144,7 @@ pode ser o próprio valor numérico ou um apontador para uma representação int
 Eventualmente, o analisador léxico pode encontrar uma sequência de caracteres que não casa com
 nenhum dos padrões definidos. Em alguns casos, o erro só pode ser detectado por fases
 posteriores, pois o lexema é localmente válido, embora gramaticalmente inadequado: a sequência
-\texttt{fi}, em um programa C, é um identificador léxicamente válido, ainda que provavelmente
+\texttt{fi}, em um programa C, é um identificador lexicamente válido, ainda que provavelmente
 seja um \texttt{if} grafado de forma equivocada \cite{aho2008}. Quando, porém, nenhum padrão
 casa com o prefixo restante da entrada, o analisador léxico precisa recorrer a alguma estratégia
 de recuperação. A mais simples, conhecida como recuperação em \textit{modo de pânico}, consiste
@@ -1268,7 +1268,7 @@ fonte e, sempre que possível, recuperar-se de modo a permitir a detecção de e
 em uma única invocação do compilador \cite{aho2008}. Os autores discutem quatro
 estratégias gerais de recuperação de erros sintáticos. A recuperação em \textit{modo pânico}
 descarta \textit{tokens} da entrada até encontrar um \textit{token} de sincronismo, como
-ponto-e-vírgula ou chave de fechamento, retomando a análise a partir desse ponto. É simples e
+ponto e vírgula ou chave de fechamento, retomando a análise a partir desse ponto. É simples e
 robusta, embora possa ocultar erros próximos. A recuperação em nível de frase tenta corrigir o
 erro localmente por meio de pequenas substituições, inserções ou exclusões de \textit{tokens}.
 A estratégia de produções de erro estende a gramática com regras que reconhecem construções
@@ -1372,7 +1372,7 @@ fonte. Em uma AST de uma expressão, cada nó interno representa um operador ou 
 da linguagem, e seus filhos representam os operandos ou componentes semanticamente
 significativos dessa construção \cite{aho2008}. Não há nós para variáveis sintáticas auxiliares
 nem para produções unitárias, e os terminais que servem apenas como pontuação (parênteses,
-ponto-e-vírgula, palavras-chave de delimitação) costumam ser descartados, pois sua função já
+ponto e vírgula, palavras-chave de delimitação) costumam ser descartados, pois sua função já
 está implícita na estrutura hierárquica da árvore. O resultado é uma estrutura mais compacta,
 mais próxima da intenção do programador e, por consequência, mais conveniente para ser
 percorrida pelas fases de análise semântica, otimização e geração de código.
@@ -1559,8 +1559,8 @@ questões como retrocesso e ambiguidade.
 
 Uma terceira opção, frequentemente subestimada, é a do analisador escrito manualmente,
 em geral pela técnica de descida recursiva, descrita na Seção~\ref{sec:sintatica}. Nessa
-abordagem, cada não-terminal da gramática é traduzido em uma função do compilador, que invoca,
-direta ou indiretamente, as demais funções correspondentes aos não-terminais que aparecem em
+abordagem, cada não terminal da gramática é traduzido em uma função do compilador, que invoca,
+direta ou indiretamente, as demais funções correspondentes aos não terminais que aparecem em
 suas produções. Apesar de demandar mais trabalho inicial do que as duas alternativas anteriores,
 essa estratégia oferece o controle mais fino sobre o comportamento do analisador, sendo
 especialmente útil quando se deseja produzir mensagens de erro de alta qualidade ou quando a
@@ -1951,7 +1951,7 @@ O trabalho intitulado \textit{Exploiting Finite State Automata for Efficient Lex
 Rust Implementation}, publicado na forma de artigo técnico e
 tutorial prático por \citeonline{bruzzone2023}, apresenta uma implementação de analisador
 léxico em Rust fundamentada diretamente na teoria dos autômatos finitos. O autor parte da
-constatação de que analisadores léxicos são, em essência, autômatos finitos não-determinísticos
+constatação de que analisadores léxicos são, em essência, autômatos finitos não determinísticos
 aplicados ao reconhecimento de \textit{tokens}, e propõe uma implementação em que cada categoria
 léxica corresponde a um estado ou conjunto de estados explicitamente codificados na estrutura
 do autômato.
@@ -1981,7 +1981,7 @@ educacionais mais difundidas para o ensino de linguagens formais e autômatos.
 Desenvolvida por Susan H. Rodger e colaboradores na Duke University, com origens que remontam
 ao início da década de 1990, a ferramenta acumula décadas de desenvolvimento contínuo
 \cite{rodger2006jflap}. O JFLAP permite a criação e simulação de autômatos finitos
-determinísticos e não-determinísticos, autômatos de pilha, máquinas de Turing, gramáticas livres
+determinísticos e não determinísticos, autômatos de pilha, máquinas de Turing, gramáticas livres
 de contexto e sistemas-L, constituindo um ambiente abrangente para toda a hierarquia de Chomsky
 \cite{rodger2006jflap}.
 
@@ -2016,7 +2016,7 @@ ferramenta é implementada em C++ com a biblioteca gráfica GTK/GTKmm e executa 
 GNU/Linux e Windows, sendo distribuída livremente para uso acadêmico.
 
 O GAM oferece módulos para a entrada, edição e teste de autômatos finitos determinísticos e
-não-determinísticos, além de conversões entre formalismos regulares, como a construção de
+não determinísticos, além de conversões entre formalismos regulares, como a construção de
 subconjuntos (de AFN para AFD) e a conversão entre autômatos finitos e expressões regulares
 \cite{jukemura2005gam}. A interface gráfica permite a construção visual dos
 autômatos e a simulação do processamento de cadeias de entrada, com apresentação parcial das
@@ -2042,7 +2042,7 @@ ferramentas \textit{desktop} existentes, como o JFLAP, impõem barreiras de inst
 configuração que dificultam sua adoção em ambientes educacionais heterogêneos, e propõe como
 alternativa um simulador acessível diretamente pelo navegador, sem necessidade de instalação.
 
-A ferramenta suporta autômatos finitos determinísticos e não-determinísticos, autômatos de
+A ferramenta suporta autômatos finitos determinísticos e não determinísticos, autômatos de
 pilha e máquinas de Turing, permitindo a construção gráfica dos modelos e a simulação visual
 do processamento de cadeias, com apresentação dos estados e transições percorridos em cada
 passo \cite{nunes2017simulador}. A arquitetura \textit{web} é um diferencial relevante em
@@ -2084,7 +2084,7 @@ visualmente o estado corrente em tempo real \cite{kienetz2016automatograph}. Al�
 AutomatoGraph mantém a abordagem gráfica para a construção do autômato e não oferece
 representação textual formal, versionamento ou diagnóstico de erros estruturais. O escopo
 restrito a AFDs também constitui uma limitação quando se considera o ensino de
-não-determinismo, ponto em que a ferramenta proposta no presente trabalho, que suporta tanto
+não determinismo, ponto em que a ferramenta proposta no presente trabalho, que suporta tanto
 AFDs quanto AFNs com descrição textual unificada, representa um avanço significativo.
 
 \section{Análise Comparativa}
@@ -2235,7 +2235,7 @@ Este capítulo apresenta o projeto da Linguagem de Domínio Específico (DSL) pr
 descrevendo sua sintaxe concreta, sua gramática formal e as principais decisões de projeto
 que orientaram seu desenvolvimento. A linguagem, denominada Autosim, foi projetada para
 permitir a descrição declarativa de autômatos finitos determinísticos (AFDs) e
-não-determinísticos (AFNs) com transições $\varepsilon$, de forma textual, estruturada e
+não determinísticos (AFNs) com transições $\varepsilon$, de forma textual, estruturada e
 passível de versionamento.
 
 \section{Visão Geral da Linguagem}
@@ -2280,7 +2280,7 @@ simular exemplo_afd com ""
 O alfabeto é declarado uma única vez no início do arquivo e é compartilhado por todos os
 autômatos do programa, garantindo consistência entre as declarações. Cada autômato é
 nomeado e classificado como \texttt{AFD} (determinístico) ou \texttt{AFN}
-(não-determinístico), e sua estrutura é composta por quatro seções: estados, estado
+(não determinístico), e sua estrutura é composta por quatro seções: estados, estado
 inicial, estados finais e transições.
 
 \section{Gramática Formal}
@@ -2384,7 +2384,7 @@ erros em linguagens que distinguem caixa.
         \texttt{alfabeto}  & Declaração do alfabeto \\
         \texttt{automato}  & Declaração de autômato \\
         \texttt{AFD}       & Especificação de autômato determinístico \\
-        \texttt{AFN}       & Especificação de autômato não-determinístico \\
+        \texttt{AFN}       & Especificação de autômato não determinístico \\
         \texttt{estados}   & Declaração do conjunto de estados \\
         \texttt{inicial}   & Definição do estado inicial \\
         \texttt{finais}    & Declaração dos estados de aceitação \\
@@ -2417,7 +2417,7 @@ formal do autômato.
 \label{sec:dsl-classificacao}
 
 A linguagem exige que o usuário declare explicitamente se o autômato é
-determinístico (AFD) ou não-determinístico (AFN). Essa classificação permite que
+determinístico (AFD) ou não determinístico (AFN). Essa classificação permite que
 o compilador realize verificações específicas para cada tipo: para AFDs, o
 analisador semântico verifica a ausência de transições $\varepsilon$ e a unicidade
 de transição por par (estado, símbolo); para AFNs, ambas as construções são
@@ -2547,7 +2547,7 @@ maiúsculas e minúsculas. São reconhecidas as seguintes categorias de \textit{
           \texttt{finais}, \texttt{transicoes}, \texttt{simular}, \texttt{com},
           \texttt{epsilon}, \texttt{eps};
     \item Símbolos: \texttt{ChaveAberta} (\{), \texttt{ChaveFechada} (\}),
-          \texttt{Vírgula} (,), \texttt{Seta} (\texttt{-{}-{}});
+          \texttt{Vírgula} (,), \texttt{Seta} (\texttt{-{}>});
     \item Literais: \texttt{CharLiteral} (\texttt{'a'}), \texttt{StringLiteral}
           (\texttt{"ab"});
     \item Identificadores: \texttt{Ident} (\texttt{q0}, \texttt{exemplo}).
@@ -3131,11 +3131,11 @@ dos autômatos:
           pertencente ao alfabeto é rejeitado;
     \item Simulação de autômato inexistente (1 teste): verifica que referência
           a autômato não declarado é detectada;
-    \item AFD não-determinístico (1 teste): verifica que transições
+    \item AFD não determinístico (1 teste): verifica que transições
           conflitantes em AFD são reportadas;
     \item AFD com transição epsilon (1 teste): verifica que transições
           $\varepsilon$ em AFD são rejeitadas;
-    \item AFN permite não-determinismo (1 teste): verifica que transições
+    \item AFN permite não determinismo (1 teste): verifica que transições
           conflitantes em AFN são permitidas;
     \item Acumulação de múltiplos erros (1 teste): verifica que o analisador
           não interrompe a análise no primeiro erro, acumulando ao menos 3 erros
@@ -3241,7 +3241,7 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
         \hline
         \texttt{sema\_error.asl} & 4 erros semânticos & 4 mensagens localizadas \\
         \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & AFD não pode ter epsilon \\
-        \texttt{sema\_nondeterministic.asl} & AFD não-determinístico & Transição conflitante \\
+        \texttt{sema\_nondeterministic.asl} & AFD não determinístico & Transição conflitante \\
         \texttt{parse\_error.asl} & Falta \texttt{inicial} & "esperava 'inicial'" \\
         \texttt{symbol\_error.asl} & Caractere inválido & "token inválido" \\
         \texttt{error\_line3.asl} & Caractere inválido & "token inválido '@'" (linha 3) \\
@@ -3386,9 +3386,9 @@ linguagem Rust. O código-fonte e os pacotes estão disponíveis no repositório
 operacional:
 
 \begin{alineas}
-    \item \texttt{autosim-v1.0.2-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
-    \item \texttt{autosim-v1.0.2-windows-x86\_64.zip}, para Windows em processadores x86-64;
-    \item \texttt{autosim-v1.0.2-macos-aarch64.tar.gz}, para macOS em processadores Apple
+    \item \texttt{autosim-v1.0.3-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
+    \item \texttt{autosim-v1.0.3-windows-x86\_64.zip}, para Windows em processadores x86-64;
+    \item \texttt{autosim-v1.0.3-macos-aarch64.tar.gz}, para macOS em processadores Apple
     Silicon.
 \end{alineas}
 
@@ -3398,8 +3398,8 @@ Apêndices B a D. Basta extrair o pacote em uma pasta qualquer; não há etapa d
 instalação. No Linux, a extração pode ser feita pelo terminal:
 
 \begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
-tar xzf autosim-v1.0.2-linux-x86_64.tar.gz
-cd autosim-v1.0.2-linux-x86_64
+tar xzf autosim-v1.0.3-linux-x86_64.tar.gz
+cd autosim-v1.0.3-linux-x86_64
 \end{lstlisting}
 
 No macOS, como o executável não é assinado digitalmente, o sistema pode bloquear sua
@@ -3421,7 +3421,7 @@ pré-compilado, como o macOS em processadores Intel.
 
 Em todos os casos, a interface gráfica requer um ambiente de janelas (X11 ou Wayland, no
 Linux). A instalação pode ser conferida com \texttt{autosim -{}-version}, que deve exibir
-\texttt{autosim 1.0.2}.
+\texttt{autosim 1.0.3}.
 
 \apendice{Execução e Uso da Interface Gráfica}
 
@@ -3609,7 +3609,7 @@ o que cada uma indica e como corrigi-la.
         \texttt{AFD não pode ter transição epsilon} & Um autômato declarado como AFD usa
         \texttt{epsilon}. Remover a transição ou declarar o autômato como AFN. \\
         \hline
-        \texttt{AFD 'X' não-determinístico: duas saídas de 'Q' com 'S'} & O estado Q tem
+        \texttt{AFD 'X' não determinístico: duas saídas de 'Q' com 'S'} & O estado Q tem
         duas transições com o mesmo símbolo S, e o segundo rótulo indica a primeira delas.
         Remover uma das transições ou declarar o autômato como AFN. \\
         \hline

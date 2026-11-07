@@ -59,12 +59,12 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 ## Revisão linguística e referências
 
 ### Ortografia e estilo
-- [ ] p. 38: "léxicamente" → "lexicamente"
-- [ ] pp. 41 e 44: "ponto-e-vírgula" → "ponto e vírgula"
-- [ ] Uniformizar "não determinístico" sem hífen em todo o texto
-- [ ] Uniformizar "não terminais" sem hífen em todo o texto
-- [ ] p. 25: eliminar a redundância "no caso geral, em geral"
-- [ ] p. 75: corrigir o token Seta, exibido como dois traços, para `->`
+- [x] p. 38: "léxicamente" → "lexicamente"
+- [x] pp. 41 e 44: "ponto-e-vírgula" → "ponto e vírgula"
+- [x] Uniformizar "não determinístico" sem hífen em todo o texto
+- [x] Uniformizar "não terminais" sem hífen em todo o texto
+- [x] p. 25: eliminar a redundância "no caso geral, em geral"
+- [x] p. 75: corrigir o token Seta, exibido como dois traços, para `->`
 
 ### Referências
 - [x] pp. 74–75 e 85: incluir citação e referência da biblioteca Ariadne
