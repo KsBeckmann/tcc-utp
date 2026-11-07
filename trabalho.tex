@@ -84,8 +84,10 @@ como requisito à obtenção do grau de Bacharel.}
 \begin{resumo}
     O ensino de autômatos finitos em cursos de Ciência da Computação enfrenta dificuldades
     relacionadas à abstração dos conceitos teóricos e à falta de retroalimentação imediata,
-    uma vez que as ferramentas existentes adotam abordagens exclusivamente visuais, sem oferecer
-    representação textual formal, versionamento ou diagnósticos de erro precisos. Este trabalho
+    uma vez que as ferramentas mais difundidas, como o JFLAP, adotam abordagens exclusivamente
+    visuais, sem oferecer representação textual formal, versionamento ou diagnósticos de erro
+    precisos, e a alternativa textual existente, a biblioteca FSM, não acopla a descrição
+    textual a uma simulação visual. Este trabalho
     apresenta a Autosim, uma ferramenta educacional composta por uma Linguagem de Domínio
     Específico (DSL) textual, em português, para a descrição declarativa de Autômatos Finitos
     Determinísticos (AFD) e Não-Determinísticos (AFN) com transições $\varepsilon$, cuja
@@ -212,6 +214,14 @@ há validação formal da estrutura com mensagens de erro claras e localizadas; 
 estudante que comete um erro na construção não recebe um diagnóstico preciso do
 problema.
 
+Abordagens textuais também foram propostas. \citeonline{morazan2014} descrevem a FSM,
+uma biblioteca da linguagem Racket na qual autômatos são escritos como código e podem ser
+executados e testados, o que oferece ao estudante retroalimentação por meio da execução.
+Na versão descrita pelos autores, contudo, os autômatos são escritos na sintaxe da
+linguagem hospedeira, o resultado da execução é apresentado em forma textual e a
+representação gráfica das máquinas, com a animação de sua execução, é apontada como
+trabalho futuro.
+
 Diante desse cenário, a pergunta que orienta esta pesquisa é a seguinte: como uma
 linguagem textual de domínio específico, processada por um compilador com diagnósticos
 de erro localizados e acoplada a uma simulação visual, pode oferecer ao estudante
@@ -227,7 +237,11 @@ erros de clique por uma descrição declarativa estruturada, permitindo o uso de
 de versionamento de código (como o Git); segundo, introduz uma infraestrutura
 de compilador real (com análises léxica, sintática e semântica) focada no diagnóstico
 detalhado de erros conceituais (como transições para estados não declarados ou
-determinismo violado), fornecendo mensagens com linha e coluna exatas.
+determinismo violado), fornecendo mensagens com linha e coluna exatas. Em relação à FSM,
+que também adota a descrição textual, a Autosim se diferencia por ser uma DSL externa, com
+sintaxe própria em português restrita ao domínio dos autômatos finitos, e por acoplar essa
+descrição a um diagrama de estados gerado e animado automaticamente, recurso que os autores
+da FSM indicavam como trabalho futuro.
 
 Do ponto de vista pedagógico, a ferramenta busca mitigar o problema específico da
 ausência de retroalimentação imediata que ocorre na transição entre o formalismo matemático
@@ -885,9 +899,9 @@ Cabe ainda diferenciar dois sentidos do termo simulação que aparecem na litera
 estrito, simular um autômato é executar sua função de transição sobre uma entrada específica,
 como descrito acima. Em sentido mais amplo, ferramentas como o JFLAP \cite{rodger2006jflap} e a
 biblioteca FSM \cite{morazan2014} oferecem também a possibilidade de \textit{testar} um
-autômato com múltiplas cadeias geradas aleatoriamente, comparar duas máquinas quanto à
-equivalência de suas linguagens e visualizar transformações construtivas, como a conversão de
-AFN em AFD. Essas operações estendem a noção básica de simulação para um conjunto mais rico de
+autômato com múltiplas cadeias, que na FSM podem ser geradas aleatoriamente, comparar duas
+máquinas quanto às cadeias que aceitam e aplicar transformações construtivas, como a
+conversão de AFN em AFD, que o JFLAP apresenta com animações visuais. Essas operações estendem a noção básica de simulação para um conjunto mais rico de
 recursos didáticos, ao qual se pode atribuir o termo \textit{ambiente de experimentação}. A
 ferramenta proposta neste trabalho posiciona-se nesse espectro, oferecendo, em primeiro plano,
 a simulação visual passo a passo de autômatos finitos descritos por meio de uma linguagem de
@@ -1678,9 +1692,10 @@ restante das atividades de programação que o estudante realiza ao longo do cur
 autômato como um diagrama a ser desenhado, e não como um objeto computacional a ser construído
 e manipulado por meio de código.
 
-A alternativa proposta por \citeonline{morazan2014} consiste em oferecer ao estudante
-uma DSL textual em que autômatos finitos, autômatos de pilha, máquinas de Turing e gramáticas
-sejam descritos diretamente como termos da linguagem, podendo então ser construídos, compostos,
+A alternativa proposta por \citeonline{morazan2014} consiste em oferecer ao estudante a
+FSM, uma biblioteca da linguagem Racket que funciona, nos termos da
+Seção~\ref{sec:dsl}, como uma DSL interna, em que autômatos finitos, autômatos de pilha,
+máquinas de Turing e gramáticas são descritos diretamente como termos da linguagem, podendo então ser construídos, compostos,
 testados e executados como qualquer outro programa. Os autores argumentam que essa abordagem
 recoloca os objetos da teoria da computação no mesmo plano dos demais artefatos com que o
 estudante trabalha em programação, integrando o estudo das linguagens formais ao restante do
@@ -1699,7 +1714,11 @@ A abordagem textual não se opõe, entretanto, à visualização. Pelo contrári
 ensino tende a beneficiar-se da combinação entre uma representação textual primária, em que o
 estudante exprime suas ideias, e uma representação visual derivada, gerada automaticamente a
 partir do texto, que serve para a inspeção do resultado e para a execução passo a passo da
-máquina descrita. Esse arranjo preserva os ganhos de programação enumerados anteriormente sem
+máquina descrita. Os próprios \citeonline{morazan2014} apontam essa combinação como trabalho
+futuro da FSM, cuja versão descrita não dispõe de interface gráfica: o objetivo declarado é
+que o estudante continue a escrever código e que as máquinas assim descritas sejam
+desenhadas e tenham sua execução animada. Esse arranjo preserva os ganhos de programação
+enumerados anteriormente sem
 abrir mão dos ganhos visuais que motivam o uso de ferramentas como o JFLAP, e é precisamente
 esse o equilíbrio que a ferramenta proposta no presente trabalho busca alcançar, conforme
 detalhado nos capítulos subsequentes.
@@ -1908,9 +1927,12 @@ justificativa é apresentada no Capítulo~\ref{cap:implementacao}.
 
 O desenvolvimento de ferramentas computacionais para apoiar o ensino de autômatos finitos tem
 uma trajetória longa e relativamente consolidada na literatura de educação em Ciência da
-Computação. No entanto, conforme se argumenta ao longo deste trabalho, as abordagens existentes
-compartilham uma limitação comum: a ausência de uma representação textual formal e de um
-compilador associado capaz de validar e diagnosticar erros com precisão. Este capítulo apresenta
+Computação. No entanto, as ferramentas didáticas analisadas neste capítulo compartilham uma
+limitação comum: a ausência de uma representação textual formal e de um compilador associado
+capaz de validar e diagnosticar erros com precisão. A principal abordagem textual identificada
+na literatura, a biblioteca FSM \cite{morazan2014}, apresentada na
+Seção~\ref{sec:dsl-ensino}, é comparada à ferramenta proposta na
+Seção~\ref{sec:rel-comparativa}. Este capítulo apresenta
 e analisa os cinco trabalhos mais relevantes identificados na revisão bibliográfica, organizados
 conforme sua plataforma e abordagem, evidenciando em cada caso as contribuições e as limitações
 que motivam o desenvolvimento da ferramenta proposta.
@@ -2128,6 +2150,25 @@ um desenho animado, isolado da prática de codificação. Por outro lado, aborda
 pura como o trabalho de \citeonline{bruzzone2023} expõem o rigor técnico do Rust e a
 manipulação via código, mas falham no suporte educacional por carecerem de interfaces gráficas
 interativas para estudantes iniciantes.
+
+A biblioteca FSM \cite{morazan2014}, discutida na Seção~\ref{sec:dsl-ensino}, não consta
+dos Quadros~\ref{quad:comparativo-recursos} e~\ref{quad:comparativo-qualitativo} por não ser,
+na versão descrita pelos autores, uma ferramenta de simulação visual, mas constitui a
+comparação mais próxima da proposta deste trabalho quanto à representação textual: nela, os
+autômatos também são descritos como texto e podem ser executados e testados. As diferenças
+concentram-se em dois pontos. O primeiro é a forma da linguagem: a FSM é uma DSL interna,
+escrita na sintaxe da linguagem Racket, embora os autores observem que apenas um mínimo dessa
+sintaxe precisa ser aprendido, ao passo que a Autosim é uma DSL externa, com sintaxe própria
+em português restrita ao domínio dos autômatos finitos e processada por um compilador que
+emite diagnósticos no vocabulário desse domínio. O segundo é a apresentação da execução: na
+FSM, o resultado é um valor textual, como o caminho retornado pela função
+\textit{show-transitions-sm}, que é vazio quando um autômato não determinístico rejeita a
+cadeia, e a representação gráfica é apontada como trabalho futuro; na Autosim, o caminho é
+acompanhado em um diagrama gerado e animado a partir do texto, e, na rejeição, exibe-se o
+caminho que mais se aproximou da aceitação. Em contrapartida, a FSM abrange um conjunto de
+formalismos muito mais amplo, que inclui autômatos de pilha, máquinas de Turing e gramáticas,
+e oferece testes automáticos com cadeias geradas aleatoriamente, recursos que a Autosim não
+oferece.
 
 A ferramenta proposta neste trabalho ocupa, portanto, essa lacuna exata de engenharia
 pedagógica: ela adota o rigor da descrição textual por meio de uma DSL externa dedicada,

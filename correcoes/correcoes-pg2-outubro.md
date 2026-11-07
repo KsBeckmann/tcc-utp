@@ -33,8 +33,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 ## Coerência e conclusão
 
 ### Ferramentas existentes (pp. 3, 11 e 61)
-- [ ] Revisar a afirmação geral de que nenhuma ferramenta tem descrição textual: conflita com o FSM, descrito na p. 53 como DSL
-- [ ] Incluir a comparação com o FSM ao delimitar a contribuição do projeto
+- [x] Revisar a afirmação geral de que nenhuma ferramenta tem descrição textual: conflita com o FSM, descrito na p. 53 como DSL
+- [x] Incluir a comparação com o FSM ao delimitar a contribuição do projeto
 
 ### Gramática × testes
 - [ ] Regra de alfabeto (p. 70) exige ao menos um caractere, mas o teste da p. 87 aceita `alfabeto { }` — decidir o comportamento desejado
