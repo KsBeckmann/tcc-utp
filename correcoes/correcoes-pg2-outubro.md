@@ -53,8 +53,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] pp. 59–60: atualizar as escolhas descritas no futuro, considerando as bibliotecas efetivamente usadas no cap. 7
 
 ### Conclusão (pp. 92–93)
-- [ ] Acrescentar as dificuldades efetivamente encontradas e como foram enfrentadas
-- [ ] Restringir as afirmações sobre solução das dificuldades de aprendizagem ao que foi demonstrado (testes de funcionamento não comprovam ganho de aprendizagem)
+- [x] Acrescentar as dificuldades efetivamente encontradas e como foram enfrentadas
+- [x] Restringir as afirmações sobre solução das dificuldades de aprendizagem ao que foi demonstrado (testes de funcionamento não comprovam ganho de aprendizagem)
 
 ## Revisão linguística e referências
 

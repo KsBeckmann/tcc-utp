@@ -2421,8 +2421,9 @@ determinístico (AFD) ou não-determinístico (AFN). Essa classificação permit
 o compilador realize verificações específicas para cada tipo: para AFDs, o
 analisador semântico verifica a ausência de transições $\varepsilon$ e a unicidade
 de transição por par (estado, símbolo); para AFNs, ambas as construções são
-permitidas. Essa distinção tem valor pedagógico, pois obriga o estudante a
-refletir sobre a natureza do autômato que está descrevendo.
+permitidas. Essa distinção tem finalidade pedagógica: ao exigir que o tipo seja
+declarado, busca levar o estudante a refletir sobre a natureza do autômato que está
+descrevendo.
 
 \subsection{Sintaxe em Português}
 \label{sec:dsl-portugues}
@@ -2969,8 +2970,8 @@ geração de mensagens de erro. O diagnóstico inclui:
 \end{itemize}
 
 Esse formato de diagnóstico, semelhante ao de compiladores modernos como o \texttt{rustc},
-foi adotado por seu valor pedagógico: o estudante recebe informações claras e
-visualmente organizadas sobre cada erro, facilitando a correção do código-fonte.
+foi adotado com finalidade pedagógica: busca oferecer ao estudante informações claras e
+visualmente organizadas sobre cada erro, de modo a facilitar a correção do código-fonte.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -3283,8 +3284,42 @@ texto fonte e anima a simulação passo a passo, com destaque visual para o esta
 corrente e as transições percorridas. A validação da ferramenta foi realizada por meio
 de 51 testes automatizados, distribuídos entre as fases léxica, sintática e
 semântica e o simulador, além de simulações com autômatos clássicos da literatura, com todos os
-resultados concordando com o esperado, o que confirma a correção do simulador e a
-qualidade dos diagnósticos gerados.
+resultados concordando com o esperado, o que confirma o funcionamento correto do simulador
+e que os diagnósticos localizam e descrevem os erros previstos.
+
+Quanto à pergunta que orientou esta pesquisa, os resultados indicam que uma linguagem
+textual de domínio específico, processada por um compilador com diagnósticos localizados e
+acoplada a uma simulação visual, é capaz de oferecer retroalimentação imediata na construção
+e na execução de autômatos finitos: a cada execução, erros de estrutura e de conceito são
+apontados com sua localização no texto, e autômatos válidos são desenhados e simulados passo
+a passo. Essa resposta, contudo, restringe-se ao plano funcional. Os testes demonstram que a
+retroalimentação é produzida corretamente, mas não avaliam seus efeitos sobre estudantes. Se
+a ferramenta de fato atenua as dificuldades de aprendizagem que motivaram o trabalho
+permanece, portanto, uma hipótese, cuja verificação depende dos estudos com estudantes
+propostos ao final deste capítulo.
+
+O desenvolvimento enfrentou dificuldades que levaram a revisões do projeto inicial. A
+primeira dizia respeito à exibição da simulação de AFNs: a versão inicial do simulador
+propagava, a cada passo, o conjunto de todos os estados em que o autômato poderia estar, o
+que fazia vários estados se acenderem ao mesmo tempo e tornava a execução difícil de
+acompanhar. A solução foi substituir essa estratégia pela escolha prévia de um único
+caminho, descrita na Seção~\ref{sec:impl-caminho}, cujos critérios garantem que o caminho
+exibido seja aceitador sempre que a cadeia pertence à linguagem. A segunda surgiu com
+autômatos maiores, cujo arranjo circular fazia os estados se sobreporem ou ultrapassarem os
+limites da janela: o raio do arranjo passou a crescer com o número de estados, e o diagrama
+ganhou navegação por deslocamento e ampliação, como mostra a
+Figura~\ref{fig:screenshot-automato-grande}. A terceira envolveu a localização dos erros.
+Como o analisador sintático opera sobre \textit{tokens}, foi preciso converter os índices
+de \textit{token} da AST em posições no texto-fonte; além disso, constatou-se na revisão
+final que caracteres acentuados, comuns em comentários escritos em português, deslocavam a
+posição indicada nos diagnósticos, pois o analisador léxico fornece intervalos de
+\textit{bytes} e a biblioteca de diagnóstico os interpretava como índices de caractere. A
+correção, descrita na Seção~\ref{sec:impl-ast}, consistiu em adotar os \textit{bytes}
+como unidade em toda a cadeia de diagnóstico. A quarta foi manter a especificação, a
+implementação e os testes coerentes entre si e com a teoria: o caso do alfabeto vazio,
+aceito pela gramática e por um teste embora a definição formal exija um alfabeto não vazio,
+foi resolvido com uma verificação semântica específica, conforme a
+Seção~\ref{sec:dsl-gramatica}.
 
 No entanto, apesar desses resultados positivos, a ferramenta apresenta limitações
 que devem ser reconhecidas. Todos os autômatos de um mesmo arquivo compartilham um
