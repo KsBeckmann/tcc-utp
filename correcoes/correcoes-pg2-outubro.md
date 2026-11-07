@@ -68,7 +68,7 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 
 ### Referências
 - [x] pp. 74–75 e 85: incluir citação e referência da biblioteca Ariadne
-- [ ] p. 94: completar a referência de Nunes (2017) com instituição e tipo de trabalho
+- [x] p. 94: completar a referência de Nunes (2017) com instituição e tipo de trabalho
 
 ## Entrega final (14/11, OneDrive)
 - [ ] Texto monográfico completo: pré-textuais, introdução, fundamentação teórica, trabalhos relacionados, metodologia de construção da solução, ferramentas para implementação, resultados e discussões, conclusões e pós-textuais
