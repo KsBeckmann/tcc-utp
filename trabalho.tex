@@ -277,11 +277,12 @@ e é proposta como trabalho futuro no Capítulo~\ref{cap:conclusao}.
 
 Este trabalho está organizado como segue.
 O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica: os conceitos de autômatos finitos e linguagens formais (Seção~\ref{cap:automatos}) e as fases de compilação e as linguagens de domínio específico (Seção~\ref{cap:compiladores}).
-O Capítulo~\ref{cap:rust} apresenta a linguagem Rust e justifica sua adoção como plataforma de implementação da ferramenta proposta.
 O Capítulo~\ref{cap:relacionados} discute as ferramentas relacionadas e suas limitações.
+O Capítulo~\ref{cap:metodologia} descreve a metodologia de construção da solução: a caracterização da pesquisa, as etapas do desenvolvimento, a organização do trabalho e os critérios de validação.
+O Capítulo~\ref{cap:ferramentas} apresenta as ferramentas utilizadas na implementação, com destaque para a linguagem Rust, cuja adoção é justificada, e para as bibliotecas e os serviços de versionamento e distribuição empregados.
 O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramática.
 O Capítulo~\ref{cap:implementacao} detalha a implementação do compilador e da interface gráfica.
-O Capítulo~\ref{cap:resultados} apresenta os testes e os resultados obtidos.
+O Capítulo~\ref{cap:resultados} apresenta e discute os testes e os resultados obtidos.
 Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e trabalhos futuros.
 Os Apêndices A a D compõem o manual de uso da ferramenta: o Apêndice A descreve a instalação,
 o Apêndice B a execução e a interface gráfica, o Apêndice C a escrita de programas na DSL e o
@@ -1589,7 +1590,7 @@ combina três recursos: um gerador de analisadores léxicos embutido na própria
 hospedeira, que produz o \textit{lexer} a partir de anotações no código-fonte; uma biblioteca
 de \textit{parser combinators} para a análise sintática; e a escrita manual da análise
 semântica e das demais etapas. Essa combinação preserva a integração natural com o restante da
-ferramenta, escrita inteiramente em Rust, linguagem apresentada no Capítulo~\ref{cap:rust},
+ferramenta, escrita inteiramente em Rust, linguagem apresentada no Capítulo~\ref{cap:ferramentas},
 sem introduzir etapas externas de
 geração de código nem dependências de plataformas de \textit{language engineering}.
 
@@ -1726,206 +1727,6 @@ detalhado nos capítulos subsequentes.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-% 4. Rust como Linguagem de Implementação
-% -------------------------------------------------------------------------------------------------
-% -------------------------------------------------------------------------------------------------
-\chapter{Rust como Linguagem de Implementação}
-\label{cap:rust}
-Este capítulo apresenta a linguagem de programação Rust e justifica sua adoção como plataforma
-de implementação da ferramenta proposta. Inicia-se com uma visão geral da linguagem e de suas
-características centrais (Seção~\ref{sec:rust-visao-geral}), seguindo-se uma discussão sobre
-seu sistema de tipos e o modelo de propriedade de memória
-(Seção~\ref{sec:rust-ownership}). Em seguida, apresenta-se o ecossistema de bibliotecas e o
-gerenciador de pacotes Cargo (Seção~\ref{sec:rust-cargo}), e discutem-se as principais
-bibliotecas de \textit{parser combinators} disponíveis para Rust
-(Seção~\ref{sec:rust-parsers}), cujas características orientam a escolha de implementação
-descrita no Capítulo~\ref{cap:implementacao}.
-
-\section{Visão Geral da Linguagem}
-\label{sec:rust-visao-geral}
-
-Rust é uma linguagem de programação de sistemas criada pela Mozilla Research e lançada em sua
-primeira versão estável em 2015 \cite{klabnik2019}. Seu projeto parte de uma premissa central:
-oferecer desempenho comparável ao de C e C++, sem abrir mão das garantias de segurança de
-memória que essas linguagens historicamente não fornecem em tempo de compilação. Para atingir
-esse objetivo, Rust introduz um sistema de tipos estático e um conjunto de regras de compilação,
-coletivamente denominado modelo de \textit{ownership} e \textit{borrowing}, que permite ao
-compilador verificar, antes da execução, a ausência de erros como acessos a regiões de memória
-inválidas, condições de corrida e uso de ponteiros nulos \cite{klabnik2019}.
-
-A linguagem é compilada para código nativo por meio do compilador \texttt{rustc}, que utiliza
-como \textit{backend} a infraestrutura LLVM, a mesma empregada por compiladores como Clang e
-Swift \cite{klabnik2019}. O resultado é um binário executável diretamente pelo sistema
-operacional, sem a necessidade de uma máquina virtual ou de um interpretador em tempo de
-execução. Essa característica torna Rust adequado tanto para o desenvolvimento de sistemas de
-baixo nível, como kernels e drivers, quanto para aplicações de alto nível que exigem desempenho
-previsível, como compiladores, servidores e ferramentas de linha de comando.
-
-Do ponto de vista da expressividade, Rust combina paradigmas de programação imperativa,
-funcional e orientada a objetos por meio de \textit{traits}, que funcionam de forma análoga às
-interfaces de Java ou às classes de tipos de Haskell \cite{klabnik2019}. Essa flexibilidade
-permite que construções comuns em linguagens funcionais, como mapeamento, filtragem e
-encadeamento de iteradores, sejam expressas de forma concisa e com custo de abstração zero,
-isto é, sem sobrecarga de desempenho em relação ao código imperativo equivalente. Para a
-construção de compiladores e processadores de linguagens, esse conjunto de características é
-particularmente valioso: a segurança de tipos facilita a representação de estruturas como
-\textit{tokens}, nós de AST e estados de autômatos sem o risco de inconsistências em tempo de execução,
-enquanto o modelo funcional favorece a composição das fases de análise de forma clara e
-modular.
-
-\section{Sistema de Tipos, \textit{Ownership} e \textit{Borrowing}}
-\label{sec:rust-ownership}
-
-O traço mais distintivo de Rust em relação a outras linguagens de sistemas é seu modelo de
-gerenciamento de memória, que elimina a necessidade de um coletor de lixo (\textit{garbage
-collector}) sem exigir que o programador gerencie a memória manualmente \cite{klabnik2019}. Esse
-modelo é fundamentado em três conceitos inter-relacionados: \textit{ownership} (propriedade),
-\textit{borrowing} (empréstimo) e \textit{lifetimes} (tempos de vida).
-
-O princípio de \textit{ownership} estabelece que cada valor em Rust possui exatamente um
-dono em qualquer ponto do programa, e que o valor é automaticamente liberado da memória
-quando seu dono sai de escopo \cite{klabnik2019}. A atribuição de um valor a uma nova variável,
-ou sua passagem como argumento a uma função, transfere a propriedade para o novo contexto,
-invalidando o acesso anterior. Essa regra, verificada estaticamente pelo compilador, garante
-que não existam dois fragmentos de código tentando liberar a mesma região de memória
-simultaneamente.
-
-O \textit{borrowing} complementa o \textit{ownership} ao permitir que um valor seja
-referenciado sem que sua propriedade seja transferida. Rust distingue dois tipos de
-referências: as referências imutáveis (\texttt{\&T}), das quais podem existir
-simultaneamente quantas forem necessárias, e as referências mutáveis (\texttt{\&mut T}),
-das quais apenas uma pode existir em qualquer instante, excluindo a coexistência com qualquer
-referência imutável \cite{klabnik2019}. Essas restrições, verificadas pelo compilador em uma
-fase denominada \textit{borrow checking}, eliminam em tempo de compilação toda uma classe de
-erros relacionados à mutação concorrente de dados compartilhados.
-
-O sistema de tipos de Rust é estático e fortemente tipado, com suporte a inferência de tipos
-que dispensa, na maior parte dos casos, anotações explícitas de tipo \cite{klabnik2019}. Para a
-representação de estruturas de dados que podem assumir diferentes formas, Rust oferece os
-tipos enumerados (\texttt{enum}), que permitem associar dados distintos a cada variante
-e são processados por meio de correspondência de padrões (\textit{pattern matching}) com
-verificação de exaustividade pelo compilador. Esse recurso é particularmente útil na
-implementação de compiladores, onde nós de AST, \textit{tokens} e erros costumam ser representados
-naturalmente como enumerações: o compilador garante que todo código que manipula essas
-estruturas trate explicitamente cada variante possível, evitando casos não tratados silenciosos.
-
-No contexto do presente trabalho, o sistema de tipos e o modelo de \textit{ownership} de Rust
-oferecem garantias concretas para a implementação das fases do compilador da DSL proposta. A
-AST do autômato, por exemplo, pode ser representada como uma enumeração cujas variantes
-correspondem aos diferentes nós da árvore, estados, transições, declarações de alfabeto e
-metadados, com a certeza de que qualquer acesso a essas estruturas será verificado em tempo de
-compilação. Da mesma forma, a passagem da AST entre as fases de análise semântica e de
-simulação não requer cópias desnecessárias, pois o modelo de \textit{borrowing} permite que
-cada fase leia a estrutura sem assumir sua propriedade.
-
-\section{Ecossistema e Gerenciador de Pacotes Cargo}
-\label{sec:rust-cargo}
-
-O ecossistema de Rust organiza-se em torno do Cargo, ferramenta oficial que acumula as
-funções de gerenciador de pacotes, sistema de \textit{build} e executor de testes
-\cite{klabnik2019}. Por meio do Cargo, o desenvolvedor declara as dependências do projeto em um
-arquivo de manifesto (\texttt{Cargo.toml}), e a ferramenta resolve automaticamente as versões
-compatíveis, baixa os pacotes do repositório central \texttt{crates.io} e compila todo o
-projeto em uma única invocação. Esse modelo elimina a necessidade de sistemas de \textit{build}
-externos e garante que projetos Rust sejam reprodutíveis em qualquer ambiente que disponha do
-compilador instalado.
-
-A unidade de distribuição de código em Rust é denominada \textit{crate}, termo que
-corresponde, aproximadamente, ao conceito de biblioteca ou módulo em outras linguagens
-\cite{klabnik2019}. O repositório \texttt{crates.io} hospeda dezenas de milhares de
-\textit{crates} de código aberto, cobrindo desde estruturas de dados e algoritmos até
-bibliotecas para desenvolvimento \textit{web}, interfaces gráficas e, em especial para os fins
-deste trabalho, análise sintática e processamento de linguagens.
-
-A integração entre Cargo e o compilador \texttt{rustc} estende-se à execução automatizada de
-testes unitários e de integração. Todo projeto Rust pode incluir módulos de teste diretamente
-no código fonte, anotados com o atributo \texttt{\#[test]}, que são compilados e executados
-pelo comando \texttt{cargo test} \cite{klabnik2019}. Esse mecanismo nativo de testes é
-relevante para o presente trabalho, pois permite validar cada fase do compilador da DSL de
-forma isolada, verificando o comportamento do analisador léxico, do analisador sintático e do
-verificador semântico sobre entradas controladas, em linha com a estratégia de validação
-descrita no Capítulo~\ref{cap:resultados}.
-
-\section{\textit{Parser Combinators} em Rust}
-\label{sec:rust-parsers}
-
-Conforme discutido na Seção~\ref{sec:contrucao-compiladores}, a estratégia de implementação
-adotada para o compilador da DSL proposta baseia-se no uso de uma biblioteca de
-\textit{parser combinators}, abordagem que integra naturalmente a definição da gramática ao
-restante do código da ferramenta. O ecossistema Rust oferece três bibliotecas principais para
-esse fim: nom, pest e chumsky, cada uma com características
-distintas que as tornam adequadas a diferentes cenários.
-
-A biblioteca nom é uma das mais antigas e consolidadas do ecossistema Rust para
-análise sintática \cite{couprie2015nom}. Sua abordagem é baseada em funções que recebem uma
-fatia de bytes ou caracteres e retornam o resultado do reconhecimento juntamente com o restante
-da entrada não consumida, compondo-se por meio de macros e funções de ordem superior. A
-orientação de nom para o processamento de formatos binários e protocolos de rede, domínio em
-que a eficiência é crítica, torna-a uma escolha robusta para linguagens textuais, embora a
-geração de mensagens de erro precisas requeira esforço adicional do implementador, pois a
-biblioteca não foi projetada com esse objetivo em primeiro plano.
-
-A biblioteca pest adota uma abordagem diferente: em vez de compor \textit{parsers} no
-código Rust, o desenvolvedor descreve a gramática da linguagem em um arquivo externo com
-notação própria, derivada de gramáticas de expressão de análise (\textit{Parsing Expression
-Grammars}, ou PEG), e a biblioteca gera automaticamente o analisador correspondente em tempo de
-compilação por meio de macros procedurais \cite{pest2018}. Essa estratégia separa claramente a
-especificação da gramática de sua implementação, facilitando a leitura e a manutenção da
-definição da linguagem, mas reduz o controle sobre o comportamento do analisador e sobre as
-mensagens de erro produzidas.
-
-A biblioteca chumsky é a mais recente das três e foi projetada explicitamente com foco
-na qualidade do diagnóstico de erros \cite{chumsky2022}. Seus combinadores propagam
-automaticamente informações de localização ao longo do processo de análise e oferecem
-mecanismos nativos de recuperação de erros, permitindo que o analisador continue após encontrar
-uma construção inválida e reporte múltiplos erros em uma única execução. Essas características
-alinham-se diretamente com os requisitos de diagnóstico estabelecidos na
-Seção~\ref{sec:diagnostico-erro}, tornando chumsky uma alternativa particularmente adequada
-para DSLs voltadas ao ensino, em que a qualidade das mensagens de erro é tão importante quanto
-a correção da análise.
-
-O Quadro~\ref{tab:comparacao-parsers} sintetiza as principais características das três
-bibliotecas, evidenciando os critérios que orientaram a escolha descrita a seguir.
-
-\begin{quadro}[h]
-    \centering
-    \caption{COMPARAÇÃO ENTRE BIBLIOTECAS DE PARSER COMBINATORS PARA RUST}
-    \label{tab:comparacao-parsers}
-    \small
-    \setlength{\tabcolsep}{5pt}
-    \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-    % Adicionado | no início, no fim e entre as colunas do tabularx
-    \begin{tabularx}{\textwidth}{|l|Y|Y|Y|}
-        \hline
-        Critério              & nom       & pest         & chumsky       \\
-        \hline
-        Abordagem                      & Combinadores       & Gramática PEG externa & Combinadores           \\
-        Qualidade dos erros            & Baixa              & Média                 & Alta                   \\
-        Recuperação de erros           & Manual             & Limitada              & Nativa                 \\
-        Rastreamento de localização    & Manual             & Automático            & Automático             \\
-        Maturidade                     & Alta               & Alta                  & Média                  \\
-        Foco original                  & Dados binários     & Linguagens textuais   & Linguagens textuais    \\
-        \hline
-    \end{tabularx}
-    \fonte{Os autores (\the\year)}
-\end{quadro}
-
-Com base nesses critérios, a biblioteca chumsky foi adotada para a análise sintática do
-compilador da DSL. A decisão decorre dos requisitos estabelecidos para o compilador: em
-especial, a necessidade de mensagens de erro com indicação precisa de localização e natureza
-do problema, conforme descrito na Seção~\ref{sec:diagnostico-erro}, e a integração natural
-com o restante da ferramenta, escrita integralmente em Rust, sem uma gramática mantida fora
-do código. A aplicação do chumsky e a justificativa da escolha em relação ao nom e ao pest
-são retomadas na Seção~\ref{sec:impl-parser}.
-
-As demais etapas da ferramenta também se apoiam em bibliotecas do ecossistema Rust, cujo uso
-é descrito no Capítulo~\ref{cap:implementacao}: a análise léxica emprega a biblioteca Logos
-\cite{logos2021}, que gera o analisador léxico a partir de anotações no código-fonte; os
-diagnósticos de erro são formatados pela biblioteca Ariadne \cite{ariadne2021}; e a interface
-gráfica é construída com a biblioteca Iced \cite{iced2022}.
-
-% -------------------------------------------------------------------------------------------------
-% -------------------------------------------------------------------------------------------------
 % 5. Trabalhos Relacionados
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -1961,8 +1762,8 @@ entre a teoria dos autômatos, apresentada na Seção~\ref{cap:automatos}, e sua
 prática em uma linguagem de programação moderna. O autor demonstra que as primitivas de Rust,
 em especial os tipos enumerados e o mecanismo de correspondência de padrões, são
 particularmente adequados para representar estados e transições de autômatos de forma segura e
-eficiente, em consonância com os argumentos desenvolvidos no Capítulo~\ref{cap:rust} deste
-trabalho.
+eficiente, argumento retomado no Capítulo~\ref{cap:ferramentas} para justificar a adoção da
+linguagem neste trabalho.
 
 No entanto, o escopo do trabalho de \citeonline{bruzzone2023} restringe-se à fase de análise
 léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de
@@ -2222,6 +2023,428 @@ software em uma única plataforma de experimentação.
     \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{quadro}
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 4. Metodologia de Construção da Solução
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Metodologia de Construção da Solução}
+\label{cap:metodologia}
+
+Este capítulo descreve como o trabalho foi conduzido. A Seção~\ref{sec:met-caracterizacao}
+caracteriza a pesquisa quanto à sua natureza, aos seus objetivos e aos seus procedimentos; a
+Seção~\ref{sec:met-etapas} apresenta as etapas em que a construção da ferramenta Autosim foi
+organizada; a Seção~\ref{sec:met-organizacao} descreve a divisão do trabalho entre os autores e
+o acompanhamento ao longo do desenvolvimento; e a Seção~\ref{sec:met-validacao} define os
+critérios adotados para verificar se a ferramenta construída atende aos objetivos específicos
+enunciados no Capítulo~\ref{cap:introducao}. As ferramentas utilizadas na implementação são
+apresentadas no Capítulo~\ref{cap:ferramentas}.
+
+\section{Caracterização da Pesquisa}
+\label{sec:met-caracterizacao}
+
+Quanto à sua natureza, este trabalho caracteriza-se como uma pesquisa aplicada, pois tem como
+finalidade gerar conhecimento dirigido à solução de um problema prático e específico
+\cite{gerhardt2009}: a ausência de retroalimentação imediata na construção de autômatos
+finitos, discutida no Capítulo~\ref{cap:introducao}. O produto principal da pesquisa é,
+portanto, um artefato de \textit{software}, a ferramenta Autosim, e não uma teoria ou um
+modelo explicativo.
+
+Quanto aos objetivos, a pesquisa é exploratória, na medida em que busca proporcionar maior
+familiaridade com o problema, tornando-o mais explícito por meio do levantamento bibliográfico
+e da análise de soluções existentes \cite{gil2002}. Quanto aos procedimentos técnicos, o
+trabalho combina a pesquisa bibliográfica, realizada a partir de livros e artigos já
+publicados \cite{gil2002}, que sustenta a fundamentação teórica do Capítulo~\ref{cap:fundamentacao}
+e a análise de ferramentas do Capítulo~\ref{cap:relacionados}, com o desenvolvimento e a
+verificação funcional do artefato proposto, descritos nos Capítulos~\ref{cap:projeto}
+a~\ref{cap:resultados}.
+
+\citeonline{wazlawick2014} observa que, em Ciência da Computação, um trabalho que apresenta um
+novo artefato não deve limitar-se à sua descrição: é necessário mostrar em que ele se
+diferencia das soluções existentes e verificar, de forma objetiva, que ele funciona conforme o
+que se afirma a seu respeito. Neste trabalho, a diferenciação é estabelecida pela análise
+comparativa da Seção~\ref{sec:rel-comparativa}, que posiciona a Autosim em relação ao JFLAP, à
+FSM e às demais ferramentas analisadas, e a verificação é realizada segundo os critérios
+definidos na Seção~\ref{sec:met-validacao}.
+
+\section{Etapas da Construção da Solução}
+\label{sec:met-etapas}
+
+A construção da solução foi organizada em seis etapas, sintetizadas no
+Quadro~\ref{quad:etapas}. Os períodos indicados foram reconstituídos a partir do histórico de
+versões dos repositórios da ferramenta e da monografia, mantidos com o sistema de controle de
+versão Git (Seção~\ref{sec:ferr-versionamento}).
+
+\begin{quadro}[h]
+    \centering
+    \caption{ETAPAS DA CONSTRUÇÃO DA SOLUÇÃO}
+    \label{quad:etapas}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{3.2cm}|l|Z|}
+        \hline
+        \textbf{Etapa} & \textbf{Descrição} & \textbf{Período} & \textbf{Produto} \\
+        \hline
+        1 & Revisão bibliográfica e análise de ferramentas
+          & mar.--jun. 2026
+          & Fundamentação teórica e análise comparativa (Capítulos~\ref{cap:fundamentacao} e~\ref{cap:relacionados}) \\
+        \hline
+        2 & Especificação da DSL e analisador léxico
+          & mar.--maio 2026
+          & Sintaxe, palavras reservadas e gramática da linguagem (Capítulo~\ref{cap:projeto}); analisador léxico (Seção~\ref{sec:impl-lexer}) \\
+        \hline
+        3 & Analisadores sintático e semântico
+          & maio 2026
+          & AST, tabela de símbolos e verificações semânticas (Seções~\ref{sec:impl-parser} e~\ref{sec:impl-sema}) \\
+        \hline
+        4 & Simulador e interface gráfica
+          & maio--set. 2026
+          & Simulação passo a passo e diagrama de estados interativo (Seções~\ref{sec:impl-simulador} e~\ref{sec:impl-ui}) \\
+        \hline
+        5 & Validação
+          & maio--nov. 2026
+          & Testes automatizados, simulações de referência e cenários de erro (Capítulo~\ref{cap:resultados}) \\
+        \hline
+        6 & Revisão e distribuição
+          & nov. 2026
+          & Versões 1.0.0 a 1.0.3, pacotes para Linux, Windows e macOS e manual de uso (Apêndices A a D) \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+A primeira etapa consistiu no estudo da teoria de autômatos finitos, das fases de um
+compilador e das linguagens de domínio específico, bem como na análise das ferramentas
+didáticas existentes. Dessa análise resultaram os requisitos que orientaram as etapas
+seguintes: descrição textual e versionável dos autômatos, diagnóstico de erros localizado e
+simulação visual sincronizada com o texto.
+
+Da segunda à quarta etapa, as fases da ferramenta foram implementadas na mesma ordem em que
+processam a entrada: primeiro o analisador léxico, depois os analisadores sintático e
+semântico e, por fim, o simulador e a interface gráfica. Essa ordem permitiu que cada fase
+fosse construída e verificada sobre a saída de uma fase anterior já funcional. A quarta etapa
+foi a mais longa e incluiu revisões motivadas pelo uso da própria ferramenta: a navegação por
+deslocamento e ampliação do diagrama, acrescentada em julho para acomodar autômatos maiores, e a
+substituição, em setembro, da exibição do conjunto de estados ativos pela simulação de um
+caminho único (Seção~\ref{sec:impl-caminho}), dificuldades relatadas no
+Capítulo~\ref{cap:conclusao}.
+
+A validação, quinta etapa, acompanhou o desenvolvimento: cada fase do compilador recebeu um
+conjunto próprio de testes automatizados, ampliado à medida que novas verificações eram
+implementadas. Na sexta etapa, o texto da monografia, a especificação da linguagem e o
+código-fonte foram conferidos entre si. As divergências encontradas foram corrigidas na
+ferramenta, e não apenas no texto, dando origem às versões 1.0.1 a 1.0.3: a rejeição do
+alfabeto vazio na análise semântica, a adoção de \textit{bytes} como unidade de localização
+nos diagnósticos e a correção de uma mensagem de erro. Nessa etapa também foi automatizada a
+geração dos pacotes de distribuição (Seção~\ref{sec:ferr-versionamento}) e foi redigido o
+manual de uso que compõe os apêndices.
+
+A redação da monografia ocorreu em paralelo a todas as etapas, ao longo das disciplinas de
+Projeto de Graduação~I e~II.
+
+\section{Organização do Trabalho e Acompanhamento}
+\label{sec:met-organizacao}
+
+O trabalho foi desenvolvido em dupla. A implementação da ferramenta concentrou-se no autor
+Klaus Siegfried Beckmann, enquanto a redação da monografia foi dividida entre os dois autores.
+Ferramenta e monografia foram mantidas em repositórios Git distintos, o que permitiu que
+cada autor acompanhasse as alterações do outro e que o texto fosse conferido contra o
+estado atual do código.
+
+O desenvolvimento foi acompanhado em reuniões semanais com o professor orientador, nas quais
+eram discutidos o andamento das etapas, as decisões de projeto e os próximos passos. Além
+disso, as entregas parciais previstas no cronograma das disciplinas de Projeto de Graduação
+receberam devolutivas cujas indicações de correção foram registradas em listas de verificação
+e incorporadas às versões seguintes do texto e, quando necessário, da ferramenta.
+
+\section{Critérios de Validação}
+\label{sec:met-validacao}
+
+A validação adotada neste trabalho é funcional: verifica se a ferramenta se comporta conforme
+especificado, sem avaliar seus efeitos sobre a aprendizagem de estudantes, que permanecem fora
+do escopo, conforme delimitado no Capítulo~\ref{cap:introducao}. Para cada objetivo
+específico verificável, foi definido um instrumento e um critério de aceitação:
+
+\begin{alineas}
+    \item \textbf{testes automatizados por fase}: cada fase do compilador e o simulador
+    possuem testes executados pelo comando \texttt{cargo test}, também executados
+    automaticamente antes da geração de cada versão distribuída
+    (Seção~\ref{sec:ferr-versionamento}). O critério é que todos os testes sejam aprovados;
+    \item \textbf{simulações com autômatos de referência}: autômatos clássicos descritos em
+    \citeonline{hopcroft2006} e \citeonline{sipser2012} são escritos na DSL e simulados sobre
+    cadeias cuja pertinência à linguagem é conhecida. O critério é que o veredito da
+    ferramenta, aceitação ou rejeição, coincida em todos os casos com o veredito dado pela
+    definição formal do autômato;
+    \item \textbf{cenários com erros induzidos}: arquivos-fonte com erros léxicos,
+    sintáticos e semânticos introduzidos propositalmente são submetidos à ferramenta. O
+    critério é que cada erro seja detectado na fase correspondente e que o diagnóstico
+    indique sua linha e coluna, destaque o trecho do código-fonte e descreva o problema.
+\end{alineas}
+
+Os resultados obtidos com cada instrumento são apresentados e discutidos no
+Capítulo~\ref{cap:resultados}.
+
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+% 5. Ferramentas para Implementação
+% -------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------
+\chapter{Ferramentas para Implementação}
+\label{cap:ferramentas}
+Este capítulo apresenta as ferramentas utilizadas na implementação da Autosim. A maior parte
+do capítulo é dedicada à linguagem de programação Rust, cuja adoção como plataforma de
+implementação é justificada: inicia-se com uma visão geral da linguagem e de suas
+características centrais (Seção~\ref{sec:rust-visao-geral}), seguindo-se uma discussão sobre
+seu sistema de tipos e o modelo de propriedade de memória
+(Seção~\ref{sec:rust-ownership}). Em seguida, apresenta-se o ecossistema de bibliotecas e o
+gerenciador de pacotes Cargo (Seção~\ref{sec:rust-cargo}), e discutem-se as principais
+bibliotecas de \textit{parser combinators} disponíveis para Rust
+(Seção~\ref{sec:rust-parsers}), cujas características orientam a escolha de implementação
+descrita no Capítulo~\ref{cap:implementacao}. Por fim, relacionam-se as bibliotecas adotadas
+e suas versões (Seção~\ref{sec:ferr-bibliotecas}) e as ferramentas de versionamento,
+integração e distribuição empregadas (Seção~\ref{sec:ferr-versionamento}).
+
+\section{Visão Geral da Linguagem}
+\label{sec:rust-visao-geral}
+
+Rust é uma linguagem de programação de sistemas criada pela Mozilla Research e lançada em sua
+primeira versão estável em 2015 \cite{klabnik2019}. Seu projeto parte de uma premissa central:
+oferecer desempenho comparável ao de C e C++, sem abrir mão das garantias de segurança de
+memória que essas linguagens historicamente não fornecem em tempo de compilação. Para atingir
+esse objetivo, Rust introduz um sistema de tipos estático e um conjunto de regras de compilação,
+coletivamente denominado modelo de \textit{ownership} e \textit{borrowing}, que permite ao
+compilador verificar, antes da execução, a ausência de erros como acessos a regiões de memória
+inválidas, condições de corrida e uso de ponteiros nulos \cite{klabnik2019}.
+
+A linguagem é compilada para código nativo por meio do compilador \texttt{rustc}, que utiliza
+como \textit{backend} a infraestrutura LLVM, a mesma empregada por compiladores como Clang e
+Swift \cite{klabnik2019}. O resultado é um binário executável diretamente pelo sistema
+operacional, sem a necessidade de uma máquina virtual ou de um interpretador em tempo de
+execução. Essa característica torna Rust adequado tanto para o desenvolvimento de sistemas de
+baixo nível, como kernels e drivers, quanto para aplicações de alto nível que exigem desempenho
+previsível, como compiladores, servidores e ferramentas de linha de comando.
+
+Do ponto de vista da expressividade, Rust combina paradigmas de programação imperativa,
+funcional e orientada a objetos por meio de \textit{traits}, que funcionam de forma análoga às
+interfaces de Java ou às classes de tipos de Haskell \cite{klabnik2019}. Essa flexibilidade
+permite que construções comuns em linguagens funcionais, como mapeamento, filtragem e
+encadeamento de iteradores, sejam expressas de forma concisa e com custo de abstração zero,
+isto é, sem sobrecarga de desempenho em relação ao código imperativo equivalente. Para a
+construção de compiladores e processadores de linguagens, esse conjunto de características é
+particularmente valioso: a segurança de tipos facilita a representação de estruturas como
+\textit{tokens}, nós de AST e estados de autômatos sem o risco de inconsistências em tempo de execução,
+enquanto o modelo funcional favorece a composição das fases de análise de forma clara e
+modular.
+
+\section{Sistema de Tipos, \textit{Ownership} e \textit{Borrowing}}
+\label{sec:rust-ownership}
+
+O traço mais distintivo de Rust em relação a outras linguagens de sistemas é seu modelo de
+gerenciamento de memória, que elimina a necessidade de um coletor de lixo (\textit{garbage
+collector}) sem exigir que o programador gerencie a memória manualmente \cite{klabnik2019}. Esse
+modelo é fundamentado em três conceitos inter-relacionados: \textit{ownership} (propriedade),
+\textit{borrowing} (empréstimo) e \textit{lifetimes} (tempos de vida).
+
+O princípio de \textit{ownership} estabelece que cada valor em Rust possui exatamente um
+dono em qualquer ponto do programa, e que o valor é automaticamente liberado da memória
+quando seu dono sai de escopo \cite{klabnik2019}. A atribuição de um valor a uma nova variável,
+ou sua passagem como argumento a uma função, transfere a propriedade para o novo contexto,
+invalidando o acesso anterior. Essa regra, verificada estaticamente pelo compilador, garante
+que não existam dois fragmentos de código tentando liberar a mesma região de memória
+simultaneamente.
+
+O \textit{borrowing} complementa o \textit{ownership} ao permitir que um valor seja
+referenciado sem que sua propriedade seja transferida. Rust distingue dois tipos de
+referências: as referências imutáveis (\texttt{\&T}), das quais podem existir
+simultaneamente quantas forem necessárias, e as referências mutáveis (\texttt{\&mut T}),
+das quais apenas uma pode existir em qualquer instante, excluindo a coexistência com qualquer
+referência imutável \cite{klabnik2019}. Essas restrições, verificadas pelo compilador em uma
+fase denominada \textit{borrow checking}, eliminam em tempo de compilação toda uma classe de
+erros relacionados à mutação concorrente de dados compartilhados.
+
+O sistema de tipos de Rust é estático e fortemente tipado, com suporte a inferência de tipos
+que dispensa, na maior parte dos casos, anotações explícitas de tipo \cite{klabnik2019}. Para a
+representação de estruturas de dados que podem assumir diferentes formas, Rust oferece os
+tipos enumerados (\texttt{enum}), que permitem associar dados distintos a cada variante
+e são processados por meio de correspondência de padrões (\textit{pattern matching}) com
+verificação de exaustividade pelo compilador. Esse recurso é particularmente útil na
+implementação de compiladores, onde nós de AST, \textit{tokens} e erros costumam ser representados
+naturalmente como enumerações: o compilador garante que todo código que manipula essas
+estruturas trate explicitamente cada variante possível, evitando casos não tratados silenciosos.
+
+No contexto do presente trabalho, o sistema de tipos e o modelo de \textit{ownership} de Rust
+oferecem garantias concretas para a implementação das fases do compilador da DSL proposta. A
+AST do autômato, por exemplo, pode ser representada como uma enumeração cujas variantes
+correspondem aos diferentes nós da árvore, estados, transições, declarações de alfabeto e
+metadados, com a certeza de que qualquer acesso a essas estruturas será verificado em tempo de
+compilação. Da mesma forma, a passagem da AST entre as fases de análise semântica e de
+simulação não requer cópias desnecessárias, pois o modelo de \textit{borrowing} permite que
+cada fase leia a estrutura sem assumir sua propriedade.
+
+\section{Ecossistema e Gerenciador de Pacotes Cargo}
+\label{sec:rust-cargo}
+
+O ecossistema de Rust organiza-se em torno do Cargo, ferramenta oficial que acumula as
+funções de gerenciador de pacotes, sistema de \textit{build} e executor de testes
+\cite{klabnik2019}. Por meio do Cargo, o desenvolvedor declara as dependências do projeto em um
+arquivo de manifesto (\texttt{Cargo.toml}), e a ferramenta resolve automaticamente as versões
+compatíveis, baixa os pacotes do repositório central \texttt{crates.io} e compila todo o
+projeto em uma única invocação. Esse modelo elimina a necessidade de sistemas de \textit{build}
+externos e garante que projetos Rust sejam reprodutíveis em qualquer ambiente que disponha do
+compilador instalado.
+
+A unidade de distribuição de código em Rust é denominada \textit{crate}, termo que
+corresponde, aproximadamente, ao conceito de biblioteca ou módulo em outras linguagens
+\cite{klabnik2019}. O repositório \texttt{crates.io} hospeda dezenas de milhares de
+\textit{crates} de código aberto, cobrindo desde estruturas de dados e algoritmos até
+bibliotecas para desenvolvimento \textit{web}, interfaces gráficas e, em especial para os fins
+deste trabalho, análise sintática e processamento de linguagens.
+
+A integração entre Cargo e o compilador \texttt{rustc} estende-se à execução automatizada de
+testes unitários e de integração. Todo projeto Rust pode incluir módulos de teste diretamente
+no código fonte, anotados com o atributo \texttt{\#[test]}, que são compilados e executados
+pelo comando \texttt{cargo test} \cite{klabnik2019}. Esse mecanismo nativo de testes é
+relevante para o presente trabalho, pois permite validar cada fase do compilador da DSL de
+forma isolada, verificando o comportamento do analisador léxico, do analisador sintático e do
+verificador semântico sobre entradas controladas, em linha com a estratégia de validação
+descrita no Capítulo~\ref{cap:resultados}.
+
+\section{\textit{Parser Combinators} em Rust}
+\label{sec:rust-parsers}
+
+Conforme discutido na Seção~\ref{sec:contrucao-compiladores}, a estratégia de implementação
+adotada para o compilador da DSL proposta baseia-se no uso de uma biblioteca de
+\textit{parser combinators}, abordagem que integra naturalmente a definição da gramática ao
+restante do código da ferramenta. O ecossistema Rust oferece três bibliotecas principais para
+esse fim: nom, pest e chumsky, cada uma com características
+distintas que as tornam adequadas a diferentes cenários.
+
+A biblioteca nom é uma das mais antigas e consolidadas do ecossistema Rust para
+análise sintática \cite{couprie2015nom}. Sua abordagem é baseada em funções que recebem uma
+fatia de bytes ou caracteres e retornam o resultado do reconhecimento juntamente com o restante
+da entrada não consumida, compondo-se por meio de macros e funções de ordem superior. A
+orientação de nom para o processamento de formatos binários e protocolos de rede, domínio em
+que a eficiência é crítica, torna-a uma escolha robusta para linguagens textuais, embora a
+geração de mensagens de erro precisas requeira esforço adicional do implementador, pois a
+biblioteca não foi projetada com esse objetivo em primeiro plano.
+
+A biblioteca pest adota uma abordagem diferente: em vez de compor \textit{parsers} no
+código Rust, o desenvolvedor descreve a gramática da linguagem em um arquivo externo com
+notação própria, derivada de gramáticas de expressão de análise (\textit{Parsing Expression
+Grammars}, ou PEG), e a biblioteca gera automaticamente o analisador correspondente em tempo de
+compilação por meio de macros procedurais \cite{pest2018}. Essa estratégia separa claramente a
+especificação da gramática de sua implementação, facilitando a leitura e a manutenção da
+definição da linguagem, mas reduz o controle sobre o comportamento do analisador e sobre as
+mensagens de erro produzidas.
+
+A biblioteca chumsky é a mais recente das três e foi projetada explicitamente com foco
+na qualidade do diagnóstico de erros \cite{chumsky2022}. Seus combinadores propagam
+automaticamente informações de localização ao longo do processo de análise e oferecem
+mecanismos nativos de recuperação de erros, permitindo que o analisador continue após encontrar
+uma construção inválida e reporte múltiplos erros em uma única execução. Essas características
+alinham-se diretamente com os requisitos de diagnóstico estabelecidos na
+Seção~\ref{sec:diagnostico-erro}, tornando chumsky uma alternativa particularmente adequada
+para DSLs voltadas ao ensino, em que a qualidade das mensagens de erro é tão importante quanto
+a correção da análise.
+
+O Quadro~\ref{tab:comparacao-parsers} sintetiza as principais características das três
+bibliotecas, evidenciando os critérios que orientaram a escolha descrita a seguir.
+
+\begin{quadro}[h]
+    \centering
+    \caption{COMPARAÇÃO ENTRE BIBLIOTECAS DE PARSER COMBINATORS PARA RUST}
+    \label{tab:comparacao-parsers}
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+    % Adicionado | no início, no fim e entre as colunas do tabularx
+    \begin{tabularx}{\textwidth}{|l|Y|Y|Y|}
+        \hline
+        Critério              & nom       & pest         & chumsky       \\
+        \hline
+        Abordagem                      & Combinadores       & Gramática PEG externa & Combinadores           \\
+        Qualidade dos erros            & Baixa              & Média                 & Alta                   \\
+        Recuperação de erros           & Manual             & Limitada              & Nativa                 \\
+        Rastreamento de localização    & Manual             & Automático            & Automático             \\
+        Maturidade                     & Alta               & Alta                  & Média                  \\
+        Foco original                  & Dados binários     & Linguagens textuais   & Linguagens textuais    \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Com base nesses critérios, a biblioteca chumsky foi adotada para a análise sintática do
+compilador da DSL. A decisão decorre dos requisitos estabelecidos para o compilador: em
+especial, a necessidade de mensagens de erro com indicação precisa de localização e natureza
+do problema, conforme descrito na Seção~\ref{sec:diagnostico-erro}, e a integração natural
+com o restante da ferramenta, escrita integralmente em Rust, sem uma gramática mantida fora
+do código. A aplicação do chumsky e a justificativa da escolha em relação ao nom e ao pest
+são retomadas na Seção~\ref{sec:impl-parser}.
+
+\section{Bibliotecas Adotadas}
+\label{sec:ferr-bibliotecas}
+
+As demais etapas da ferramenta também se apoiam em bibliotecas do ecossistema Rust, cujo uso
+é descrito no Capítulo~\ref{cap:implementacao}: a análise léxica emprega a biblioteca Logos
+\cite{logos2021}, que gera o analisador léxico a partir de anotações no código-fonte; os
+diagnósticos de erro são formatados pela biblioteca Ariadne \cite{ariadne2021}; e a interface
+gráfica é construída com a biblioteca Iced \cite{iced2022}. O Quadro~\ref{quad:ferramentas}
+relaciona as ferramentas e bibliotecas utilizadas, com as versões empregadas na versão 1.0.3 da
+Autosim, registradas no arquivo de manifesto \texttt{Cargo.toml}.
+
+\begin{quadro}[h]
+    \centering
+    \caption{FERRAMENTAS E BIBLIOTECAS UTILIZADAS NA IMPLEMENTAÇÃO}
+    \label{quad:ferramentas}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|l|l|Z|}
+        \hline
+        \textbf{Ferramenta} & \textbf{Versão} & \textbf{Função na Autosim} \\
+        \hline
+        Rust              & edição 2024 & Linguagem de implementação de toda a ferramenta \\
+        \hline
+        Cargo             & ---         & Gerenciamento de dependências, compilação e execução dos testes \\
+        \hline
+        Logos             & 0.16.1      & Geração do analisador léxico (Seção~\ref{sec:impl-lexer}) \\
+        \hline
+        Chumsky           & 0.13.0      & Construção do analisador sintático (Seção~\ref{sec:impl-parser}) \\
+        \hline
+        Ariadne           & 0.5.1       & Formatação dos diagnósticos de erro (Seção~\ref{sec:impl-ariadne}) \\
+        \hline
+        Iced              & 0.14.0      & Interface gráfica e desenho do diagrama de estados (Seção~\ref{sec:impl-ui}) \\
+        \hline
+        Git e GitHub      & ---         & Controle de versão e hospedagem dos repositórios \\
+        \hline
+        GitHub Actions    & ---         & Execução dos testes e geração automática dos pacotes de distribuição \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+\section{Versionamento, Integração e Distribuição}
+\label{sec:ferr-versionamento}
+
+O código-fonte da ferramenta e o texto desta monografia foram mantidos sob o sistema de
+controle de versão distribuído Git \cite{chacon2014}, em repositórios hospedados na plataforma
+GitHub. Cada alteração é registrada como um \textit{commit} com autoria, data e descrição, o
+que permite recuperar qualquer estado anterior do projeto, acompanhar a evolução de cada fase
+e identificar quando e por que uma decisão foi tomada. Esse histórico serviu de base para a
+reconstituição das etapas descritas na Seção~\ref{sec:met-etapas}. O repositório da ferramenta
+é público \cite{autosim2026}.
+
+A distribuição da ferramenta foi automatizada com o GitHub Actions \cite{githubactions}, serviço
+de integração contínua da plataforma GitHub que executa fluxos de trabalho descritos em
+arquivos de configuração mantidos no próprio repositório. O fluxo de trabalho da Autosim é
+disparado sempre que uma nova versão é marcada no repositório e é executado em paralelo em
+três ambientes: Linux e Windows, na arquitetura x86-64, e macOS, na arquitetura ARM64. Em cada
+ambiente, o fluxo executa toda a suíte de testes automatizados, compila a ferramenta em modo
+otimizado e empacota o executável junto com o arquivo de instruções e os exemplos de
+programas na DSL. Os pacotes resultantes são publicados na página de versões do repositório,
+de onde podem ser obtidos sem a necessidade de instalar o compilador de Rust, conforme descrito
+no Apêndice A. Como os testes são executados antes da compilação, o pacote de cada sistema
+operacional só é publicado se todos os testes forem aprovados naquele sistema.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2524,6 +2747,45 @@ Ariadne e a execução é interrompida antes da fase seguinte.
     \textbf{Arquivo .asl} $\to$ \textbf{Analisador Léxico} (Logos) $\to$ \textbf{Analisador Sintático} (Chumsky) $\to$ \textbf{Analisador Semântico} $\to$ \textbf{Simulador} $\to$ \textbf{Interface Gráfica} (Iced)
     \fonte{Os autores (\the\year)}
 \end{figure}
+
+O código-fonte reflete essa divisão: cada fase do pipeline ocupa um módulo próprio, e os
+testes automatizados são organizados em um arquivo por fase. O
+Quadro~\ref{quad:organizacao-codigo} descreve os diretórios e arquivos do repositório da
+ferramenta \cite{autosim2026}.
+
+\begin{quadro}[h]
+    \centering
+    \caption{ORGANIZAÇÃO DO CÓDIGO-FONTE DA AUTOSIM}
+    \label{quad:organizacao-codigo}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|l|Z|}
+        \hline
+        \textbf{Caminho} & \textbf{Conteúdo} \\
+        \hline
+        \texttt{src/main.rs}   & Ponto de entrada: lê e valida o arquivo-fonte, exibe os diagnósticos e abre a interface gráfica \\
+        \hline
+        \texttt{src/cli.rs}    & Definição dos argumentos de linha de comando \\
+        \hline
+        \texttt{src/lexer/}    & Analisador léxico: definição dos \textit{tokens} (\texttt{token.rs}) e erros léxicos (\texttt{error.rs}) \\
+        \hline
+        \texttt{src/parser/}   & Analisador sintático: AST (\texttt{ast.rs}), gramática (\texttt{grammar.rs}) e erros sintáticos (\texttt{error.rs}) \\
+        \hline
+        \texttt{src/sema/}     & Analisador semântico: tabela de símbolos (\texttt{table.rs}), verificações e erros semânticos \\
+        \hline
+        \texttt{src/runtime/}  & Simulador: escolha do caminho (\texttt{path.rs}) e execução passo a passo (\texttt{simulator.rs}) \\
+        \hline
+        \texttt{src/ui/}       & Interface gráfica: diagrama de estados, controles da simulação e navegação \\
+        \hline
+        \texttt{tests/}        & Testes automatizados, um arquivo por categoria: \texttt{lexer.rs}, \texttt{parser.rs}, \texttt{sema.rs} e \texttt{runtime.rs} \\
+        \hline
+        \texttt{examples/}     & Programas de exemplo na DSL, válidos e com erros propositais \\
+        \hline
+        \texttt{.github/workflows/} & Fluxo de trabalho de geração dos pacotes de distribuição (Seção~\ref{sec:ferr-versionamento}) \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
 
 \section{Analisador Léxico}
 \label{sec:impl-lexer}
@@ -2978,7 +3240,7 @@ visualmente organizadas sobre cada erro, de modo a facilitar a correção do có
 % 8. Resultados
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
-\chapter{Resultados}
+\chapter{Resultados e Discussões}
 \label{cap:resultados}
 
 Este capítulo apresenta os resultados obtidos com a implementação da ferramenta Autosim.

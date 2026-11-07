@@ -74,3 +74,10 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [ ] Texto monográfico completo: pré-textuais, introdução, fundamentação teórica, trabalhos relacionados, metodologia de construção da solução, ferramentas para implementação, resultados e discussões, conclusões e pós-textuais
 - [ ] Formatação conforme normas ABNT/UTP
 - [ ] Programa implementado (e instalador, se necessário)
+
+### Estrutura exigida (cronograma UTP)
+- [x] Capítulo 4 — Metodologia de Construção da Solução (caracterização da pesquisa, etapas, organização do trabalho, critérios de validação)
+- [x] Capítulo 5 — Ferramentas para Implementação (antigo capítulo de Rust, movido para depois de Trabalhos Relacionados; ganha quadro de bibliotecas/versões e seção de versionamento e distribuição)
+- [x] Capítulo 8 renomeado para "Resultados e Discussões"
+- [x] Quadro de organização do código-fonte na Seção 7.1 ("descrição de arquivos" pedida no checkpoint do PG II)
+- [ ] Slides e roteiro: atualizar o roteiro de 9 capítulos para a nova ordem e incluir a Metodologia
