@@ -1735,44 +1735,14 @@ detalhado nos capítulos subsequentes.
 
 O desenvolvimento de ferramentas computacionais para apoiar o ensino de autômatos finitos tem
 uma trajetória longa e relativamente consolidada na literatura de educação em Ciência da
-Computação. No entanto, as ferramentas didáticas analisadas neste capítulo compartilham uma
-limitação comum: a ausência de uma representação textual formal e de um compilador associado
-capaz de validar e diagnosticar erros com precisão. A principal abordagem textual identificada
-na literatura, a biblioteca FSM \cite{morazan2014}, apresentada na
-Seção~\ref{sec:dsl-ensino}, é comparada à ferramenta proposta na
-Seção~\ref{sec:rel-comparativa}. Este capítulo apresenta
-e analisa os cinco trabalhos mais relevantes identificados na revisão bibliográfica, organizados
-conforme sua plataforma e abordagem, evidenciando em cada caso as contribuições e as limitações
-que motivam o desenvolvimento da ferramenta proposta.
-
-\section{Análise Léxica em Rust}
-\label{sec:rel-lexer-rust}
-
-O trabalho intitulado \textit{Exploiting Finite State Automata for Efficient Lexical Analysis: A
-Rust Implementation}, publicado na forma de artigo técnico e
-tutorial prático por \citeonline{bruzzone2023}, apresenta uma implementação de analisador
-léxico em Rust fundamentada diretamente na teoria dos autômatos finitos. O autor parte da
-constatação de que analisadores léxicos são, em essência, autômatos finitos não determinísticos
-aplicados ao reconhecimento de \textit{tokens}, e propõe uma implementação em que cada categoria
-léxica corresponde a um estado ou conjunto de estados explicitamente codificados na estrutura
-do autômato.
-
-A relevância deste trabalho para o presente contexto reside justamente nessa ponte explícita
-entre a teoria dos autômatos, apresentada na Seção~\ref{cap:automatos}, e sua aplicação
-prática em uma linguagem de programação moderna. O autor demonstra que as primitivas de Rust,
-em especial os tipos enumerados e o mecanismo de correspondência de padrões, são
-particularmente adequados para representar estados e transições de autômatos de forma segura e
-eficiente, argumento retomado no Capítulo~\ref{cap:ferramentas} para justificar a adoção da
-linguagem neste trabalho.
-
-No entanto, o escopo do trabalho de \citeonline{bruzzone2023} restringe-se à fase de análise
-léxica e à sua conexão com a teoria dos autômatos, sem avançar para as demais fases de
-compilação nem para qualquer forma de simulação visual ou interativa. Trata-se, portanto, de
-uma contribuição de natureza técnica e didática voltada a programadores que desejam compreender
-a implementação de \textit{lexers}, e não de uma ferramenta educacional direcionada ao ensino de
-autômatos em si. A ferramenta proposta no presente trabalho diferencia-se ao incorporar, além
-da análise léxica, as fases sintática e semântica completas, a construção da AST e a simulação
-visual interativa do autômato descrito.
+Computação. As ferramentas gráficas analisadas neste capítulo, as mais difundidas para esse
+fim, compartilham uma limitação comum: a ausência de uma representação textual formal e de um
+compilador associado capaz de validar e diagnosticar erros com precisão. A principal abordagem
+textual identificada na literatura, a biblioteca FSM \cite{morazan2014}, é analisada na
+Seção~\ref{sec:rel-fsm}. Este capítulo apresenta e analisa os cinco trabalhos mais relevantes
+identificados na revisão bibliográfica, quatro ferramentas gráficas e uma textual, evidenciando
+em cada caso as contribuições e as limitações que motivam o desenvolvimento da ferramenta
+proposta, e encerra-se com uma análise comparativa (Seção~\ref{sec:rel-comparativa}).
 
 \section{JFLAP}
 \label{sec:rel-jflap}
@@ -1888,6 +1858,38 @@ restrito a AFDs também constitui uma limitação quando se considera o ensino d
 não determinismo, ponto em que a ferramenta proposta no presente trabalho, que suporta tanto
 AFDs quanto AFNs com descrição textual unificada, representa um avanço significativo.
 
+\section{FSM}
+\label{sec:rel-fsm}
+
+A FSM é uma biblioteca da linguagem Racket desenvolvida por \citeonline{morazan2014} para o
+ensino de linguagens formais e teoria da computação. Ao contrário das ferramentas analisadas
+nas seções anteriores, ela adota uma abordagem textual: autômatos finitos, autômatos de pilha,
+máquinas de Turing e gramáticas são descritos como termos da linguagem e podem ser
+construídos, compostos, testados e executados como qualquer outro programa. Os fundamentos
+pedagógicos dessa abordagem, que aproximam o estudo das linguagens formais das atividades de
+programação, foram discutidos na Seção~\ref{sec:dsl-ensino}.
+
+Entre os recursos da FSM, destacam-se a amplitude de formalismos suportados e a possibilidade
+de testar as máquinas descritas, inclusive com cadeias geradas aleatoriamente, o que introduz
+na disciplina de linguagens formais práticas de verificação comuns no desenvolvimento de
+\textit{software} \cite{morazan2014}. A execução de uma máquina devolve um valor textual: a
+função \textit{show-transitions-sm}, por exemplo, retorna o caminho percorrido, que é vazio
+quando um autômato não determinístico rejeita a cadeia. Na versão descrita pelos autores, a
+FSM não dispõe de interface gráfica; o desenho das máquinas e a animação de sua execução são
+apontados como trabalho futuro \cite{morazan2014}.
+
+A FSM é, portanto, a comparação mais próxima da proposta deste trabalho quanto à
+representação textual, e as diferenças concentram-se em dois pontos. O primeiro é a forma
+da linguagem: a FSM é uma DSL interna, escrita na sintaxe da linguagem Racket, embora os
+autores observem que apenas um mínimo dessa sintaxe precisa ser aprendido, ao passo que a
+Autosim é uma DSL externa, com sintaxe própria em português restrita ao domínio dos autômatos
+finitos e processada por um compilador que emite diagnósticos no vocabulário desse domínio.
+O segundo é a apresentação da execução: na FSM, o resultado é textual e a representação
+gráfica é trabalho futuro; na Autosim, o caminho é acompanhado em um diagrama gerado e
+animado a partir do texto, e, na rejeição, exibe-se o caminho que mais se aproximou da
+aceitação. Em contrapartida, a FSM abrange um conjunto de formalismos muito mais amplo e
+oferece testes automáticos com cadeias aleatórias, recursos que a Autosim não oferece.
+
 \section{Análise Comparativa}
 \label{sec:rel-comparativa}
 
@@ -1919,9 +1921,6 @@ decisão de projeto da ferramenta proposta.
             & \textbf{\makecell{Voltada\\ao ensino}}
             & \textbf{Plataforma} \\
         \hline
-        Análise Léxica em Rust
-            & Não & Sim & Não & Não & Linha de comando & Não & Rust (Nativo) \\
-        \hline
         JFLAP
             & Não & Não & Não & Sim & Sim & Sim & Desktop (Java) \\
         \hline
@@ -1933,6 +1932,9 @@ decisão de projeto da ferramenta proposta.
         \hline
         AutomatoGraph
             & Não & Não & Não & Parcial & Parcial & Sim & Desktop (Java) \\
+        \hline
+        FSM
+            & Sim (interna) & Sim & Via Racket & Não & Textual & Sim & Biblioteca (Racket) \\
         \hline
         \textbf{Este trabalho}
             & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Desktop} \\
@@ -1954,29 +1956,13 @@ infraestrutura de compilador nessas soluções didáticas: nenhuma delas possui 
 sintática ou semântica capaz de interceptar erros conceituais na raiz (como transições para
 estados não declarados) antes da execução. Embora o JFLAP e o Simulador UFSC entreguem uma
 simulação passo a passo robusta no diagrama de estados, eles tratam o autômato puramente como
-um desenho animado, isolado da prática de codificação. Por outro lado, abordagens de engenharia
-pura como o trabalho de \citeonline{bruzzone2023} expõem o rigor técnico do Rust e a
-manipulação via código, mas falham no suporte educacional por carecerem de interfaces gráficas
-interativas para estudantes iniciantes.
+um desenho animado, isolado da prática de codificação.
 
-A biblioteca FSM \cite{morazan2014}, discutida na Seção~\ref{sec:dsl-ensino}, não consta
-dos Quadros~\ref{quad:comparativo-recursos} e~\ref{quad:comparativo-qualitativo} por não ser,
-na versão descrita pelos autores, uma ferramenta de simulação visual, mas constitui a
-comparação mais próxima da proposta deste trabalho quanto à representação textual: nela, os
-autômatos também são descritos como texto e podem ser executados e testados. As diferenças
-concentram-se em dois pontos. O primeiro é a forma da linguagem: a FSM é uma DSL interna,
-escrita na sintaxe da linguagem Racket, embora os autores observem que apenas um mínimo dessa
-sintaxe precisa ser aprendido, ao passo que a Autosim é uma DSL externa, com sintaxe própria
-em português restrita ao domínio dos autômatos finitos e processada por um compilador que
-emite diagnósticos no vocabulário desse domínio. O segundo é a apresentação da execução: na
-FSM, o resultado é um valor textual, como o caminho retornado pela função
-\textit{show-transitions-sm}, que é vazio quando um autômato não determinístico rejeita a
-cadeia, e a representação gráfica é apontada como trabalho futuro; na Autosim, o caminho é
-acompanhado em um diagrama gerado e animado a partir do texto, e, na rejeição, exibe-se o
-caminho que mais se aproximou da aceitação. Em contrapartida, a FSM abrange um conjunto de
-formalismos muito mais amplo, que inclui autômatos de pilha, máquinas de Turing e gramáticas,
-e oferece testes automáticos com cadeias geradas aleatoriamente, recursos que a Autosim não
-oferece.
+A FSM \cite{morazan2014} ocupa o extremo oposto: os autômatos são escritos como código, podem
+ser versionados e testados, mas, na versão descrita pelos autores, a execução é apresentada
+apenas em forma textual (Seção~\ref{sec:rel-fsm}).
+Assim, entre as ferramentas analisadas, as gráficas oferecem visualização sem descrição
+textual, e a textual oferece descrição como código sem visualização.
 
 A ferramenta proposta neste trabalho ocupa, portanto, essa lacuna exata de engenharia
 pedagógica: ela adota o rigor da descrição textual por meio de uma DSL externa dedicada,
@@ -1996,10 +1982,6 @@ software em uma única plataforma de experimentação.
         \hline
         \textbf{Trabalho} & \textbf{Contribuição / Lacuna identificada para o projeto} \\
         \hline
-        Análise Léxica em Rust
-            & Contribuição: Demonstra a viabilidade prática e a segurança de tipos
-            da linguagem Rust para modelar e codificar estados de autômatos formalmente. \\
-        \hline
         JFLAP
             & Lacuna: Interface de modelagem puramente visual baseada em cliques;
             impede o armazenamento estruturado em texto e o versionamento por código. \\
@@ -2015,6 +1997,11 @@ software em uma única plataforma de experimentação.
         AutomatoGraph
             & Contribuição: Reforça a equivalência formal ao gerar gramáticas
             automáticas, mas carece de animação interativa do diagrama em tempo real. \\
+        \hline
+        FSM
+            & Contribuição: Mostra os ganhos de descrever autômatos como código, que pode ser
+            testado e versionado; Lacuna: execução apenas textual e visualização deixada como
+            trabalho futuro. \\
         \hline
         \textbf{Este trabalho}
             & Decisão de projeto: Une o rigor da descrição declarativa textual
@@ -2173,9 +2160,12 @@ específico verificável, foi definido um instrumento e um critério de aceitaç
     (Seção~\ref{sec:ferr-versionamento}). O critério é que todos os testes sejam aprovados;
     \item \textbf{simulações com autômatos de referência}: autômatos clássicos descritos em
     \citeonline{hopcroft2006} e \citeonline{sipser2012} são escritos na DSL e simulados sobre
-    cadeias cuja pertinência à linguagem é conhecida. O critério é que o veredito da
-    ferramenta, aceitação ou rejeição, coincida em todos os casos com o veredito dado pela
-    definição formal do autômato;
+    cadeias cuja pertinência à linguagem é conhecida, primeiro em casos escolhidos
+    manualmente e depois em uma validação diferencial, sobre todas as cadeias até um
+    comprimento máximo, comparada com a definição da linguagem e com um simulador de
+    referência independente. O critério é que o veredito da ferramenta, aceitação ou
+    rejeição, coincida em todos os casos com o veredito dado pela definição formal do
+    autômato;
     \item \textbf{cenários com erros induzidos}: arquivos-fonte com erros léxicos,
     sintáticos e semânticos introduzidos propositalmente são submetidos à ferramenta. O
     critério é que cada erro seja detectado na fase correspondente e que o diagnóstico
@@ -2198,8 +2188,9 @@ implementação é justificada: inicia-se com uma visão geral da linguagem e de
 características centrais (Seção~\ref{sec:rust-visao-geral}), seguindo-se uma discussão sobre
 seu sistema de tipos e o modelo de propriedade de memória
 (Seção~\ref{sec:rust-ownership}). Em seguida, apresenta-se o ecossistema de bibliotecas e o
-gerenciador de pacotes Cargo (Seção~\ref{sec:rust-cargo}), e discutem-se as principais
-bibliotecas de \textit{parser combinators} disponíveis para Rust
+gerenciador de pacotes Cargo (Seção~\ref{sec:rust-cargo}), justifica-se a escolha de Rust
+em comparação com outras linguagens candidatas (Seção~\ref{sec:rust-justificativa}), e
+discutem-se as principais bibliotecas de \textit{parser combinators} disponíveis para Rust
 (Seção~\ref{sec:rust-parsers}), cujas características orientam a escolha de implementação
 descrita no Capítulo~\ref{cap:implementacao}. Por fim, relacionam-se as bibliotecas adotadas
 e suas versões (Seção~\ref{sec:ferr-bibliotecas}) e as ferramentas de versionamento,
@@ -2309,6 +2300,78 @@ relevante para o presente trabalho, pois permite validar cada fase do compilador
 forma isolada, verificando o comportamento do analisador léxico, do analisador sintático e do
 verificador semântico sobre entradas controladas, em linha com a estratégia de validação
 descrita no Capítulo~\ref{cap:resultados}.
+
+\section{Justificativa da Adoção de Rust}
+\label{sec:rust-justificativa}
+
+A escolha da linguagem de implementação partiu de quatro requisitos derivados dos objetivos
+do trabalho e da análise das ferramentas existentes:
+
+\begin{alineas}
+    \item \textbf{distribuição simples}: a ferramenta deve ser executada pelo estudante sem
+    exigir a instalação de um ambiente de execução separado, dificuldade apontada por
+    \citeonline{nunes2017simulador} em relação às ferramentas \textit{desktop} e que, no caso
+    do JFLAP, decorre da dependência da máquina virtual Java (Seção~\ref{sec:rel-jflap});
+    \item \textbf{representação segura das estruturas do compilador}: \textit{tokens}, nós
+    da AST, erros e transições assumem formas distintas, e cada fase deve tratar todas
+    elas;
+    \item \textbf{apoio à construção de compiladores com bons diagnósticos}: a qualidade das
+    mensagens de erro é central na proposta (Seção~\ref{sec:diagnostico-erro}), e convém
+    contar com bibliotecas que a favoreçam em vez de implementá-la do zero;
+    \item \textbf{interface gráfica multiplataforma}: o diagrama deve ser desenhado e animado
+    em Linux, Windows e macOS a partir do mesmo código.
+\end{alineas}
+
+O Quadro~\ref{quad:linguagens} compara Rust a três linguagens frequentemente usadas no
+desenvolvimento de ferramentas desse tipo, Python, Java e C++, segundo critérios ligados a
+esses requisitos.
+
+\begin{quadro}[h]
+    \centering
+    \caption{COMPARAÇÃO ENTRE LINGUAGENS CANDIDATAS À IMPLEMENTAÇÃO}
+    \label{quad:linguagens}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|Z|Z|Z|Z|}
+        \hline
+        \textbf{Critério} & \textbf{Rust} & \textbf{Python} & \textbf{Java} & \textbf{C++} \\
+        \hline
+        Forma de execução & Binário nativo & Interpretador & Máquina virtual (JVM) & Binário nativo \\
+        \hline
+        Gerência de memória & \textit{Ownership}, verificado na compilação & Coletor de lixo & Coletor de lixo & Manual \\
+        \hline
+        Tipos soma com verificação de exaustividade & Sim (\texttt{enum} e \texttt{match}) & Não & Sim, a partir do Java 21 (classes seladas) & Parcial (\texttt{std::}\allowbreak\texttt{variant}) \\
+        \hline
+        Gerenciador de pacotes e testes oficiais & Sim (Cargo) & Parcial (pip; testes por bibliotecas) & Não (Maven e Gradle são externos) & Não \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Python e Java atendem bem ao segundo e ao terceiro requisitos, mas a distribuição dependeria
+de um interpretador ou de uma máquina virtual instalados, ou do empacotamento desse ambiente
+junto com a ferramenta. C++ gera binários nativos, mas transfere ao programador a gerência da
+memória e não oferece um gerenciador de pacotes e de testes padronizado. Rust reúne os
+quatro requisitos: compila para um binário nativo único, que é a forma como a Autosim é
+distribuída (Seção~\ref{sec:ferr-versionamento}); representa \textit{tokens}, nós da AST e
+erros como enumerações cujo tratamento exaustivo é verificado pelo compilador
+(Seção~\ref{sec:rust-ownership}); dispõe de bibliotecas voltadas a compiladores com
+diagnósticos precisos, como o chumsky e o Ariadne (Seções~\ref{sec:rust-parsers}
+e~\ref{sec:ferr-bibliotecas}); e conta com bibliotecas de interface gráfica multiplataforma,
+como o Iced \cite{iced2022}.
+
+A adequação de Rust à representação de autômatos também é ilustrada por
+\citeonline{bruzzone2023}, que implementa um analisador léxico em Rust fundamentado
+diretamente na teoria dos autômatos finitos, tratando cada categoria léxica como um estado ou
+conjunto de estados do autômato. O autor mostra que os tipos enumerados e a correspondência de
+padrões da linguagem representam estados e transições de forma segura e eficiente, argumento
+que se aplica às estruturas da Autosim.
+
+A escolha também tem custos, que foram aceitos conscientemente. O modelo de
+\textit{ownership} exige um período de adaptação maior do que o de linguagens com coletor de
+lixo, a compilação é mais lenta, e o ecossistema de interfaces gráficas em Rust é mais recente
+e menos estável que os de Java ou C++: a biblioteca Iced, por exemplo, ainda não atingiu a
+versão 1.0, o que significa que sua interface de programação pode mudar entre versões.
 
 \section{\textit{Parser Combinators} em Rust}
 \label{sec:rust-parsers}
@@ -3243,12 +3306,15 @@ visualmente organizadas sobre cada erro, de modo a facilitar a correção do có
 \chapter{Resultados e Discussões}
 \label{cap:resultados}
 
-Este capítulo apresenta os resultados obtidos com a implementação da ferramenta Autosim.
+Este capítulo apresenta e discute os resultados obtidos com a implementação da ferramenta
+Autosim, segundo os critérios de validação definidos na Seção~\ref{sec:met-validacao}.
 A validação foi realizada por meio de uma suíte de testes automatizados, cobrindo as três
 fases de análise (léxica, sintática e semântica) e o simulador, totalizando 51 casos de
-teste. Além
-dos testes, foram conduzidas simulações com autômatos clássicos da literatura para
-verificar a correção do simulador e a qualidade dos diagnósticos de erro.
+teste. Além dos testes, foram conduzidas simulações com autômatos clássicos da literatura,
+uma validação diferencial do simulador sobre mais de 57 mil cadeias e cenários com erros
+induzidos, para verificar a correção do simulador e os diagnósticos de erro. O capítulo se
+encerra com a discussão dos resultados em relação aos objetivos específicos
+(Seção~\ref{sec:res-discussao}).
 
 \section{Estratégia de Testes}
 \label{sec:res-estrategia}
@@ -3482,8 +3548,87 @@ clássicos da literatura, descritos em \citeonline{hopcroft2006} e
     \fonte{Os autores (\the\year)}
 \end{quadro}
 
-Todas as simulações produziram o veredito esperado, confirmando a correção do
-simulador tanto para AFDs quanto para AFNs com transições $\varepsilon$.
+Todas as simulações produziram o veredito esperado, tanto para AFDs quanto para AFNs com
+transições $\varepsilon$. Por envolverem poucas cadeias, escolhidas manualmente, essas
+simulações ilustram o comportamento do simulador, mas não excluem a existência de erros em
+casos não exercitados, limitação tratada pela validação diferencial descrita a seguir.
+
+\section{Validação Diferencial do Simulador}
+\label{sec:res-diferencial}
+
+Na validação diferencial, o mesmo problema é resolvido por implementações independentes e
+os resultados são comparados: qualquer discordância indica um erro em pelo menos uma delas.
+Para cada autômato do Quadro~\ref{quad:diferencial}, todas as cadeias sobre o alfabeto do
+autômato, da cadeia vazia até o comprimento máximo indicado, foram simuladas pela Autosim
+1.0.3, e o veredito de cada simulação foi comparado com duas referências:
+
+\begin{alineas}
+    \item a definição da linguagem, escrita diretamente como uma condição sobre a cadeia,
+    por exemplo, ``contém a subcadeia 01'' ou ``representa em binário um múltiplo de 3'';
+    \item um simulador de referência que implementa a definição formal da
+    Seção~\ref{cap:automatos}, propagando, a cada símbolo, o conjunto de todos os estados
+    ativos e o seu $\varepsilon$-fecho, isto é, a estratégia que a Autosim não usa para exibir a
+    simulação (Seção~\ref{sec:impl-caminho}).
+\end{alineas}
+
+O conjunto inclui os autômatos do Quadro~\ref{quad:simulacoes}, outros autômatos clássicos
+descritos em \citeonline{hopcroft2006} e \citeonline{sipser2012} e, para exercitar a
+equivalência entre AFN e AFD (Seção~\ref{cap:automatos}), o AFN que reconhece as cadeias
+cujo terceiro símbolo a partir do fim é 1 \cite{sipser2012} junto com o AFD de oito estados
+obtido dele pela construção de subconjuntos. Os autômatos foram escritos na DSL e
+processados pelas mesmas fases de análise léxica, sintática e semântica usadas pela
+ferramenta.
+
+\begin{quadro}[h]
+    \centering
+    \caption{VALIDAÇÃO DIFERENCIAL DO SIMULADOR}
+    \label{quad:diferencial}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|Z|c|c|c|r|r|c|}
+        \hline
+        \textbf{Linguagem reconhecida} & \textbf{Tipo} & \textbf{Estados} & \textbf{Comp.} & \textbf{Cadeias} & \textbf{Aceitas} & \textbf{Diverg.} \\
+        \hline
+        Cadeias que contêm 01               & AFD             & 3 & 12 & 8.191 & 8.100 & 0 \\
+        \hline
+        Número par de 0s e de 1s            & AFD             & 4 & 12 & 8.191 & 2.731 & 0 \\
+        \hline
+        Múltiplos de 3 em binário           & AFD             & 3 & 12 & 8.191 & 2.737 & 0 \\
+        \hline
+        Cadeias terminadas em 01            & AFN             & 3 & 12 & 8.191 & 2.047 & 0 \\
+        \hline
+        Terceiro símbolo do fim é 1         & AFN             & 4 & 12 & 8.191 & 4.092 & 0 \\
+        \hline
+        Terceiro símbolo do fim é 1         & AFD             & 8 & 12 & 8.191 & 4.092 & 0 \\
+        \hline
+        $a^*b^*$                            & AFN-$\varepsilon$ & 2 & 12 & 8.191 & 91 & 0 \\
+        \hline
+        $0^k$, $k$ múltiplo de 2 ou de 3    & AFN-$\varepsilon$ & 6 & 30 & 31 & 21 & 0 \\
+        \hline
+        \textbf{Total}                      & & & & \textbf{57.368} & & \textbf{0} \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Nas 57.368 simulações, o veredito da Autosim coincidiu com o da definição da linguagem e com
+o do simulador de referência, sem nenhuma divergência. O resultado inclui os casos que
+exercitam a escolha do caminho em AFNs, como as cadeias em que o autômato precisa adivinhar o
+início do sufixo, e as transições $\varepsilon$ que escolhem entre os dois ciclos do último
+autômato. O AFN e o AFD da mesma linguagem aceitaram exatamente as mesmas 4.092 cadeias, o que
+ilustra empiricamente a equivalência discutida na Seção~\ref{cap:automatos}. A execução
+completa levou cerca de um segundo em um computador pessoal, incluindo as duas referências.
+
+Para garantir que a comparação é capaz de detectar erros, uma das definições foi
+propositalmente alterada; as divergências passaram a ser apontadas imediatamente, com a
+cadeia e os três vereditos envolvidos. O código da validação e os arquivos dos autômatos
+foram mantidos junto aos arquivos-fonte desta monografia, de modo que o
+Quadro~\ref{quad:diferencial} pode ser reproduzido com um único comando.
+
+Essa validação tem dois limites. Primeiro, ela é exaustiva apenas até o comprimento indicado
+e para os autômatos escolhidos; o comportamento sobre cadeias mais longas é inferido, e não
+verificado. Segundo, ela verifica o veredito, e não a forma do caminho exibido, que é
+coberta pelos testes do simulador (Seção~\ref{sec:res-simulador}).
 
 \section{Cenários de Diagnóstico de Erro}
 \label{sec:res-erros}
@@ -3497,24 +3642,78 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
     \caption{CENÁRIOS DE TESTE DE DIAGNÓSTICO DE ERRO}
     \label{quad:cenarios-erro}
     \small
-    \begin{tabular}{|l|l|l|}
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}p{3.3cm}|Z|}
         \hline
-        \textbf{Arquivo de teste} & \textbf{Tipo de erro} & \textbf{Diagnóstico gerado} \\
+        \textbf{Arquivo de teste} & \textbf{Tipo de erro} & \textbf{Diagnóstico gerado (versão 1.0.3)} \\
         \hline
-        \texttt{sema\_error.asl} & 4 erros semânticos & 4 mensagens localizadas \\
-        \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & AFD não pode ter epsilon \\
-        \texttt{sema\_nondeterministic.asl} & AFD não determinístico & Transição conflitante \\
-        \texttt{parse\_error.asl} & Falta \texttt{inicial} & "esperava 'inicial'" \\
-        \texttt{symbol\_error.asl} & Caractere inválido & "token inválido" \\
-        \texttt{error\_line3.asl} & Caractere inválido & "token inválido '@'" (linha 3) \\
+        \texttt{sema\_error.asl} & 5 erros semânticos & 5 mensagens localizadas, uma por erro: estado inicial, estado final e estado de destino não declarados, símbolo fora do alfabeto e simulação de autômato inexistente \\
         \hline
-    \end{tabular}
+        \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & ``AFD não pode ter transição epsilon'' \\
+        \hline
+        \texttt{sema\_nondeterministic.asl} & AFD não determinístico & ``AFD `exemplo' não determinístico: duas saídas de `q0' com `a''', com as duas transições destacadas \\
+        \hline
+        \texttt{parse\_error.asl} & Falta \texttt{inicial} & ``esperava `inicial', encontrou `q0''' \\
+        \hline
+        \texttt{symbol\_error.asl} & Caractere inválido & ``token inválido `\%''' \\
+        \hline
+        \texttt{error\_line3.asl} & Caractere inválido & ``token inválido `@''' (linha 3, coluna 22) \\
+        \hline
+    \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{quadro}
 
-Em todos os cenários, as mensagens de erro incluíram o número da linha e coluna, o
-trecho do código-fonte com realce e uma descrição do problema em português,
-confirmando que os diagnósticos localizam e descrevem corretamente cada erro.
+Em todos os cenários, a ferramenta interrompeu o processamento na fase em que o erro foi
+detectado e as mensagens incluíram o número da linha e da coluna, o trecho do código-fonte
+com realce e uma descrição do problema em português, o que mostra que os diagnósticos
+localizam e descrevem cada erro previsto. No arquivo \texttt{sema\_error.asl}, a análise
+semântica não parou no primeiro erro: os cinco foram reportados em uma única execução, o que
+permite ao estudante corrigi-los de uma só vez.
+
+\section{Discussão dos Resultados}
+\label{sec:res-discussao}
+
+Os resultados podem ser confrontados com os objetivos específicos enunciados no
+Capítulo~\ref{cap:introducao}:
+
+\begin{alineas}
+    \item \textbf{projetar uma DSL textual com gramática formalizada em EBNF}: a linguagem
+    foi especificada no Capítulo~\ref{cap:projeto}, e todos os autômatos usados nesta
+    validação, incluindo o AFD de oito estados e os AFNs com transições $\varepsilon$, foram
+    descritos nela sem necessidade de qualquer recurso externo à gramática;
+    \item \textbf{implementar um compilador pedagógico com diagnósticos localizados}: as três
+    fases de análise são cobertas por 42 dos 51 testes automatizados, e os cenários da
+    Seção~\ref{sec:res-erros} mostram cada erro detectado na fase correspondente e reportado
+    com sua localização;
+    \item \textbf{desenvolver um simulador de AFDs e AFNs}: além dos testes do simulador, a
+    validação diferencial não encontrou divergências em 57.368 simulações, comparadas tanto
+    com a definição das linguagens quanto com uma implementação independente da definição
+    formal;
+    \item \textbf{construir uma interface gráfica que renderize e anime o autômato}: a
+    interface foi descrita e ilustrada na Seção~\ref{sec:impl-ui}. Diferentemente dos demais
+    objetivos, este não foi submetido a testes automatizados, e sua verificação limitou-se ao
+    uso da ferramenta pelos autores com os exemplos distribuídos e com autômatos maiores, como
+    o da Figura~\ref{fig:screenshot-automato-grande};
+    \item \textbf{validar a ferramenta por meio de testes, simulações e cenários de erro}: os
+    três instrumentos definidos na Seção~\ref{sec:met-validacao} foram aplicados, e todos os
+    critérios de aceitação foram atendidos.
+\end{alineas}
+
+Em relação às ferramentas analisadas no Capítulo~\ref{cap:relacionados}, os resultados
+confirmam, no plano funcional, a combinação que motivou o trabalho: os autômatos são
+descritos em arquivos de texto, que podem ser versionados e reutilizados, como foram os
+próprios arquivos desta validação; os erros de descrição são apontados antes da execução; e
+os autômatos válidos são desenhados e simulados automaticamente. Nenhuma das ferramentas
+gráficas analisadas reúne esses três aspectos, e a FSM, que também adota a descrição
+textual, não oferecia a visualização na versão descrita por seus autores.
+
+Os resultados também têm limites que devem ser explicitados. Os testes e os cenários de erro
+foram elaborados pelos próprios autores e, por isso, exercitam os erros que os autores
+anteciparam; erros cometidos por estudantes reais podem revelar mensagens pouco claras ou
+situações não previstas. A interface gráfica, como observado, não foi avaliada de forma
+sistemática. Por fim, nenhum dos instrumentos mede o efeito da ferramenta sobre a
+aprendizagem: os resultados mostram que a retroalimentação é produzida corretamente, mas não
+que ela melhora o desempenho dos estudantes, questão que permanece como trabalho futuro.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -3545,9 +3744,11 @@ gráfica interativa que renderiza automaticamente o diagrama de estados a partir
 texto fonte e anima a simulação passo a passo, com destaque visual para o estado
 corrente e as transições percorridas. A validação da ferramenta foi realizada por meio
 de 51 testes automatizados, distribuídos entre as fases léxica, sintática e
-semântica e o simulador, além de simulações com autômatos clássicos da literatura, com todos os
-resultados concordando com o esperado, o que confirma o funcionamento correto do simulador
-e que os diagnósticos localizam e descrevem os erros previstos.
+semântica e o simulador, de simulações com autômatos clássicos da literatura e de uma
+validação diferencial que comparou 57.368 simulações com a definição das linguagens e com um
+simulador de referência independente, sem nenhuma divergência. Todos os resultados
+concordaram com o esperado, o que indica o funcionamento correto do simulador e mostra que os
+diagnósticos localizam e descrevem os erros previstos.
 
 Quanto à pergunta que orientou esta pesquisa, os resultados indicam que uma linguagem
 textual de domínio específico, processada por um compilador com diagnósticos localizados e

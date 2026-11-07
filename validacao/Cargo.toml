@@ -1,0 +1,10 @@
+[package]
+name = "validacao"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+# Validação diferencial do simulador da Autosim (Capítulo 8 da monografia).
+# Usa a versão 1.0.3 da ferramenta, a mesma descrita no texto.
+[dependencies]
+autosim = { git = "https://github.com/KsBeckmann/autosim", tag = "v1.0.3" }

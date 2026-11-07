@@ -631,10 +631,10 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
       \toprule
       \textbf{Arquivo} & \textbf{Tipo de erro} & \textbf{Diagnóstico} \\
       \midrule
-      \texttt{sema\_error.asl} & 4 erros semânticos & 4 mensagens localizadas \\
-      \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & ``AFD não pode ter epsilon'' \\
-      \texttt{sema\_nondeterministic.asl} & AFD não determinístico & Transição conflitante \\
-      \texttt{parse\_error.asl} & Falta \texttt{inicial} & ``esperava 'inicial'\,'' \\
+      \texttt{sema\_error.asl} & 5 erros semânticos & 5 mensagens localizadas \\
+      \texttt{sema\_dfa\_epsilon.asl} & AFD com $\varepsilon$ & ``AFD não pode ter transição epsilon'' \\
+      \texttt{sema\_nondeterministic.asl} & AFD não determinístico & ``duas saídas de `q0' com `a''' \\
+      \texttt{parse\_error.asl} & Falta \texttt{inicial} & ``esperava `inicial', encontrou `q0''' \\
       \texttt{symbol\_error.asl} & Caractere inválido & ``token inválido'' \\
       \bottomrule
     \end{tabular}

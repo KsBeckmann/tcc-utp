@@ -81,3 +81,12 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Capítulo 8 renomeado para "Resultados e Discussões"
 - [x] Quadro de organização do código-fonte na Seção 7.1 ("descrição de arquivos" pedida no checkpoint do PG II)
 - [ ] Slides e roteiro: atualizar o roteiro de 9 capítulos para a nova ordem e incluir a Metodologia
+
+### Prioridade 2 — reforço para a defesa
+- [x] Resultados: Seção 8.7, Validação Diferencial (57.368 cadeias, 8 autômatos, 0 divergências; código em `validacao/`)
+- [x] Resultados: Quadro 15 conferido com a Autosim 1.0.3 (sema_error gera 5 erros, não 4; mensagens atualizadas, também no slide)
+- [x] Resultados: Seção 8.9, Discussão dos Resultados (objetivo por objetivo e limites da validação)
+- [x] Trabalhos Relacionados: FSM ganha a Seção 3.5 e entra nos Quadros 3 e 4; "Análise Léxica em Rust" sai do capítulo
+- [x] Ferramentas: Seção 5.4, Justificativa da Adoção de Rust (requisitos, Quadro 6 comparando com Python, Java e C++, custos), com Bruzzone (2023)
+- [ ] Slides: retirar "Análise Léxica em Rust" dos slides de trabalhos relacionados e incluir FSM e a validação diferencial
+- [ ] Autosim: comentário no topo de examples/sema_error.asl lista 4 erros, mas o arquivo tem 5 (avisar o Klaus)
