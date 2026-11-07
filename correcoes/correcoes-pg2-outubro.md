@@ -37,8 +37,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Incluir a comparação com o FSM ao delimitar a contribuição do projeto
 
 ### Gramática × testes
-- [ ] Regra de alfabeto (p. 70) exige ao menos um caractere, mas o teste da p. 87 aceita `alfabeto { }` — decidir o comportamento desejado
-- [ ] Ajustar a especificação **ou** a implementação, e o teste correspondente
+- [x] Regra de alfabeto (p. 70) exige ao menos um caractere, mas o teste da p. 87 aceita `alfabeto { }` — decidir o comportamento desejado
+- [x] Ajustar a especificação **ou** a implementação, e o teste correspondente
 
 ### Precisão técnica do texto
 - [ ] pp. 76 e 88: esclarecer se os intervalos de localização da AST usam índices de caracteres ou de tokens, e em qual etapa ocorre a conversão

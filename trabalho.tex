@@ -2323,6 +2323,17 @@ auxiliar definido recursivamente, o que aumentaria o tamanho da gramática sem a
 informação. A EBNF expressa essas listas diretamente e mantém a gramática próxima da
 estrutura dos programas que ela descreve.
 
+A gramática admite listas vazias em \texttt{alfabeto}, \texttt{estados} e \texttt{finais},
+e as restrições que dependem do significado dessas listas ficam a cargo da análise
+semântica, descrita na Seção~\ref{sec:impl-tabela}. Assim, um alfabeto vazio é
+sintaticamente válido, mas é rejeitado pela análise semântica, pois um alfabeto é, por
+definição, um conjunto finito e não vazio de símbolos, conforme a
+Seção~\ref{sec:linguagens-formais}; essa divisão permite que o erro seja relatado com uma
+mensagem no vocabulário do domínio, e não com a mensagem genérica de um símbolo
+inesperado. Um conjunto de estados finais vazio, por sua vez, é válido e descreve um
+autômato que não aceita nenhuma cadeia, enquanto um conjunto de estados vazio é rejeitado
+pela verificação do estado inicial, que precisa estar declarado em \texttt{estados}.
+
 Os terminais da gramática são definidos conforme as expressões regulares
 apresentadas no Quadro~\ref{quad:terminais-dsl}.
 
@@ -2640,6 +2651,7 @@ e as entradas de cada autômato (estados, inicial, finais). Durante essa fase, s
 detectados e reportados os seguintes erros:
 
 \begin{itemize}
+    \item Alfabeto vazio;
     \item Símbolo duplicado no alfabeto;
     \item Estado duplicado em um mesmo autômato;
     \item Nome de autômato duplicado.
@@ -2962,9 +2974,9 @@ da cobertura de testes.
         \hline
         Análise Léxica    & 12  & Palavras reservadas, \textit{case-insensitive}, literais, epsilon, comentários, erros \\
         \hline
-        Análise Sintática & 15  & \textit{Parsing} completo, AFN com epsilon, alfabeto vazio, múltiplos autômatos, erros \\
+        Análise Sintática & 14  & \textit{Parsing} completo, AFN com epsilon, múltiplos autômatos, erros \\
         \hline
-        Análise Semântica & 15  & AFD válido, AFN válido, duplicatas, referências inválidas, determinismo \\
+        Análise Semântica & 16  & AFD válido, AFN válido, alfabeto vazio, duplicatas, referências inválidas, determinismo \\
         \hline
         Simulação         & 9   & Caminho aceitador, uso de epsilon, cadeia vazia, rejeição por falta de transição, navegação \\
         \hline
@@ -3013,14 +3025,12 @@ Todos os 12 testes do analisador léxico são aprovados com sucesso.
 \section{Testes do Analisador Sintático}
 \label{sec:res-parser}
 
-Os 15 testes do analisador sintático verificam a construção correta da AST a partir de
+Os 14 testes do analisador sintático verificam a construção correta da AST a partir de
 entradas válidas e o tratamento adequado de entradas malformadas:
 
 \begin{itemize}
     \item Alfabeto apenas (1 teste): verifica que um programa contendo somente
           a declaração do alfabeto produz uma AST vazia para autômatos e simulações;
-    \item Alfabeto vazio (1 teste): verifica que \texttt{alfabeto \{ \}} é
-          aceito;
     \item Vírgula final (1 teste): verifica que uma vírgula após o último
           elemento da lista é aceita;
     \item AFD completo (1 teste): verifica que todos os campos de um AFD
@@ -3051,12 +3061,12 @@ entradas válidas e o tratamento adequado de entradas malformadas:
           geração das mensagens de erro.
 \end{itemize}
 
-Todos os 15 testes do analisador sintático são aprovados.
+Todos os 14 testes do analisador sintático são aprovados.
 
 \section{Testes do Analisador Semântico}
 \label{sec:res-sema}
 
-Os 15 testes do analisador semântico cobrem as verificações de consistência estrutural
+Os 16 testes do analisador semântico cobrem as verificações de consistência estrutural
 dos autômatos:
 
 \begin{itemize}
@@ -3066,6 +3076,8 @@ dos autômatos:
           $\varepsilon$ são aceitos;
     \item Simulação válida (1 teste): verifica que uma referência a autômato
           existente no comando \texttt{simular} é aceita;
+    \item Alfabeto vazio (1 teste): verifica que \texttt{alfabeto \{ \}} é rejeitado,
+          já que um alfabeto deve conter ao menos um símbolo;
     \item Símbolo duplicado no alfabeto (1 teste): verifica que a repetição
           de um símbolo no alfabeto é detectada;
     \item Estado duplicado (1 teste): verifica que a declaração do mesmo
@@ -3093,7 +3105,7 @@ dos autômatos:
           simultâneos.
 \end{itemize}
 
-Todos os 15 testes do analisador semântico são aprovados. O teste de acumulação de
+Todos os 16 testes do analisador semântico são aprovados. O teste de acumulação de
 erros confirma que o analisador semântico é capaz de detectar e reportar, em uma única
 execução, problemas de diferentes naturezas (estado inicial ausente, estado final
 ausente, símbolo fora do alfabeto), evitando que o estudante precise corrigir um erro
@@ -3303,9 +3315,9 @@ linguagem Rust. O código-fonte e os pacotes estão disponíveis no repositório
 operacional:
 
 \begin{alineas}
-    \item \texttt{autosim-v1.0.0-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
-    \item \texttt{autosim-v1.0.0-windows-x86\_64.zip}, para Windows em processadores x86-64;
-    \item \texttt{autosim-v1.0.0-macos-aarch64.tar.gz}, para macOS em processadores Apple
+    \item \texttt{autosim-v1.0.1-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
+    \item \texttt{autosim-v1.0.1-windows-x86\_64.zip}, para Windows em processadores x86-64;
+    \item \texttt{autosim-v1.0.1-macos-aarch64.tar.gz}, para macOS em processadores Apple
     Silicon.
 \end{alineas}
 
@@ -3315,8 +3327,8 @@ Apêndices B a D. Basta extrair o pacote em uma pasta qualquer; não há etapa d
 instalação. No Linux, a extração pode ser feita pelo terminal:
 
 \begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
-tar xzf autosim-v1.0.0-linux-x86_64.tar.gz
-cd autosim-v1.0.0-linux-x86_64
+tar xzf autosim-v1.0.1-linux-x86_64.tar.gz
+cd autosim-v1.0.1-linux-x86_64
 \end{lstlisting}
 
 No macOS, como o executável não é assinado digitalmente, o sistema pode bloquear sua
@@ -3338,7 +3350,7 @@ pré-compilado, como o macOS em processadores Intel.
 
 Em todos os casos, a interface gráfica requer um ambiente de janelas (X11 ou Wayland, no
 Linux). A instalação pode ser conferida com \texttt{autosim -{}-version}, que deve exibir
-\texttt{autosim 1.0.0}.
+\texttt{autosim 1.0.1}.
 
 \apendice{Execução e Uso da Interface Gráfica}
 
@@ -3494,6 +3506,10 @@ o que cada uma indica e como corrigi-la.
         uma estrutura, em geral por falta de uma chave de fechamento. \\
         \hline
         \multicolumn{2}{|l|}{\textit{Análise semântica}} \\
+        \hline
+        \texttt{alfabeto vazio: declare ao menos um símbolo} & A declaração
+        \texttt{alfabeto} não contém nenhum símbolo. Incluir os símbolos usados nas
+        transições e nas cadeias simuladas. \\
         \hline
         \texttt{símbolo 'X' duplicado no alfabeto} & O símbolo foi listado mais de uma vez
         em \texttt{alfabeto}. Remover a repetição. \\
