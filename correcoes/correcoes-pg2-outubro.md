@@ -41,8 +41,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Ajustar a especificação **ou** a implementação, e o teste correspondente
 
 ### Precisão técnica do texto
-- [ ] pp. 76 e 88: esclarecer se os intervalos de localização da AST usam índices de caracteres ou de tokens, e em qual etapa ocorre a conversão
-- [ ] pp. 78–83: distinguir o acompanhamento de um caminho escolhido da manutenção do conjunto de estados ativos, delimitando cada modo
+- [x] pp. 76 e 88: esclarecer se os intervalos de localização da AST usam índices de caracteres ou de tokens, e em qual etapa ocorre a conversão
+- [x] pp. 78–83: distinguir o acompanhamento de um caminho escolhido da manutenção do conjunto de estados ativos, delimitando cada modo
 
 ### Remissões
 - [ ] pp. 30, 32 e 39: a linguagem do projeto é remetida ao cap. 3, mas está no cap. 6

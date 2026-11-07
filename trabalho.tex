@@ -2550,9 +2550,10 @@ específicos e descartados, sem gerar \textit{tokens}.
 \subsection{Tratamento de Erros Léxicos}
 \label{sec:impl-erros-lexicos}
 
-Quando um caractere não pertence a nenhum padrão definido, o Logos retorna um erro
-contendo a posição (linha e coluna) do caractere inválido. A ferramenta converte essa
-informação em uma mensagem de diagnóstico por meio da biblioteca Ariadne, que exibe o
+Quando um caractere não pertence a nenhum padrão definido, o Logos sinaliza um erro
+acompanhado do intervalo de \textit{bytes} ocupado pelo caractere inválido. A
+ferramenta converte essa informação em uma mensagem de diagnóstico por meio da
+biblioteca Ariadne, que calcula a linha e a coluna correspondentes e exibe o
 trecho do código-fonte com realce colorido, uma seta apontando para a posição do erro e
 uma mensagem descritiva.
 
@@ -2609,12 +2610,28 @@ palavras-chave. As principais estruturas são:
 \end{itemize}
 
 Cada nó da AST preserva sua posição no texto-fonte por meio de um \textit{span}
-(\texttt{Range<usize>}). Como o analisador sintático opera sobre a sequência de
-\textit{tokens} produzida pelo analisador léxico, e não diretamente sobre os caracteres,
-esse \textit{span} registra os índices de início e fim do nó nessa sequência de
-\textit{tokens}. Na geração das mensagens de erro, tanto sintáticas quanto semânticas,
-esses índices são convertidos em posições de caractere a partir das posições registradas
-pelo analisador léxico, o que permite indicar a linha e a coluna exatas do problema.
+(\texttt{Range<usize>}), isto é, um intervalo de índices cuja unidade depende da etapa
+do \textit{pipeline}:
+
+\begin{itemize}
+    \item no analisador léxico, cada \textit{token} é acompanhado do intervalo de
+          \textit{bytes} que ocupa no texto-fonte, que é a unidade fornecida pelo Logos;
+    \item na AST, como o analisador sintático opera sobre a sequência de \textit{tokens}
+          e não diretamente sobre o texto, o \textit{span} de cada nó registra os índices
+          de início e fim do nó nessa sequência de \textit{tokens};
+    \item nos diagnósticos, os índices de \textit{token} são convertidos de volta em
+          intervalos de \textit{bytes}, a partir dos intervalos registrados pelo
+          analisador léxico.
+\end{itemize}
+
+Essa conversão ocorre somente na construção dos diagnósticos: no analisador sintático,
+quando um erro produzido pelo Chumsky é transformado na mensagem da ferramenta, e no
+analisador semântico, quando um erro é registrado ou quando a tabela de símbolos guarda a
+posição de uma declaração, usada como referência em erros posteriores, como a primeira
+ocorrência de um estado duplicado. A biblioteca Ariadne recebe, por fim, os intervalos de
+\textit{bytes} e calcula a linha e a coluna exibidas ao estudante. A unidade em
+\textit{bytes}, e não em caracteres, é necessária porque, na codificação UTF-8, letras
+acentuadas, comuns em comentários escritos em português, ocupam mais de um \textit{byte}.
 
 \subsection{Estrutura da Gramática}
 \label{sec:impl-gramatica}
@@ -2753,6 +2770,15 @@ final ficam ausentes do resultado e são tratados como infinitamente distantes.
 Por fim, o caminho é reconstruído a partir do par eleito, seguindo os apontadores de
 origem registrados durante a busca. Como a busca é feita em largura, o caminho obtido é
 também o mais curto entre os que levam àquele par.
+
+Ficam assim delimitados os dois momentos da simulação. A exploração de todas as
+configurações alcançáveis ocorre uma única vez, antes da exibição, e serve apenas para
+escolher o caminho; é ela que garante que o veredito coincida com o da definição formal
+de aceitação, segundo a qual um AFN aceita a cadeia se ao menos uma de suas computações
+consome toda a entrada e termina em um estado final. A simulação passo a passo, por sua
+vez, acompanha exclusivamente o caminho escolhido. Em nenhum momento a ferramenta mantém
+ou exibe o conjunto de estados ativos: a cada passo, a configuração corrente contém um
+único estado, que é o destacado no diagrama.
 
 \subsection{Passo de Simulação}
 \label{sec:impl-passo}
@@ -2925,7 +2951,8 @@ Todas as fases do pipeline utilizam a biblioteca Ariadne para a geração de men
 de erro. O diagnóstico inclui:
 
 \begin{itemize}
-    \item O caminho do arquivo e a posição do erro (linha e coluna);
+    \item O caminho do arquivo e a posição do erro (linha e coluna), calculada pelo
+          Ariadne a partir do intervalo de \textit{bytes} do trecho problemático;
     \item Um trecho do código-fonte com realce da região problemática;
     \item Uma seta primária apontando para a localização exata do erro;
     \item Setas secundárias para informações complementares (como a declaração
@@ -3017,7 +3044,8 @@ de \textit{token} e o tratamento de casos especiais:
           arquivo descrevendo um AFN com transições $\varepsilon$ produz os
           \textit{tokens} \texttt{AFN} e \texttt{Epsilon};
     \item \textit{Token} inválido (1 teste): verifica que um caractere não reconhecido
-          (como \texttt{\%}) produz um erro com o \textit{span} correto (9..10).
+          (como \texttt{\%}) produz um erro com o intervalo de \textit{bytes}
+          correto (9..10).
 \end{itemize}
 
 Todos os 12 testes do analisador léxico são aprovados com sucesso.
@@ -3057,8 +3085,8 @@ entradas válidas e o tratamento adequado de entradas malformadas:
           identificador no lugar de um literal de caractere na transição gera erro;
     \item \textit{Spans} como índices de \textit{token} (1 teste): verifica que os
           \textit{spans} armazenados na AST referem-se a índices de \textit{token}, e
-          não a deslocamentos de caractere, sendo a conversão realizada apenas na
-          geração das mensagens de erro.
+          não a deslocamentos no texto-fonte, sendo a conversão para intervalos de
+          \textit{bytes} realizada apenas na construção dos diagnósticos.
 \end{itemize}
 
 Todos os 14 testes do analisador sintático são aprovados.
@@ -3315,9 +3343,9 @@ linguagem Rust. O código-fonte e os pacotes estão disponíveis no repositório
 operacional:
 
 \begin{alineas}
-    \item \texttt{autosim-v1.0.1-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
-    \item \texttt{autosim-v1.0.1-windows-x86\_64.zip}, para Windows em processadores x86-64;
-    \item \texttt{autosim-v1.0.1-macos-aarch64.tar.gz}, para macOS em processadores Apple
+    \item \texttt{autosim-v1.0.2-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
+    \item \texttt{autosim-v1.0.2-windows-x86\_64.zip}, para Windows em processadores x86-64;
+    \item \texttt{autosim-v1.0.2-macos-aarch64.tar.gz}, para macOS em processadores Apple
     Silicon.
 \end{alineas}
 
@@ -3327,8 +3355,8 @@ Apêndices B a D. Basta extrair o pacote em uma pasta qualquer; não há etapa d
 instalação. No Linux, a extração pode ser feita pelo terminal:
 
 \begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
-tar xzf autosim-v1.0.1-linux-x86_64.tar.gz
-cd autosim-v1.0.1-linux-x86_64
+tar xzf autosim-v1.0.2-linux-x86_64.tar.gz
+cd autosim-v1.0.2-linux-x86_64
 \end{lstlisting}
 
 No macOS, como o executável não é assinado digitalmente, o sistema pode bloquear sua
@@ -3350,7 +3378,7 @@ pré-compilado, como o macOS em processadores Intel.
 
 Em todos os casos, a interface gráfica requer um ambiente de janelas (X11 ou Wayland, no
 Linux). A instalação pode ser conferida com \texttt{autosim -{}-version}, que deve exibir
-\texttt{autosim 1.0.1}.
+\texttt{autosim 1.0.2}.
 
 \apendice{Execução e Uso da Interface Gráfica}
 
