@@ -257,6 +257,11 @@ específicos:
     com falhas estruturais induzidas.
 \end{alineas}
 
+A validação prevista nesses objetivos é funcional, isto é, verifica se a ferramenta se
+comporta conforme especificado. A avaliação da eficácia pedagógica da ferramenta com
+estudantes, que exigiria um estudo com turmas reais, não faz parte do escopo deste trabalho
+e é proposta como trabalho futuro no Capítulo~\ref{cap:conclusao}.
+
 Este trabalho está organizado como segue.
 O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica: os conceitos de autômatos finitos e linguagens formais (Seção~\ref{cap:automatos}) e as fases de compilação e as linguagens de domínio específico (Seção~\ref{cap:compiladores}).
 O Capítulo~\ref{cap:rust} apresenta a linguagem Rust e justifica sua adoção como plataforma de implementação da ferramenta proposta.
@@ -1209,6 +1214,16 @@ conseguem expressar construções recursivamente aninhadas, como expressões par
 de comandos balanceados, que são comuns em linguagens de programação. As gramáticas livres de
 contexto, por sua vez, capturam naturalmente essas construções por meio de regras recursivas,
 sendo o formalismo padrão para a especificação sintática de linguagens \cite{aho2008}.
+
+Na especificação de linguagens de programação, as produções de uma gramática livre de
+contexto são tradicionalmente escritas na notação BNF (\textit{Backus-Naur Form}), na qual
+cada regra associa um não terminal a uma ou mais alternativas, separadas pelo símbolo
+$\mid$, formadas por terminais e não terminais \cite{aho2008}. A notação EBNF
+(\textit{Extended Backus-Naur Form}) estende a BNF com operadores para repetição,
+opcionalidade e agrupamento de trechos de uma regra \cite{iso14977}. Esses operadores não
+ampliam o poder de expressão da notação, pois toda regra em EBNF pode ser reescrita em BNF
+por meio de não terminais auxiliares, mas tornam a gramática mais compacta, sobretudo na
+descrição de listas, que em BNF exigem regras recursivas.
 
 Para programas bem formados, o analisador sintático constrói, ao menos conceitualmente, uma
 árvore de derivação que é então repassada às fases subsequentes do \textit{front-end}, isto é,
@@ -2256,6 +2271,18 @@ comando_simulacao ::= "simular" ident "com" cadeia_literal
 \end{figure}
 \FloatBarrier
 
+Na Figura~\ref{fig:gramatica-dsl}, cada regra associa um não terminal, à esquerda do
+símbolo \texttt{::=}, à sua definição; os terminais aparecem entre aspas, o operador
+\texttt{*} indica zero ou mais repetições, os colchetes delimitam trechos opcionais, os
+parênteses agrupam trechos e a barra vertical separa alternativas. A gramática é
+apresentada apenas em EBNF, e não também em BNF, porque as duas notações descrevem a
+mesma classe de linguagens, conforme discutido na Seção~\ref{sec:sintatica}, e a
+conversão de uma para a outra é mecânica. Em BNF, cada lista da DSL, como as de símbolos
+do alfabeto, de estados, de estados finais e de transições, exigiria um não terminal
+auxiliar definido recursivamente, o que aumentaria o tamanho da gramática sem acrescentar
+informação. A EBNF expressa essas listas diretamente e mantém a gramática próxima da
+estrutura dos programas que ela descreve.
+
 Os terminais da gramática são definidos conforme as expressões regulares
 apresentadas no Quadro~\ref{quad:terminais-dsl}.
 
@@ -3136,7 +3163,7 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
 
 Em todos os cenários, as mensagens de erro incluíram o número da linha e coluna, o
 trecho do código-fonte com realce e uma descrição do problema em português,
-confirmando a eficácia da estratégia de diagnóstico adotada.
+confirmando que os diagnósticos localizam e descrevem corretamente cada erro.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------

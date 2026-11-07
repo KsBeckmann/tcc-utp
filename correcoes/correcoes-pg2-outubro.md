@@ -27,8 +27,8 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Como interpretar os diagnósticos de erro
 
 ### Objetivos (p. 12)
-- [ ] Compatibilizar com a entrega: foi prometida formalização em BNF e EBNF, mas o cap. 6 só apresenta EBNF — incluir a BNF **ou** justificar o ajuste de escopo
-- [ ] Diferenciar a validação funcional da avaliação da eficácia pedagógica com estudantes (proposta para trabalho futuro)
+- [x] Compatibilizar com a entrega: foi prometida formalização em BNF e EBNF, mas o cap. 6 só apresenta EBNF — incluir a BNF **ou** justificar o ajuste de escopo
+- [x] Diferenciar a validação funcional da avaliação da eficácia pedagógica com estudantes (proposta para trabalho futuro)
 
 ## Coerência e conclusão
 
