@@ -5,14 +5,12 @@
 %
 % Compilar: pdflatex apresentacao.tex  (2x)
 %
-% Tempo: limite de 15 minutos; o roteiro de fala (roteiro.tex) planeja 13:30.
+% Tempo: limite de 15 minutos; o roteiro de fala (roteiro.tex) planeja 12:07.
 % As 9 seções têm os mesmos títulos e a mesma numeração dos capítulos da monografia, e cada uma
 % abre com o slide de Roteiro, para que a banca acompanhe a apresentação junto com o texto.
 %
-% VÍDEO: o slide de demonstração reproduz video/demo-autosim.mp4. A pasta video/ precisa estar
-% ao lado do PDF. O vídeo toca dentro do PDF no Okular e no Adobe Acrobat Reader; em outros
-% leitores, use o link "abrir no reprodutor de vídeo" do próprio slide ou abra o arquivo à mão.
-% Teste no computador da defesa antes da apresentação.
+% VÍDEO: não há slide de demonstração. O vídeo video/demo-autosim.mp4 (1min44s) fica no
+% repositório como recurso de reserva, para abrir à mão no reprodutor de vídeo se for necessário.
 % =================================================================================================
 
 \documentclass[aspectratio=169,11pt]{beamer}
@@ -28,7 +26,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,automata,calc}
 \usepackage{graphicx}
-\usepackage{multimedia}
+\usepackage{appendixnumberbeamer}
 
 % ----- Tema -----------------------------------------------------------------------------------
 \usetheme{Madrid}
@@ -44,6 +42,18 @@
 \setbeamercolor{structure}{fg=acento}
 \setbeamercolor{block title}{bg=acento,fg=white}
 \setbeamercolor{block body}{bg=acento!8}
+
+% Rótulo no canto direito do título: onde o conteúdo do slide está na monografia
+\newcommand{\notexto}[1]{\hskip 0pt plus 1filll{\normalfont\footnotesize\color{white!85!acento}#1}}
+
+% Slides de reserva (depois do "Obrigado"): botão para voltar ao índice de reserva
+\newcommand{\voltar}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south east,inner sep=0pt] at ([xshift=-6pt,yshift=13pt]current page.south east)
+      {\hyperlink{reserva}{\beamerreturnbutton{Índice}}};
+  \end{tikzpicture}}
+% Item do índice de reserva: link para o slide, com a seção da monografia ao lado
+\newcommand{\itemreserva}[3]{\item \hyperlink{#1}{\textcolor{acento}{#2}} {\scriptsize\color{gray}(#3)}}
 
 % Slide de abertura de cada seção com o roteiro destacado: a banca acompanha a apresentação
 % junto com o texto da monografia, cujos capítulos têm a mesma numeração
@@ -98,7 +108,7 @@
 % =================================================================================================
 \section{Introdução}
 
-\begin{frame}{Contexto e problema}
+\begin{frame}{Contexto e problema\notexto{Cap. 1}}
   \begin{itemize}
     \item Autômatos finitos são um pilar da Ciência da Computação, mas a disciplina é
           \textbf{reconhecidamente difícil}.
@@ -116,7 +126,7 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Pergunta de pesquisa e proposta}
+\begin{frame}{Pergunta de pesquisa e proposta\notexto{Cap. 1}}
   \begin{block}{Pergunta de pesquisa}
     Como uma linguagem textual de domínio específico, processada por um compilador com
     diagnósticos localizados e acoplada a uma simulação visual, pode oferecer ao estudante
@@ -137,7 +147,7 @@
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Objetivos}
+\begin{frame}{Objetivos\notexto{Cap. 1}}
   \textbf{Objetivo geral:} desenvolver uma ferramenta educacional que integra a descrição textual
   de autômatos, sua compilação pedagógica e sua simulação visual em um único ambiente.
   \vspace{6pt}
@@ -157,7 +167,7 @@
 % =================================================================================================
 \section{Fundamentação Teórica}
 
-\begin{frame}{Autômatos finitos}
+\begin{frame}{Autômatos finitos\notexto{Seção 2.1}}
   \begin{columns}[T]
     \begin{column}{0.47\textwidth}
       Um \textbf{AFD} é uma quíntupla $M = (Q, \Sigma, \delta, q_0, F)$:
@@ -194,12 +204,12 @@
       \small Cadeias que \textbf{contêm ``$ab$''}\\[3pt]
       \textcolor{aceita}{\textbf{aceita:}} \texttt{ab}, \texttt{aab}, \texttt{bab}\\
       \textcolor{rejeita}{\textbf{rejeita:}} $\varepsilon$, \texttt{ba}, \texttt{bbb}\\[3pt]
-      \footnotesize\emph{Reaparece na DSL e na demonstração.}
+      \footnotesize\emph{Reaparece na DSL e na interface.}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Compiladores e linguagens de domínio específico}
+\begin{frame}{Compiladores e linguagens de domínio específico\notexto{Seção 2.2}}
   \begin{center}
     \begin{tikzpicture}[
         node distance=6mm and 10mm,
@@ -228,7 +238,7 @@
 % =================================================================================================
 \section{Trabalhos Relacionados}
 
-\begin{frame}{Panorama: quatro ferramentas gráficas e uma textual}
+\begin{frame}{Panorama: quatro ferramentas gráficas e uma textual\notexto{Seções 3.1--3.5}}
   \begin{itemize}
     \item \textbf{JFLAP} --- referência mundial; cobre toda a hierarquia de Chomsky;
           construção \textbf{só gráfica}, sem descrição textual nem diagnóstico.
@@ -241,7 +251,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Análise comparativa}
+\begin{frame}{Análise comparativa\notexto{Seção 3.6}}
   \begin{center}
     \small
     \setlength{\tabcolsep}{5pt}
@@ -270,7 +280,7 @@
 % =================================================================================================
 \section{Metodologia de Construção da Solução}
 
-\begin{frame}{Metodologia}
+\begin{frame}{Metodologia\notexto{Cap. 4}}
   \small
   \textbf{Pesquisa aplicada}, exploratória: pesquisa bibliográfica + desenvolvimento e
   verificação funcional de um artefato (Gil, 2002; Wazlawick, 2014).
@@ -312,7 +322,7 @@
 % =================================================================================================
 \section{Ferramentas para Implementação}
 
-\begin{frame}{Por que Rust --- e as bibliotecas adotadas}
+\begin{frame}{Por que Rust --- e as bibliotecas adotadas\notexto{Seções 5.4 e 5.6}}
   \begin{columns}[T]
     \begin{column}{0.52\textwidth}
       \begin{block}{Requisitos atendidos}
@@ -349,7 +359,7 @@
 % =================================================================================================
 \section{Projeto da DSL}
 
-\begin{frame}[fragile]{A linguagem: o mesmo autômato, em texto}
+\begin{frame}[fragile]{A linguagem: o mesmo autômato, em texto\notexto{Seção 6.1}}
   \begin{columns}[T]
     \begin{column}{0.60\textwidth}
 \begin{lstlisting}[language=asl]
@@ -382,7 +392,7 @@ simular exemplo_afd com "bbb"   // rejeita
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Gramática e decisões de projeto}
+\begin{frame}[fragile]{Gramática e decisões de projeto\notexto{Seções 6.2--6.4}}
   \footnotesize Trecho da gramática em EBNF (completa na Seção 6.2):
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,literate={->}{->}2]
 declaracao_automato ::= "automato" ("AFD" | "AFN") ident "{"
@@ -411,7 +421,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 % =================================================================================================
 \section{Implementação}
 
-\begin{frame}{Pipeline de compilação}
+\begin{frame}{Pipeline de compilação\notexto{Seção 7.1}}
   \begin{center}
     \begin{tikzpicture}[
         node distance=4mm,
@@ -442,7 +452,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Análise semântica e diagnósticos}
+\begin{frame}{Análise semântica e diagnósticos\notexto{Seções 7.4 e 7.7}}
   \begin{columns}[T]
     \begin{column}{0.44\textwidth}
       \begin{enumerate}\small
@@ -462,7 +472,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{columns}
 \end{frame}
 
-\begin{frame}{Simulador: um caminho, não uma nuvem de estados}
+\begin{frame}{Simulador: um caminho, não uma nuvem de estados\notexto{Seção 7.5}}
   \begin{itemize}
     \item No AFN, acender \textbf{todos os estados ativos} ao mesmo tempo dificultava acompanhar
           a execução.
@@ -477,21 +487,64 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Interface gráfica (Iced)\notexto{Seção 7.6}}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \footnotesize
+      \begin{itemize}
+        \item Arquitetura Elm (\textit{Model-View-Update}).
+        \item \textbf{Cabeçalho}: autômato e seletor de simulação.
+        \item \textbf{Canvas}: diagrama, cadeia de entrada e histórico.
+        \item \textbf{Controles}: Passo, Voltar, Rodar/Pausar (800 ms), Reset, Centralizar.
+        \item \textit{Layout} circular; raio cresce com o número de estados.
+        \item Estado corrente em azul; no fim, \textcolor{aceita}{verde} ou
+              \textcolor{rejeita}{vermelho}.
+        \item \textit{Pan} e \textit{zoom} (20\%--400\%); entrada e histórico ficam fixos.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{img/interface_visao_geral.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Telas: aceitação e rejeição\notexto{Seção 7.6.3}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{img/interface_simulacao_aceita.png}\\[3pt]
+      \footnotesize \texttt{"ab"}: \textcolor{aceita}{\textbf{ACEITA}}, termina em $q_2$
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{img/interface_simulacao_rejeita.png}\\[3pt]
+      \footnotesize \texttt{"bbb"}: \textcolor{rejeita}{\textbf{REJEITA}}, termina em $q_0$
+    \end{column}
+  \end{columns}
+  \vspace{6pt}
+  \centering\small O mesmo AFD dos slides, que aceita as cadeias que contêm ``$ab$''.
+\end{frame}
+
+\begin{frame}{Telas: AFN-$\varepsilon$ e diagrama grande\notexto{Seções 6.5 e 7.6.2}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{img/interface_afn_epsilon.png}\\[3pt]
+      \footnotesize AFN-$\varepsilon$ para $a^*b^*$: a aresta $\varepsilon$ liga $q_0$ a $q_1$
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{img/interface_automato_grande.png}\\[3pt]
+      \footnotesize AFD de 14 estados: navegação por \textit{pan} e \textit{zoom}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 % =================================================================================================
 \section{Resultados e Discussões}
 
-\begin{frame}{Demonstração}
-  \begin{center}
-    \movie[width=0.62\textwidth,height=0.3875\textwidth,showcontrols]{%
-      \includegraphics[width=0.62\textwidth,height=0.3875\textwidth]{img/demo_poster.png}%
-    }{video/demo-autosim.mp4}\\[4pt]
-    \footnotesize Clique na imagem para reproduzir (1min44s):
-    aceitação e rejeição, diagnósticos de erro, AFN-$\varepsilon$ e \emph{pan}/\emph{zoom}.
-    \quad\href{run:video/demo-autosim.mp4}{\textcolor{acento}{[abrir no reprodutor de vídeo]}}
-  \end{center}
-\end{frame}
-
-\begin{frame}{Testes automatizados e cenários de erro}
+\begin{frame}{Testes automatizados e cenários de erro\notexto{Seções 8.1--8.5 e 8.8}}
   \begin{columns}[T]
     \begin{column}{0.42\textwidth}
       \begin{block}{51 testes automatizados}
@@ -520,7 +573,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{columns}
 \end{frame}
 
-\begin{frame}{Validação diferencial do simulador}
+\begin{frame}{Validação diferencial do simulador\notexto{Seção 8.7}}
   \begin{center}
     \begin{tikzpicture}[
         caixa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
@@ -560,7 +613,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Discussão: os objetivos foram atendidos?}
+\begin{frame}{Discussão: os objetivos foram atendidos?\notexto{Seção 8.9}}
   \small
   \begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
     \toprule
@@ -584,7 +637,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 % =================================================================================================
 \section{Conclusão}
 
-\begin{frame}{Contribuições}
+\begin{frame}{Contribuições\notexto{Cap. 9}}
   A pergunta de pesquisa foi respondida no \textbf{plano funcional}: a Autosim entrega
   retroalimentação imediata na construção e na execução de autômatos.
   \begin{itemize}
@@ -597,7 +650,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Limitações e trabalhos futuros}
+\begin{frame}{Limitações e trabalhos futuros\notexto{Cap. 9}}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \begin{block}{Limitações}
@@ -634,5 +687,422 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   {\color{white!85}\footnotesize Orientador: Prof. Diógenes Cogo Furlan \quad$\cdot$\quad UTP, 2026}
   \vfill
 \end{frame}}
+
+% =================================================================================================
+% SLIDES DE RESERVA: não entram no tempo da apresentação. Ficam depois do "Obrigado" e são
+% abertos pelo índice abaixo quando a banca pergunta sobre o assunto. Cada slide tem um botão
+% "Índice" no canto inferior direito para voltar.
+% =================================================================================================
+\appendix
+
+\begin{frame}[label=reserva]{Outros}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \textbf{Fundamentação e ferramentas}
+      \begin{itemize}\setlength{\itemsep}{1pt}
+        \itemreserva{res-chomsky}{Hierarquia de Chomsky}{2.1.2}
+        \itemreserva{res-subconjuntos}{Construção de subconjuntos}{2.1.5}
+        \itemreserva{res-diagnostico}{Diagnóstico de erros e DSL no ensino}{2.2.8--2.2.9}
+        \itemreserva{res-ownership}{\textit{Ownership}, \textit{borrowing} e Cargo}{5.2--5.3}
+        \itemreserva{res-combinators}{\textit{Parser combinators}: nom, pest, chumsky}{5.5}
+        \itemreserva{res-distribuicao}{Versionamento e distribuição}{5.7}
+      \end{itemize}
+      \textbf{Projeto da DSL}
+      \begin{itemize}\setlength{\itemsep}{1pt}
+        \itemreserva{res-palavras}{Palavras reservadas, $\varepsilon$ e comentários}{6.3, 6.5, 6.6}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \textbf{Implementação}
+      \begin{itemize}\setlength{\itemsep}{1pt}
+        \itemreserva{res-codigo}{Organização do código-fonte}{7.1}
+        \itemreserva{res-lexsin}{Análise léxica e sintática}{7.2--7.3}
+        \itemreserva{res-caminho}{Como o caminho do AFN é escolhido}{7.5.2}
+      \end{itemize}
+      \textbf{Resultados e conclusão}
+      \begin{itemize}\setlength{\itemsep}{1pt}
+        \itemreserva{res-testes}{Testes por categoria}{8.1--8.5}
+        \itemreserva{res-classicos}{Simulações com autômatos clássicos}{8.6}
+        \itemreserva{res-dificuldades}{Dificuldades encontradas}{Cap. 9}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ----- Fundamentação e ferramentas ---------------------------------------------------------------
+\begin{frame}[label=res-chomsky]{Hierarquia de Chomsky\notexto{Seção 2.1.2}}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}clll@{}}
+      \toprule
+      \textbf{Tipo} & \textbf{Linguagens} & \textbf{Regras} & \textbf{Modelo computacional} \\
+      \midrule
+      0 & Recursivamente enumeráveis & $\alpha \to \beta$ & Máquina de Turing \\
+      1 & Sensíveis ao contexto & $\alpha A \beta \to \alpha \gamma \beta$ & Autômato linearmente limitado \\
+      2 & Livres de contexto & $A \to \gamma$ & Autômato com pilha \\
+      \rowcolor{acento!12}
+      3 & \textbf{Regulares} & $A \to aB$ ou $A \to a$ & \textbf{Autômato finito} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{6pt}
+  \begin{itemize}\small
+    \item A Autosim cobre o \textbf{tipo 3}: AFDs e AFNs reconhecem exatamente as linguagens regulares.
+    \item Exemplo fora do alcance: $\{a^n b^n \mid n \ge 0\}$ é livre de contexto e exige pilha.
+    \item Trabalhos futuros: subir a hierarquia com \textbf{autômatos com pilha} (tipo 2) e
+          \textbf{máquinas de Turing} (tipo 0), com fita e cabeçote animados.
+  \end{itemize}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-subconjuntos]{Construção de subconjuntos (AFN $\to$ AFD)\notexto{Seção 2.1.5}}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \small
+      Cada estado do AFD é um \textbf{conjunto} de estados do AFN:
+      \begin{itemize}\footnotesize
+        \item $q_{0,D} = \{q_{0,N}\}$;
+        \item $\delta_D(S, a) = \bigcup_{p \in S} \delta_N(p, a)$;
+        \item $S$ é final se $S \cap F_N \neq \varnothing$.
+      \end{itemize}
+      \vspace{2pt}
+      Só se constroem os subconjuntos \textbf{alcançáveis}: das $2^3 = 8$ possibilidades,
+      o exemplo usa 3.\\[4pt]
+      \footnotesize Pior caso: $2^n$ estados. AFD e AFN reconhecem a mesma classe de linguagens.
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \centering
+      \footnotesize AFN: cadeias sobre $\{0,1\}$ terminadas em $01$\\[2pt]
+      \includegraphics[width=0.85\textwidth]{img/automato_finito_nao_deterministico.png}\\[4pt]
+      AFD equivalente\\[2pt]
+      \includegraphics[width=0.75\textwidth]{img/dfa_construida_a_partir_da_nfa.png}\\[1pt]
+      {\tiny Fonte: Hopcroft, Motwani e Ullman (2006)}
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-diagnostico]{Diagnóstico de erros e DSL no ensino\notexto{Seções 2.2.8--2.2.9}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Três critérios de um bom diagnóstico}
+        \small
+        \begin{enumerate}
+          \item \textbf{Localização precisa}: linha e coluna.
+          \item \textbf{Mensagem clara}: o que se esperava e o que foi encontrado, no
+                vocabulário do domínio.
+          \item \textbf{Vários erros por execução}: sem repetir o ciclo a cada defeito.
+        \end{enumerate}
+        \footnotesize Baseados nos objetivos de Aho \textit{et al.} (2008).
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{DSL no ensino (Morazán e Antunez, 2014)}
+        \small
+        \begin{itemize}
+          \item O autômato vira um \textbf{objeto computacional}, escrito, testado e versionado
+                como código.
+          \item Aproxima linguagens formais da programação.
+          \item Os próprios autores apontam como trabalho futuro da FSM \textbf{desenhar e
+                animar} as máquinas escritas em código: é o que a Autosim faz.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-ownership]{\textit{Ownership}, \textit{borrowing} e Cargo\notexto{Seções 5.2--5.3}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Memória sem coletor de lixo}
+        \small
+        \begin{itemize}
+          \item \textbf{\textit{Ownership}}: cada valor tem um único dono e é liberado quando
+                ele sai de escopo.
+          \item \textbf{\textit{Borrowing}}: várias referências \texttt{\&T} \textbf{ou} uma
+                \texttt{\&mut T}, verificado na compilação.
+          \item Na Autosim: as fases leem a AST por referência, sem cópias.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Tipos e ferramentas}
+        \small
+        \begin{itemize}
+          \item \texttt{enum} + \texttt{match} \textbf{exaustivo}: todo \textit{token}, nó da
+                AST e erro é tratado, ou o código não compila.
+          \item \textbf{Cargo}: dependências (\texttt{Cargo.toml}, \texttt{crates.io}),
+                compilação e testes (\texttt{cargo test}) em uma só ferramenta.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-combinators]{\textit{Parser combinators}: por que o Chumsky\notexto{Seção 5.5}}
+  \small
+  Combinadores: a gramática é escrita no próprio Rust, \textbf{compondo funções} pequenas, uma
+  por construção da linguagem.
+  \vspace{6pt}
+  \begin{center}
+    \begin{tabular}{@{}llll@{}}
+      \toprule
+      \textbf{Critério} & \textbf{nom} & \textbf{pest} & \textbf{chumsky} \\
+      \midrule
+      Abordagem & Combinadores & Gramática PEG externa & Combinadores \\
+      Qualidade dos erros & Baixa & Média & \textbf{Alta} \\
+      Recuperação de erros & Manual & Limitada & \textbf{Nativa} \\
+      Localização & Manual & Automática & Automática \\
+      Maturidade & Alta & Alta & Média \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{4pt}
+  Escolha: \textbf{chumsky}, pelo foco em diagnósticos (vários erros por execução, com
+  localização) e por manter a gramática no código, sem geração externa.
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-distribuicao]{Versionamento e distribuição\notexto{Seção 5.7}}
+  \begin{center}
+    \begin{tikzpicture}[node distance=4mm and 3.5mm,
+        box/.style={draw=acento,thick,fill=acento!8,rounded corners=2pt,align=center,
+                    font=\footnotesize,minimum height=9mm,text width=17mm},
+        arr/.style={-{Stealth[]},thick,acento}]
+      \node[box] (tag) {nova tag\\\texttt{v1.0.4}};
+      \node[box,right=of tag] (os) {Linux, Windows\\e macOS};
+      \node[box,right=of os] (test) {\texttt{cargo test}\\(51 testes)};
+      \node[box,right=of test] (build) {compilação\\otimizada};
+      \node[box,right=of build] (pkg) {pacote: binário,\\README, exemplos};
+      \node[box,right=of pkg,fill=aceita!15,draw=aceita] (rel) {publicado\\na Release};
+      \draw[arr] (tag) -- (os); \draw[arr] (os) -- (test); \draw[arr] (test) -- (build);
+      \draw[arr] (build) -- (pkg); \draw[arr] (pkg) -- (rel);
+    \end{tikzpicture}
+  \end{center}
+  \vspace{4pt}
+  \begin{itemize}\small
+    \item Código e monografia no \textbf{Git}, em repositórios no GitHub; o histórico serviu
+          para reconstituir as etapas da Metodologia.
+    \item \textbf{GitHub Actions}: os testes rodam antes da compilação, então um sistema só
+          recebe pacote se todos os testes passarem nele.
+    \item O estudante baixa o executável pronto, \textbf{sem instalar o Rust} (Apêndice A).
+    \item Versões 1.0.1 a 1.0.4: correções vindas da revisão (alfabeto vazio, localização em
+          \textit{bytes}, uma mensagem de erro e um exemplo).
+  \end{itemize}
+  \voltar
+\end{frame}
+
+% ----- Projeto da DSL ------------------------------------------------------------------------------
+\begin{frame}[fragile,label=res-palavras]{Palavras reservadas, transições $\varepsilon$ e comentários\notexto{Seções 6.3, 6.5 e 6.6}}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \footnotesize
+      \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Palavra} & \textbf{Função} \\
+        \midrule
+        \texttt{alfabeto} & declara o alfabeto \\
+        \texttt{automato} & declara um autômato \\
+        \texttt{AFD} / \texttt{AFN} & tipo do autômato \\
+        \texttt{estados} & conjunto de estados \\
+        \texttt{inicial} & estado inicial \\
+        \texttt{finais} & estados de aceitação \\
+        \texttt{transicoes} & bloco de transições \\
+        \texttt{simular} & comando de simulação \\
+        \texttt{com} & símbolo da transição \\
+        \texttt{epsilon} / \texttt{eps} & transição vazia \\
+        \bottomrule
+      \end{tabular}\\[3pt]
+      11 palavras, sem distinguir maiúsculas e minúsculas.
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \small AFN-$\varepsilon$ para $a^*b^*$:
+\begin{lstlisting}[language=asl,basicstyle=\ttfamily\footnotesize]
+alfabeto { 'a', 'b' }
+// comentario de linha
+automato AFN exemplo_afn_eps {
+    estados { q0, q1 }
+    inicial q0
+    finais { q0, q1 }
+    transicoes {
+        q0 -> q0 com 'a'
+        q0 -> q1 com eps
+        q1 -> q1 com 'b'
+    }
+}
+\end{lstlisting}
+      \footnotesize Cada transição $\varepsilon$ é um \textbf{passo próprio} da simulação, que
+      muda o estado sem consumir símbolo. Comentários: só \texttt{//}, de linha.
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+% ----- Implementação -------------------------------------------------------------------------------
+\begin{frame}[label=res-codigo]{Organização do código-fonte\notexto{Seção 7.1}}
+  \footnotesize
+  \begin{center}
+    \begin{tabular}{@{}lp{0.68\textwidth}@{}}
+      \toprule
+      \textbf{Caminho} & \textbf{Conteúdo} \\
+      \midrule
+      \texttt{src/main.rs} & lê e valida o arquivo, exibe os diagnósticos e abre a interface \\
+      \texttt{src/cli.rs} & argumentos de linha de comando \\
+      \texttt{src/lexer/} & \textit{tokens} (\texttt{token.rs}) e erros léxicos \\
+      \texttt{src/parser/} & AST (\texttt{ast.rs}), gramática (\texttt{grammar.rs}) e erros sintáticos \\
+      \texttt{src/sema/} & tabela de símbolos (\texttt{table.rs}), verificações e erros semânticos \\
+      \texttt{src/runtime/} & escolha do caminho (\texttt{path.rs}) e execução passo a passo \\
+      \texttt{src/ui/} & diagrama, controles da simulação e navegação \\
+      \texttt{tests/} & um arquivo por categoria: \texttt{lexer}, \texttt{parser}, \texttt{sema}, \texttt{runtime} \\
+      \texttt{examples/} & programas na DSL, válidos e com erros propositais \\
+      \texttt{.github/workflows/} & geração dos pacotes de distribuição \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \small Cada fase do \textit{pipeline} ocupa um módulo próprio, com seus testes.
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-lexsin]{Análise léxica e sintática\notexto{Seções 7.2--7.3}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Léxico (Logos)}
+        \footnotesize
+        \begin{itemize}
+          \item \texttt{\#[derive(Logos)]} gera um \textbf{AFD} a partir das anotações do
+                \texttt{enum Token}.
+          \item Categorias: palavras reservadas (\texttt{ignore(case)}), símbolos
+                (\texttt{\{ \} , ->}), literais (\texttt{\textquotesingle a\textquotesingle}, \texttt{\string"ab\string"}) e identificadores.
+          \item Espaços e comentários são descartados.
+        \end{itemize}
+      \end{block}
+      \begin{block}{Sintático (Chumsky)}
+        \footnotesize
+        \begin{itemize}
+          \item AST: \texttt{Program}, \texttt{Automaton}, \texttt{Transition},
+                \texttt{Simulation}.
+          \item Mensagens no formato \emph{esperava X, encontrou Y}:\\
+                \texttt{esperava \textquotesingle inicial\textquotesingle, encontrou \textquotesingle q0\textquotesingle}.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Localização (\textit{spans})}
+        \footnotesize
+        \begin{itemize}
+          \item Léxico: intervalo de \textbf{\textit{bytes}} de cada \textit{token}.
+          \item AST: intervalo de \textbf{índices de \textit{tokens}}.
+          \item Diagnóstico: volta a \textit{bytes}; o Ariadne calcula linha e coluna.
+          \item \textit{Bytes}, e não caracteres: letras acentuadas ocupam mais de um
+                \textit{byte} em UTF-8.
+        \end{itemize}
+      \end{block}
+      \vspace{2pt}
+      \centering
+      \includegraphics[width=\textwidth]{img/erro_lexico_token_invalido.png}
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-caminho]{Como o caminho do AFN é escolhido\notexto{Seção 7.5.2}}
+  \begin{enumerate}\small
+    \item \textbf{Busca em largura} sobre os pares (estado, símbolos consumidos), seguindo
+          transições $\varepsilon$ (não avançam) e com o próximo símbolo (avançam uma
+          posição). Cada par é visitado uma vez: ciclos de $\varepsilon$ não travam a busca.
+    \item Entre os pares alcançados, elege-se o melhor por:
+          \begin{enumerate}\footnotesize
+            \item \textbf{maior} número de símbolos consumidos;
+            \item \textbf{menor} distância até um estado final.
+          \end{enumerate}
+    \item A distância vem de uma \textbf{segunda busca em largura}, no grafo invertido, a
+          partir de todos os estados finais (calculada uma vez, antes).
+    \item O caminho é reconstruído pelos apontadores da busca e é o \textbf{mais curto} até
+          aquele par.
+  \end{enumerate}
+  \vspace{4pt}
+  \begin{block}{Por que funciona}
+    \footnotesize Se a cadeia pertence à linguagem, há um par que consumiu tudo e está em um estado
+    final (distância 0): ele vence, e o caminho exibido é \textbf{aceitador}. Se não pertence,
+    vence o caminho que chega mais longe e termina mais perto de um final. O veredito é sempre o
+    da definição formal.
+  \end{block}
+  \voltar
+\end{frame}
+
+% ----- Resultados e conclusão ----------------------------------------------------------------------
+\begin{frame}[label=res-testes]{Testes por categoria\notexto{Seções 8.1--8.5}}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}lcp{0.58\textwidth}@{}}
+      \toprule
+      \textbf{Categoria} & \textbf{Qtd.} & \textbf{Principais verificações} \\
+      \midrule
+      Análise léxica & 12 & palavras reservadas, \textit{case-insensitive}, literais, epsilon, comentários, erros \\
+      Análise sintática & 14 & \textit{parsing} completo, AFN com epsilon, múltiplos autômatos, erros \\
+      Análise semântica & 16 & AFD e AFN válidos, alfabeto vazio, duplicatas, referências inválidas, determinismo \\
+      Simulação & 9 & caminho aceitador, epsilon, cadeia vazia, rejeição por falta de transição, navegação \\
+      \midrule
+      \textbf{Total} & \textbf{51} & todos aprovados, com \texttt{cargo test} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-classicos]{Simulações com autômatos clássicos\notexto{Seção 8.6}}
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      \footnotesize
+      \begin{tabular}{@{}llcc@{}}
+        \toprule
+        \textbf{Autômato} & \textbf{Cadeia} & \textbf{Esperado} & \textbf{Obtido} \\
+        \midrule
+        AFD: contém 01 & \texttt{1101} & Aceita & Aceita \\
+        AFD: contém 01 & \texttt{111} & Rejeita & Rejeita \\
+        AFD: contém 01 & \texttt{101} & Aceita & Aceita \\
+        AFD: contém 01 & \texttt{000} & Rejeita & Rejeita \\
+        AFN: termina em 01 & \texttt{001} & Aceita & Aceita \\
+        AFN: termina em 01 & \texttt{010} & Rejeita & Rejeita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{aaa} & Aceita & Aceita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{aabb} & Aceita & Aceita \\
+        AFN-$\varepsilon$: $a^*b^*$ & \texttt{ba} & Rejeita & Rejeita \\
+        AFN-$\varepsilon$: $a^*b^*$ & $\varepsilon$ & Aceita & Aceita \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{itemize}
+        \item Autômatos de Hopcroft e Sipser.
+        \item Todos os vereditos conferem.
+        \item Limite: poucas cadeias, escolhidas à mão. Por isso veio a
+              \textbf{validação diferencial}: 57.368 cadeias, 0 divergências (Seção 8.7).
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \voltar
+\end{frame}
+
+\begin{frame}[label=res-dificuldades]{Dificuldades encontradas\notexto{Cap. 9}}
+  \begin{enumerate}\small
+    \item \textbf{AFN com vários estados acesos}: a primeira versão propagava o conjunto de estados
+          e a execução ficava difícil de seguir. $\to$ Escolha prévia de um \textbf{caminho
+          único} (Seção 7.5.2).
+    \item \textbf{Autômatos grandes}: estados se sobrepunham ou saíam da janela. $\to$ Raio do
+          arranjo cresce com o número de estados, e \textbf{\textit{pan} e \textit{zoom}}.
+    \item \textbf{Localização dos erros}: a AST guarda índices de \textit{tokens}, e acentos em
+          comentários deslocavam a coluna (\textit{bytes} lidos como caracteres). $\to$
+          Conversão de volta ao texto e \textbf{\textit{bytes} em toda a cadeia} de diagnóstico.
+    \item \textbf{Coerência entre texto, código e teoria}: a gramática e um teste aceitavam
+          \texttt{alfabeto \{ \}}, mas a definição exige alfabeto não vazio. $\to$
+          \textbf{Verificação semântica} específica.
+  \end{enumerate}
+  \voltar
+\end{frame}
 
 \end{document}
