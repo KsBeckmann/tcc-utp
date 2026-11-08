@@ -1,6 +1,7 @@
 % =================================================================================================
-% roteiro.tex — Roteiro de fala da defesa (13:30 planejados, limite de 15 min)
-% Acompanha apresentacao.tex (42 slides, com roteiro no início de cada seção).
+% roteiro.tex — Roteiro de fala da defesa (13:27 planejados, limite de 15 min)
+% Acompanha apresentacao.tex (33 slides, com roteiro no início de cada seção; as 9 seções têm a
+% mesma numeração dos capítulos da monografia).
 %
 % Compilar: pdflatex roteiro.tex  (2x, por causa da longtable)
 % =================================================================================================
@@ -36,15 +37,21 @@
 \begin{center}
   {\Large\bfseries Roteiro de fala — Defesa do TCC}\\[4pt]
   Autosim: DSL para o Ensino de Autômatos Finitos\\[2pt]
-  {\small Tempo planejado: \textbf{13:30} \quad$\cdot$\quad Limite: \textbf{15 minutos} \quad$\cdot$\quad 42 slides}
+  {\small Tempo planejado: \textbf{13:27} \quad$\cdot$\quad Limite: \textbf{15 minutos} \quad$\cdot$\quad 33 slides}
 \end{center}
 
 \vspace{4pt}
 {\small
 \textbf{Como usar:} a coluna \emph{Tempo} traz o tempo do slide e, abaixo, o tempo acumulado ao
 final dele. Use o acumulado para conferir o ritmo durante a fala. Os tempos já incluem as trocas de
-slide e as pausas, e sobra 1:30 para imprevistos. Nos slides de \emph{Roteiro} do início de cada
-seção, diga só a frase de transição e avance.
+slide e as pausas, e sobra cerca de 1:30 para imprevistos. Nos slides de \emph{Roteiro} do início
+de cada seção, diga a frase de transição, que cita o capítulo da monografia para a banca
+acompanhar, e avance.
+
+\textbf{Vídeo (slide 25):} a pasta \cad{video/} precisa estar ao lado do PDF. Teste antes no
+computador da defesa: o vídeo toca dentro do PDF no Okular e no Adobe Acrobat Reader; se não tocar,
+use o link ``abrir no reprodutor de vídeo'' do slide ou abra \cad{video/demo-autosim.mp4} à mão. O
+vídeo tem 1min44s; o tempo do slide já o inclui.
 }
 
 \vspace{6pt}
@@ -67,185 +74,166 @@ seção, diga só a frase de transição e avance.
   Autosim, uma ferramenta baseada em DSL para o ensino de autômatos finitos, orientada pelo
   professor Diógenes Furlan. \\
   2 — Roteiro & \tempo{0:12}{0:27} &
-  A apresentação segue a estrutura da monografia: introdução, fundamentação, trabalhos
-  relacionados, projeto da linguagem, implementação, resultados e conclusão. \\
+  A apresentação segue os nove capítulos da monografia, na mesma ordem e com a mesma numeração,
+  para que vocês possam acompanhar pelo texto. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{1. Introdução}{2:09}
+  \secao{1. Introdução}{1:48}
   3 — Roteiro & \tempo{0:03}{0:30} &
-  Começando pela introdução. \\
-  4 — Contexto e motivação & \tempo{0:40}{1:10} &
-  Autômatos finitos e linguagens formais são um dos pilares da Ciência da Computação, mas a
-  disciplina é conhecida por ser difícil. Morazán e Antunez apontam o porquê: na programação, o
-  aluno escreve, executa e vê o resultado na hora; em autômatos, ele projeta e prova a correção
-  no papel, sem poder experimentar nem receber retorno imediato. Isso afasta o formalismo da
-  prática. \\
-  5 — O problema & \tempo{0:32}{1:42} &
-  Existem ferramentas de apoio, e a mais conhecida é o JFLAP, mas elas são exclusivamente
-  visuais: o autômato é montado arrastando e soltando estados. Assim, a descrição não é texto,
-  o que dificulta versionar e compartilhar, não há validação formal, e o aluno que erra não
-  recebe um diagnóstico preciso. Falta unir o rigor do texto, o diagnóstico de um compilador e
-  a interatividade da simulação. \\
-  6 — A proposta: Autosim & \tempo{0:32}{2:14} &
-  Nossa proposta é a Autosim, que acopla três partes: uma DSL textual, declarativa e em
-  português, para AFDs e AFNs; um compilador pedagógico, que aponta os erros com linha e
-  coluna; e uma interface gráfica que desenha o diagrama e anima a simulação passo a passo. A
-  contribuição central é esse acoplamento: o aluno escreve o texto e a interface é gerada
-  automaticamente. \\
-  7 — Objetivos & \tempo{0:22}{2:36} &
-  O objetivo geral é integrar descrição textual, compilação pedagógica e simulação visual em um
-  único ambiente. Para isso, projetamos a DSL, implementamos o compilador, desenvolvemos o
-  simulador, construímos a interface e validamos tudo com autômatos clássicos e cenários de
-  erro. \\
+  Começando pelo Capítulo 1, a introdução. \\
+  4 — Contexto e problema & \tempo{0:45}{1:15} &
+  Autômatos finitos são um pilar da computação, mas a disciplina é conhecida por ser difícil.
+  Morazán e Antunez apontam o porquê: na programação o aluno escreve, executa e vê o resultado; em
+  autômatos, ele projeta no papel, sem experimentar nem receber retorno imediato. As ferramentas
+  mais usadas, como o JFLAP, são só visuais: não há texto para versionar e nem diagnóstico do
+  erro. Já a FSM descreve autômatos como código, mas não os desenha. A lacuna é unir as três
+  coisas: texto, diagnóstico e simulação visual. \\
+  5 — Pergunta e proposta & \tempo{0:35}{1:50} &
+  A pergunta que orienta o trabalho é: como uma DSL textual, processada por um compilador com
+  diagnósticos localizados e acoplada a uma simulação visual, pode oferecer retroalimentação
+  imediata ao estudante? Nossa resposta é a Autosim: o aluno escreve o autômato em uma DSL em
+  português, o compilador aponta os erros com linha e coluna, e a interface desenha e anima o
+  autômato automaticamente. \\
+  6 — Objetivos & \tempo{0:25}{2:15} &
+  Para isso, projetamos a DSL, implementamos o compilador, desenvolvemos o simulador, construímos
+  a interface e validamos tudo. Um ponto importante: a validação é funcional. Medir o efeito sobre
+  a aprendizagem exigiria um estudo com turmas, que fica como trabalho futuro. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{2. Autômatos Finitos e Linguagens Formais}{1:25}
-  8 — Roteiro & \tempo{0:03}{2:39} &
-  Agora, a fundamentação, começando pelos autômatos. \\
-  9 — Autômatos finitos & \tempo{0:32}{3:11} &
-  Um AFD é uma quíntupla: estados, alfabeto, função de transição, estado inicial e estados de
-  aceitação. Ele reconhece as cadeias que, partindo do estado inicial, terminam em um estado
-  final. No AFN, a transição leva a um conjunto de estados e pode haver transições vazias, as
-  transições épsilon. Os dois têm o mesmo poder: reconhecem exatamente as linguagens regulares.
-  \\
-  10 — Exemplo prático & \tempo{0:30}{3:41} &
-  No diagrama, os círculos são os estados, a seta marca o inicial, o círculo duplo é o final, e
-  as arestas são a função de transição, também mostrada na tabela. Esse autômato aceita as
-  cadeias que contêm \cad{ab}: aceita \cad{ab} e \cad{aab}, rejeita \cad{ba} e a cadeia vazia.
-  Esse exemplo volta na DSL e na simulação. \\
-  11 — Hierarquia de Chomsky & \tempo{0:20}{4:01} &
-  Na Hierarquia de Chomsky, que classifica as linguagens pela forma das regras, o tipo 3 reúne
-  as gramáticas regulares, que geram exatamente as linguagens reconhecidas pelos autômatos
-  finitos. É nesse nível que o trabalho atua. \\
+  \secao{2. Fundamentação Teórica}{1:13}
+  7 — Roteiro & \tempo{0:03}{2:18} &
+  Capítulo 2, a fundamentação teórica. \\
+  8 — Autômatos finitos & \tempo{0:40}{2:58} &
+  Um AFD é uma quíntupla: estados, alfabeto, transições, estado inicial e estados finais. No AFN,
+  uma transição pode levar a vários estados e pode haver transições vazias, as épsilon. Os dois
+  são equivalentes e reconhecem as linguagens regulares. Este autômato aceita as cadeias que
+  contêm \cad{ab}: aceita \cad{ab} e \cad{aab}, rejeita \cad{ba} e a cadeia vazia. Ele vai
+  reaparecer na DSL e na demonstração. \\
+  9 — Compiladores e DSL & \tempo{0:30}{3:28} &
+  A Autosim tem um compilador, com as três fases de análise: a léxica forma os \emph{tokens}, a
+  sintática monta a árvore sintática, e a semântica verifica o que a gramática não captura, como
+  referências a estados não declarados. Uma DSL, segundo Fowler, é uma linguagem de expressividade
+  limitada a um domínio. A FSM é interna, embutida em Racket; a Autosim é externa, com sintaxe
+  e compilador próprios. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{3. Compiladores e Linguagens de Domínio Específico}{0:55}
-  12 — Roteiro & \tempo{0:03}{4:04} &
-  Em seguida, compiladores e DSLs. \\
-  13 — Fases de análise & \tempo{0:30}{4:34} &
-  A Autosim tem um compilador, então vale lembrar as fases de análise. A léxica agrupa os
-  caracteres em \emph{tokens}. A sintática organiza os \emph{tokens} em uma árvore sintática
-  abstrata, a AST. E a semântica verifica o que a gramática não captura, como referências a
-  algo não declarado. \\
-  14 — DSL & \tempo{0:22}{4:56} &
-  Uma DSL, segundo Fowler, é uma linguagem de expressividade limitada, voltada a um domínio
-  específico. Ela pode ser interna, embutida em outra linguagem, ou externa, com sintaxe
-  própria e compilador dedicado, que é o caso da Autosim. \\
+  \secao{3. Trabalhos Relacionados}{1:03}
+  10 — Roteiro & \tempo{0:03}{3:31} &
+  Capítulo 3, os trabalhos relacionados. \\
+  11 — Panorama & \tempo{0:35}{4:06} &
+  Analisamos cinco trabalhos. Quatro são gráficos: o JFLAP, referência mundial; o GAM, limitado a
+  dez estados; o simulador da UFSC, que roda na web; e o AutomatoGraph, que gera a gramática
+  regular. O quinto, a FSM, é o mais próximo do nosso: é textual, permite testar e versionar, mas
+  a execução é só em texto, e a visualização ficou como trabalho futuro dos próprios autores. \\
+  12 — Análise comparativa & \tempo{0:25}{4:31} &
+  Lado a lado: as ferramentas gráficas visualizam, mas não têm texto nem diagnóstico; a FSM tem
+  texto, mas não visualiza. A Autosim reúne as duas coisas e acrescenta o diagnóstico de um
+  compilador. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{4. Rust como Linguagem de Implementação}{0:25}
-  15 — Roteiro & \tempo{0:03}{4:59} &
-  Sobre a linguagem de implementação: \\
-  16 — Por que Rust? & \tempo{0:22}{5:21} &
-  Escolhemos Rust pelo desempenho comparável a C e C++, com segurança de memória garantida na
-  compilação e sem coletor de lixo. O sistema de tipos ajuda a representar \emph{tokens} e nós
-  da AST, e o ecossistema já oferece bibliotecas maduras para \emph{lexing}, \emph{parsing} e
-  interface gráfica. \\
+  \secao{4. Metodologia de Construção da Solução}{0:43}
+  13 — Roteiro & \tempo{0:03}{4:34} &
+  Capítulo 4, a metodologia. \\
+  14 — Metodologia & \tempo{0:40}{5:14} &
+  É uma pesquisa aplicada, que combina pesquisa bibliográfica com o desenvolvimento de um
+  artefato. O trabalho seguiu seis etapas, de março a novembro, e a ferramenta foi construída na
+  ordem do próprio pipeline: léxico, sintático e semântico, depois simulador e interface. Na
+  revisão final, conferimos texto, especificação e código entre si, e as divergências foram
+  corrigidas na própria ferramenta, nas versões 1.0.1 a 1.0.4. A validação usou três
+  instrumentos, cada um com seu critério de aceitação. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{5. Trabalhos Relacionados}{0:58}
-  17 — Roteiro & \tempo{0:03}{5:24} &
-  Agora, o que já existe. \\
-  18 — Panorama & \tempo{0:30}{5:54} &
-  Analisamos cinco trabalhos. O JFLAP é a referência mundial, mas é só gráfico. O GAM é
-  limitado a 10 estados e 3 símbolos. O simulador da UFSC roda na web, mas a construção segue
-  gráfica. O AutomatoGraph gera a gramática regular, mas a simulação é parcialmente visual. E o
-  trabalho de Bruzzone, em Rust, não é voltado ao ensino. \\
-  19 — Análise comparativa & \tempo{0:25}{6:19} &
-  Lado a lado: nenhuma das ferramentas de ensino que analisamos tem descrição textual, versionamento ou compilador
-  com diagnóstico, e a única com versionamento não é voltada ao ensino. A Autosim reúne as
-  cinco características. É essa lacuna que o trabalho ocupa. \\
+  \secao{5. Ferramentas para Implementação}{0:38}
+  15 — Roteiro & \tempo{0:03}{5:17} &
+  Capítulo 5, as ferramentas. \\
+  16 — Por que Rust & \tempo{0:35}{5:52} &
+  Escolhemos Rust por quatro requisitos: gera um binário único, sem instalar JVM ou interpretador;
+  as enumerações com \emph{match} exaustivo garantem que cada fase trate todos os casos; há
+  bibliotecas próprias para compiladores com bons diagnósticos; e há interface multiplataforma.
+  Usamos Logos no léxico, Chumsky no sintático, Ariadne nos diagnósticos e Iced na interface. Os
+  pacotes para os três sistemas são gerados pelo GitHub Actions. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{6. Projeto da DSL}{1:18}
-  20 — Roteiro & \tempo{0:03}{6:22} &
-  Passando para o projeto da linguagem. \\
-  21 — A linguagem: um exemplo & \tempo{0:34}{6:56} &
-  Este é o mesmo autômato do exemplo anterior, escrito na Autosim. O arquivo \cad{.asl} começa
-  declarando o alfabeto. Depois vem o autômato: tipo, nome, estados, inicial, finais e
-  transições, cada uma com origem, destino e símbolo. No fim, o comando \cad{simular} testa as
-  cadeias: \cad{ab} é aceita e \cad{bbb} é rejeitada. \\
-  22 — Gramática (EBNF) & \tempo{0:17}{7:13} &
-  A linguagem foi formalizada em EBNF. Ela é livre de contexto, tem 11 palavras reservadas, e
-  nelas maiúsculas e minúsculas não fazem diferença. \\
-  23 — Decisões de projeto & \tempo{0:24}{7:37} &
-  O alfabeto é declarado uma só vez, o que simplifica a verificação. O tipo, AFD ou AFN, é
-  explícito, para checar determinismo só no AFD. A sintaxe é em português, para manter o foco
-  nos conceitos, e há suporte a transições épsilon. \\
+  \secao{6. Projeto da DSL}{1:03}
+  17 — Roteiro & \tempo{0:03}{5:55} &
+  Capítulo 6, o projeto da linguagem. \\
+  18 — A linguagem & \tempo{0:30}{6:25} &
+  Este é o mesmo autômato do exemplo, agora em texto. Cada elemento da quíntupla tem a sua
+  declaração: alfabeto, estados, inicial, finais e transições. No fim, o comando \cad{simular}
+  testa as cadeias: \cad{ab} é aceita e \cad{bbb} é rejeitada. Por ser texto puro, o arquivo pode
+  ser versionado com Git. \\
+  19 — Gramática e decisões & \tempo{0:30}{6:55} &
+  A linguagem foi formalizada em EBNF; aqui está um trecho, e a gramática completa está na Seção
+  6.2. As principais decisões: um alfabeto por arquivo; o tipo AFD ou AFN explícito, para exigir
+  determinismo só do AFD; palavras-chave em português, sem diferenciar maiúsculas; e suporte a
+  transições épsilon. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{7. Implementação}{2:36}
-  24 — Roteiro & \tempo{0:03}{7:40} &
-  Agora, a implementação. \\
-  25 — Pipeline de compilação & \tempo{0:22}{8:02} &
-  O arquivo passa pelo analisador léxico, feito com Logos, pelo sintático, com Chumsky, e pelo
-  semântico; depois, segue para o simulador e para a interface, feita com Iced. Se uma fase
-  encontrar erro, a execução para ali e os diagnósticos são exibidos com o Ariadne. \\
-  26 — Análise léxica e sintática & \tempo{0:24}{8:26} &
-  No léxico, o Logos gera um AFD a partir de anotações: usamos um autômato para ler a linguagem
-  de autômatos. Um caractere inválido é reportado com linha e coluna. No sintático, o Chumsky
-  usa \emph{parser combinators}: a gramática é escrita compondo funções, e o resultado é a AST.
-  \\
-  27 — Análise semântica & \tempo{0:28}{8:54} &
-  A semântica tem três fases: a tabela de símbolos detecta duplicatas; a verificação de
-  referências encontra estados não declarados, símbolos fora do alfabeto ou autômatos
-  inexistentes; e, só para AFD, verifica-se o determinismo: sem épsilon e com uma transição por
-  estado e símbolo. Os erros são acumulados, então o aluno vê todos de uma vez. \\
-  28 — Simulador & \tempo{0:35}{9:29} &
-  O simulador guarda todas as configurações intermediárias. Em vez de mostrar a nuvem de
-  estados simultâneos do AFN, ele mostra um caminho único: se a cadeia é aceita, o caminho que
-  aceita; se é rejeitada, o que chegou mais perto da aceitação. O caminho é escolhido por uma
-  busca em largura, e o histórico permite avançar e voltar na simulação. \\
-  29 — Interface gráfica & \tempo{0:22}{9:51} &
-  A interface desenha o diagrama a partir do texto. A simulação pode ser passo a passo ou
-  automática, destacando o estado atual, a transição usada e o que já foi lido. Dá para
-  arrastar e dar zoom, e o painel fica verde na aceitação e vermelho na rejeição. \\
-  30 — Diagnóstico de erros & \tempo{0:22}{10:13} &
-  Cada erro traz linha e coluna, o trecho do código com realce e uma seta no ponto exato, com a
-  descrição em português, como ``token inválido'' ou ``AFD não pode ter epsilon''. Isso troca o
-  tentar e errar visual por um retorno imediato e preciso. \\
+  \secao{7. Implementação}{1:28}
+  20 — Roteiro & \tempo{0:03}{6:58} &
+  Capítulo 7, a implementação. \\
+  21 — Pipeline & \tempo{0:25}{7:23} &
+  O arquivo passa pelo léxico, pelo sintático e pelo semântico, e então segue para o simulador e
+  a interface. Se qualquer fase encontra um erro, a execução para ali e o diagnóstico é exibido.
+  Um detalhe curioso: o Logos gera um AFD para ler o texto, ou seja, é um autômato lendo a
+  linguagem de autômatos. \\
+  22 — Semântica e diagnósticos & \tempo{0:30}{7:53} &
+  A análise semântica faz três verificações: duplicatas, referências a estados, símbolos ou
+  autômatos não declarados e, só no AFD, determinismo. Os erros são acumulados, então o aluno vê
+  todos de uma vez. À direita, um diagnóstico real: o arquivo, a linha e a coluna, o trecho com o
+  erro realçado e a descrição em português. \\
+  23 — Simulador & \tempo{0:30}{8:23} &
+  No AFN, acender todos os estados ativos ao mesmo tempo deixava a execução difícil de acompanhar.
+  Por isso a Autosim mostra um caminho único: o aceitador, se a cadeia é aceita, ou o que chegou
+  mais perto, se é rejeitada. O caminho é escolhido por busca em largura, então o veredito é
+  sempre o da definição formal, e o histórico permite avançar e voltar. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{8. Resultados}{2:08}
-  31 — Roteiro & \tempo{0:03}{10:16} &
-  Vamos aos resultados. \\
-  32 — Interface: visão geral & \tempo{0:17}{10:33} &
-  Esta é a interface com o autômato do exemplo. No topo, escolhemos a simulação; no centro,
-  está o diagrama gerado do arquivo; embaixo, a entrada e os botões de controle. \\
-  33 — Simulação: aceitação & \tempo{0:22}{10:55} &
-  Executando \cad{ab}: o autômato sai de $q_0$, lê \cad{a} e vai para $q_1$, lê \cad{b} e chega
-  em $q_2$, que é final. A cadeia é aceita e o painel fica verde. \\
-  34 — Simulação: rejeição & \tempo{0:17}{11:12} &
-  Já com \cad{bbb}, ele fica em $q_0$, lendo \cad{b} três vezes. A cadeia termina fora de um
-  estado final, então é rejeitada e o painel fica vermelho. \\
-  35 — AFN-$\varepsilon$ e diagramas grandes & \tempo{0:15}{11:27} &
-  A ferramenta também trata AFNs com transições épsilon, à esquerda, e autômatos maiores, como
-  este AFD de 14 estados, navegado com arrastar e zoom. \\
-  36 — Testes automatizados & \tempo{0:17}{11:44} &
-  Para validar, escrevemos 51 testes automatizados: 12 do léxico, 14 do sintático, 16 do
-  semântico e 9 do simulador. Todos passaram. \\
-  37 — Autômatos clássicos & \tempo{0:17}{12:01} &
-  Também simulamos autômatos clássicos do Hopcroft e do Sipser, com cadeias aceitas e
-  rejeitadas, incluindo a cadeia vazia. Todos os vereditos bateram com o esperado. \\
-  38 — Cenários de erro & \tempo{0:20}{12:21} &
-  E criamos arquivos com erros propositais, como um aluno faria. Em todos os casos, a mensagem
-  saiu com linha, coluna, trecho realçado e descrição em português. \\
+  \secao{8. Resultados e Discussões}{3:53}
+  24 — Roteiro & \tempo{0:03}{8:26} &
+  Capítulo 8, resultados e discussões. Começamos mostrando a ferramenta em funcionamento. \\
+  25 — Demonstração & \tempo{1:50}{10:16} &
+  \emph{(Iniciar o vídeo e narrar por cima.)} Aqui o autômato do exemplo é carregado e o diagrama é
+  gerado a partir do texto. Na simulação de uma cadeia aceita, o estado atual e a transição usada
+  são destacados a cada passo, e o painel fica verde; na rejeição, fica vermelho. Agora, um
+  arquivo com erro: a ferramenta não abre a simulação e mostra o diagnóstico com a linha e a
+  coluna. Em seguida, um AFN com transições épsilon e, por fim, um autômato maior, navegado com
+  arrastar e zoom. \\
+  26 — Testes e cenários de erro & \tempo{0:25}{10:41} &
+  A ferramenta tem 51 testes automatizados, distribuídos pelas quatro partes, todos aprovados. Nos
+  seis arquivos com erros propositais, cada erro foi detectado na fase certa e localizado; um
+  arquivo com cinco erros semânticos gerou as cinco mensagens de uma só vez. \\
+  27 — Validação diferencial & \tempo{0:35}{11:16} &
+  Para o simulador, fizemos uma validação diferencial: todas as cadeias até o comprimento 12,
+  em oito autômatos clássicos, foram simuladas pela Autosim e comparadas com a definição da
+  linguagem e com um simulador de referência independente. Foram 57.368 cadeias, sem nenhuma
+  divergência. Um AFN e o AFD equivalente aceitaram exatamente as mesmas cadeias. O limite é que
+  a verificação é exaustiva só até esse comprimento. \\
+  28 — Avaliação preliminar & \tempo{0:30}{11:46} &
+  \emph{(Completar com os resultados do formulário.)} Depois da entrega do texto, aplicamos um
+  formulário com estudantes, usando o guia rápido da ferramenta. Ele não faz parte da monografia
+  e não mede aprendizagem, mas indica como a Autosim foi recebida: \ldots \\
+  29 — Discussão & \tempo{0:30}{12:16} &
+  Voltando aos objetivos: os cinco foram atendidos, cada um com uma evidência. A interface foi
+  demonstrada, mas não passou por testes automatizados. E o limite mais importante: mostramos que
+  a retroalimentação é produzida corretamente, não que ela melhora a aprendizagem. \\
 
   % ---------------------------------------------------------------------------------------------
-  \secao{9. Conclusão}{1:09}
-  39 — Roteiro & \tempo{0:03}{12:24} &
-  Para concluir. \\
-  40 — Contribuições & \tempo{0:27}{12:51} &
-  A Autosim aproxima a descrição formal da visualização. O trabalho entrega uma DSL em
-  português, formalizada em EBNF; um compilador pedagógico com diagnósticos localizados; um
-  simulador com navegação nos dois sentidos; e uma interface que anima a simulação. Tudo
-  validado com 51 testes e simulações clássicas, todos corretos. \\
-  41 — Limitações e trabalhos futuros & \tempo{0:31}{13:22} &
-  Como limitações: um alfabeto por arquivo, um arquivo por execução, sem modo de linha de
-  comando, sem editor embutido e sem conversão de AFN para AFD. Como trabalhos futuros,
-  queremos tratar esses pontos, estender a ferramenta a autômatos com pilha e máquinas de
-  Turing e fazer estudos com estudantes para medir o impacto no ensino. \\
-  42 — Obrigado & \tempo{0:08}{13:30} &
+  \secao{9. Conclusão}{1:11}
+  30 — Roteiro & \tempo{0:03}{12:19} &
+  Capítulo 9, para concluir. \\
+  31 — Contribuições & \tempo{0:30}{12:49} &
+  Respondendo à pergunta de pesquisa no plano funcional: a Autosim oferece retroalimentação
+  imediata na construção e na execução de autômatos. O trabalho entrega a DSL em português, o
+  compilador com diagnósticos localizados, o simulador de caminho único e a interface animada,
+  validados por testes e por mais de 57 mil simulações, e distribuídos para os três sistemas
+  operacionais. \\
+  32 — Limitações e trabalhos futuros & \tempo{0:30}{13:19} &
+  Como limitações: um alfabeto por arquivo, sem modo de linha de comando, sem editor embutido e
+  sem conversão de AFN para AFD. Como trabalhos futuros, queremos tratar esses pontos, estender a
+  ferramenta a autômatos com pilha e máquinas de Turing e fazer estudos controlados com
+  estudantes. \\
+  33 — Obrigado & \tempo{0:08}{13:27} &
   Obrigado pela atenção. Ficamos à disposição para as perguntas da banca. \\
 \end{longtable}
 

@@ -80,7 +80,7 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Capítulo 5 — Ferramentas para Implementação (antigo capítulo de Rust, movido para depois de Trabalhos Relacionados; ganha quadro de bibliotecas/versões e seção de versionamento e distribuição)
 - [x] Capítulo 8 renomeado para "Resultados e Discussões"
 - [x] Quadro de organização do código-fonte na Seção 7.1 ("descrição de arquivos" pedida no checkpoint do PG II)
-- [ ] Slides e roteiro: atualizar o roteiro de 9 capítulos para a nova ordem e incluir a Metodologia
+- [x] Slides e roteiro: atualizar o roteiro de 9 capítulos para a nova ordem e incluir a Metodologia
 
 ### Prioridade 2 — reforço para a defesa
 - [x] Resultados: Seção 8.7, Validação Diferencial (57.368 cadeias, 8 autômatos, 0 divergências; código em `validacao/`)
@@ -88,5 +88,13 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Resultados: Seção 8.9, Discussão dos Resultados (objetivo por objetivo e limites da validação)
 - [x] Trabalhos Relacionados: FSM ganha a Seção 3.5 e entra nos Quadros 3 e 4; "Análise Léxica em Rust" sai do capítulo
 - [x] Ferramentas: Seção 5.4, Justificativa da Adoção de Rust (requisitos, Quadro 6 comparando com Python, Java e C++, custos), com Bruzzone (2023)
-- [ ] Slides: retirar "Análise Léxica em Rust" dos slides de trabalhos relacionados e incluir FSM e a validação diferencial
+- [x] Slides: retirar "Análise Léxica em Rust" dos slides de trabalhos relacionados e incluir FSM e a validação diferencial
 - [ ] Autosim: comentário no topo de examples/sema_error.asl lista 4 erros, mas o arquivo tem 5 (avisar o Klaus)
+
+### Apresentação (15 min)
+- [x] Slides refeitos: 33 slides, seções = 9 capítulos atuais, Roteiro no início de cada seção
+- [x] Vídeo de demonstração no slide 25 (`video/demo-autosim.mp4`, 1min44s, ao lado do PDF)
+- [x] Roteiro de fala refeito: 13:27 planejados
+- [ ] Preencher o slide 28 (avaliação preliminar) com os resultados do formulário
+- [ ] Testar o vídeo no computador da defesa (Okular/Acrobat; senão, link para o reprodutor)
+- [ ] Ensaiar cronometrando
