@@ -1,0 +1,66 @@
+name: pdf
+
+# Compila os PDFs do TCC a partir dos .tex e os publica no GitHub:
+# - a cada push no main, a Release "ultima" (pré-lançamento) é recriada com os PDFs
+#   do commit mais recente, de modo que sempre há uma versão atualizada para baixar;
+# - a cada tag de versão (ex.: v1.0), é criada uma Release fixa com os PDFs daquela tag.
+# Também pode ser disparado à mão pela aba Actions.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Dois pushes seguidos no main: só o mais recente termina
+concurrency:
+  group: pdf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # TeX Live completo; o latexmk roda o pdflatex e o bibtex quantas vezes forem
+      # necessárias para resolver sumário, referências e citações
+      - name: Compilação
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: |
+            trabalho.tex
+            apresentacao.tex
+            roteiro.tex
+            manual.tex
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: |
+            trabalho.pdf
+            apresentacao.pdf
+            roteiro.pdf
+            manual.pdf
+
+      - name: Release "ultima" (main)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ultima --cleanup-tag --yes || true
+          gh release create ultima trabalho.pdf apresentacao.pdf roteiro.pdf manual.pdf \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "Versão mais recente" \
+            --notes "PDFs compilados automaticamente a partir do commit $GITHUB_SHA do main."
+
+      - name: Release da tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" trabalho.pdf apresentacao.pdf roteiro.pdf manual.pdf \
+            --title "$GITHUB_REF_NAME" \
+            --notes "PDFs compilados automaticamente a partir da tag $GITHUB_REF_NAME."

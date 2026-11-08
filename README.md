@@ -13,9 +13,12 @@ A implementação da ferramenta está em repositório separado:
 
 ## Conteúdo
 
-* `trabalho.tex` — monografia completa (9 capítulos: Introdução, Autômatos, Compiladores/DSLs, Rust, Trabalhos Relacionados, Projeto da DSL, Implementação, Resultados, Conclusão)
-* `apresentacao.tex` — slides de defesa em Beamer (~35 min)
-* `trabalho.pdf` / `apresentacao.pdf` — PDFs compilados
+* `trabalho.tex` — monografia completa (9 capítulos: Introdução, Fundamentação Teórica, Trabalhos Relacionados, Metodologia, Ferramentas para Implementação, Projeto da DSL, Implementação, Resultados e Discussões, Conclusão)
+* `apresentacao.tex` — slides de defesa em Beamer (15 min), com slides de apoio às perguntas depois do "Obrigado"
+* `roteiro.tex` — roteiro de fala da defesa
+* `manual.tex` — guia rápido da Autosim para os participantes da pesquisa
+* `*.pdf` — PDFs compilados (também publicados automaticamente; ver abaixo)
+* `validacao/` — validação diferencial do simulador (Seção 8.7)
 * `referencias.bib` — bibliografia (Hopcroft, Sipser, Aho, Fowler, Morazán, etc.)
 * `packages/abnt-UTP.sty` — adaptação ABNT para normas UTP
 * `img/` — diagramas e screenshots da Autosim
@@ -35,6 +38,18 @@ make clean          # limpa auxiliares
 pdflatex apresentacao.tex
 pdflatex apresentacao.tex
 ```
+
+## PDFs automáticos
+
+O workflow `.github/workflows/pdf.yml` compila `trabalho`, `apresentacao`, `roteiro` e
+`manual` no GitHub Actions:
+
+* a cada push no `main`, a Release **ultima** (Versão mais recente) é recriada com os PDFs
+  do último commit;
+* a cada tag de versão (`git tag v1.0 && git push origin v1.0`), é criada uma Release fixa
+  com os PDFs daquela versão, útil para marcar a versão entregue à banca.
+
+Se algum `.tex` não compilar, a execução falha e o commit aparece com ❌ no GitHub.
 
 ## Resumo
 
