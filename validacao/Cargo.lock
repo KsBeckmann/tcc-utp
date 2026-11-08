@@ -342,8 +342,8 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "autosim"
-version = "1.0.3"
-source = "git+https://github.com/KsBeckmann/autosim?tag=v1.0.3#83617c58a78d931ebf33b1aacb04c14f58c2bc61"
+version = "1.0.4"
+source = "git+https://github.com/KsBeckmann/autosim?tag=v1.0.4#0be112116c7428dc39ac9b0ef798f3bba3d1ae13"
 dependencies = [
  "anyhow",
  "ariadne",

@@ -2095,7 +2095,7 @@ versão Git (Seção~\ref{sec:ferr-versionamento}).
         \hline
         6 & Revisão e distribuição
           & nov. 2026
-          & Versões 1.0.0 a 1.0.3, pacotes para Linux, Windows e macOS e manual de uso (Apêndices A a D) \\
+          & Versões 1.0.0 a 1.0.4, pacotes para Linux, Windows e macOS e manual de uso (Apêndices A a D) \\
         \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
@@ -2121,9 +2121,10 @@ A validação, quinta etapa, acompanhou o desenvolvimento: cada fase do compilad
 conjunto próprio de testes automatizados, ampliado à medida que novas verificações eram
 implementadas. Na sexta etapa, o texto da monografia, a especificação da linguagem e o
 código-fonte foram conferidos entre si. As divergências encontradas foram corrigidas na
-ferramenta, e não apenas no texto, dando origem às versões 1.0.1 a 1.0.3: a rejeição do
+ferramenta, e não apenas no texto, dando origem às versões 1.0.1 a 1.0.4: a rejeição do
 alfabeto vazio na análise semântica, a adoção de \textit{bytes} como unidade de localização
-nos diagnósticos e a correção de uma mensagem de erro. Nessa etapa também foi automatizada a
+nos diagnósticos, a correção de uma mensagem de erro e a de um exemplo distribuído com a
+ferramenta, que declarava como AFD um autômato não determinístico. Nessa etapa também foi automatizada a
 geração dos pacotes de distribuição (Seção~\ref{sec:ferr-versionamento}) e foi redigido o
 manual de uso que compõe os apêndices.
 
@@ -2453,7 +2454,7 @@ As demais etapas da ferramenta também se apoiam em bibliotecas do ecossistema R
 \cite{logos2021}, que gera o analisador léxico a partir de anotações no código-fonte; os
 diagnósticos de erro são formatados pela biblioteca Ariadne \cite{ariadne2021}; e a interface
 gráfica é construída com a biblioteca Iced \cite{iced2022}. O Quadro~\ref{quad:ferramentas}
-relaciona as ferramentas e bibliotecas utilizadas, com as versões empregadas na versão 1.0.3 da
+relaciona as ferramentas e bibliotecas utilizadas, com as versões empregadas na versão 1.0.4 da
 Autosim, registradas no arquivo de manifesto \texttt{Cargo.toml}.
 
 \begin{quadro}[h]
@@ -3560,7 +3561,7 @@ Na validação diferencial, o mesmo problema é resolvido por implementações i
 os resultados são comparados: qualquer discordância indica um erro em pelo menos uma delas.
 Para cada autômato do Quadro~\ref{quad:diferencial}, todas as cadeias sobre o alfabeto do
 autômato, da cadeia vazia até o comprimento máximo indicado, foram simuladas pela Autosim
-1.0.3, e o veredito de cada simulação foi comparado com duas referências:
+1.0.4, e o veredito de cada simulação foi comparado com duas referências:
 
 \begin{alineas}
     \item a definição da linguagem, escrita diretamente como uma condição sobre a cadeia,
@@ -3617,7 +3618,7 @@ exercitam a escolha do caminho em AFNs, como as cadeias em que o autômato preci
 início do sufixo, e as transições $\varepsilon$ que escolhem entre os dois ciclos do último
 autômato. O AFN e o AFD da mesma linguagem aceitaram exatamente as mesmas 4.092 cadeias, o que
 ilustra empiricamente a equivalência discutida na Seção~\ref{cap:automatos}. A execução
-completa levou cerca de um segundo em um computador pessoal, incluindo as duas referências.
+completa levou menos de um segundo em um computador pessoal, incluindo as duas referências.
 
 Para garantir que a comparação é capaz de detectar erros, uma das definições foi
 propositalmente alterada; as divergências passaram a ser apontadas imediatamente, com a
@@ -3645,7 +3646,7 @@ Quadro~\ref{quad:cenarios-erro} apresenta os cenários testados e os resultados 
     \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
     \begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}p{3.3cm}|Z|}
         \hline
-        \textbf{Arquivo de teste} & \textbf{Tipo de erro} & \textbf{Diagnóstico gerado (versão 1.0.3)} \\
+        \textbf{Arquivo de teste} & \textbf{Tipo de erro} & \textbf{Diagnóstico gerado (versão 1.0.4)} \\
         \hline
         \texttt{sema\_error.asl} & 5 erros semânticos & 5 mensagens localizadas, uma por erro: estado inicial, estado final e estado de destino não declarados, símbolo fora do alfabeto e simulação de autômato inexistente \\
         \hline
@@ -3849,9 +3850,9 @@ linguagem Rust. O código-fonte e os pacotes estão disponíveis no repositório
 operacional:
 
 \begin{alineas}
-    \item \texttt{autosim-v1.0.3-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
-    \item \texttt{autosim-v1.0.3-windows-x86\_64.zip}, para Windows em processadores x86-64;
-    \item \texttt{autosim-v1.0.3-macos-aarch64.tar.gz}, para macOS em processadores Apple
+    \item \texttt{autosim-v1.0.4-linux-x86\_64.tar.gz}, para Linux em processadores x86-64;
+    \item \texttt{autosim-v1.0.4-windows-x86\_64.zip}, para Windows em processadores x86-64;
+    \item \texttt{autosim-v1.0.4-macos-aarch64.tar.gz}, para macOS em processadores Apple
     Silicon.
 \end{alineas}
 
@@ -3861,8 +3862,8 @@ Apêndices B a D. Basta extrair o pacote em uma pasta qualquer; não há etapa d
 instalação. No Linux, a extração pode ser feita pelo terminal:
 
 \begin{lstlisting}[language={}, numbers=none, frame=single, literate={-}{-}1]
-tar xzf autosim-v1.0.3-linux-x86_64.tar.gz
-cd autosim-v1.0.3-linux-x86_64
+tar xzf autosim-v1.0.4-linux-x86_64.tar.gz
+cd autosim-v1.0.4-linux-x86_64
 \end{lstlisting}
 
 No macOS, como o executável não é assinado digitalmente, o sistema pode bloquear sua
@@ -3884,7 +3885,7 @@ pré-compilado, como o macOS em processadores Intel.
 
 Em todos os casos, a interface gráfica requer um ambiente de janelas (X11 ou Wayland, no
 Linux). A instalação pode ser conferida com \texttt{autosim -{}-version}, que deve exibir
-\texttt{autosim 1.0.3}.
+\texttt{autosim 1.0.4}.
 
 \apendice{Execução e Uso da Interface Gráfica}
 
