@@ -92,9 +92,9 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [ ] Autosim: comentário no topo de examples/sema_error.asl lista 4 erros, mas o arquivo tem 5 (avisar o Klaus)
 
 ### Apresentação (15 min)
-- [x] Slides refeitos: 35 slides, seções = 9 capítulos atuais, Roteiro no início de cada seção
+- [x] Slides refeitos: 36 slides, seções = 9 capítulos atuais, Roteiro no início de cada seção
 - [x] Slide de vídeo retirado; `video/demo-autosim.mp4` (1min44s) fica no repositório como reserva, para abrir à mão se necessário
-- [x] Roteiro de fala refeito: 12:07 planejados
-- [ ] Preencher o slide 30 (avaliação preliminar) com os resultados do formulário
-- [ ] Testar se o vídeo de reserva abre no computador da defesa
+- [x] Roteiro de fala refeito: 13:37 planejados
+- [ ] Preencher o slide 31 (avaliação preliminar) com os resultados do formulário
+- [ ] Testar no computador da defesa a demonstração ao vivo (slide 28, Alt+Tab para a Autosim) e o vídeo de reserva
 - [ ] Ensaiar cronometrando

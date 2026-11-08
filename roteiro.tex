@@ -1,6 +1,6 @@
 % =================================================================================================
-% roteiro.tex — Roteiro de fala da defesa (12:07 planejados, limite de 15 min)
-% Acompanha apresentacao.tex (35 slides, com roteiro no início de cada seção; as 9 seções têm a
+% roteiro.tex — Roteiro de fala da defesa (13:37 planejados, limite de 15 min)
+% Acompanha apresentacao.tex (36 slides, com roteiro no início de cada seção; as 9 seções têm a
 % mesma numeração dos capítulos da monografia).
 %
 % Compilar: pdflatex roteiro.tex  (2x, por causa da longtable)
@@ -37,20 +37,21 @@
 \begin{center}
   {\Large\bfseries Roteiro de fala — Defesa do TCC}\\[4pt]
   Autosim: DSL para o Ensino de Autômatos Finitos\\[2pt]
-  {\small Tempo planejado: \textbf{12:07} \quad$\cdot$\quad Limite: \textbf{15 minutos} \quad$\cdot$\quad 35 slides}
+  {\small Tempo planejado: \textbf{13:37} \quad$\cdot$\quad Limite: \textbf{15 minutos} \quad$\cdot$\quad 36 slides}
 \end{center}
 
 \vspace{4pt}
 {\small
 \textbf{Como usar:} a coluna \emph{Tempo} traz o tempo do slide e, abaixo, o tempo acumulado ao
 final dele. Use o acumulado para conferir o ritmo durante a fala. Os tempos já incluem as trocas de
-slide e as pausas, e sobram cerca de 2:50 para imprevistos. Nos slides de \emph{Roteiro} do início
+slide e as pausas, e sobram cerca de 1:20 para imprevistos. Nos slides de \emph{Roteiro} do início
 de cada seção, diga a frase de transição, que cita o capítulo da monografia para a banca
 acompanhar, e avance.
 
-\textbf{Vídeo de reserva:} não há slide de demonstração. Se a banca pedir para ver a ferramenta
-funcionando, abra \cad{video/demo-autosim.mp4} (1min44s) no reprodutor de vídeo; o tempo dele não
-está incluído no planejado.
+\textbf{Demonstração (slide 28):} antes da defesa, deixe a Autosim aberta em uma janela com
+\cad{examples/example1.asl} e um terminal na pasta da ferramenta. No slide 28, alterne para a
+Autosim (Alt+Tab), mostre e volte para os slides. Se a demonstração ao vivo falhar, abra
+\cad{video/demo-autosim.mp4} (1min44s) no reprodutor de vídeo.
 }
 
 \vspace{6pt}
@@ -196,44 +197,49 @@ está incluído no planejado.
   \emph{(Mostrar e avançar.)} Um AFN com transição épsilon e um autômato grande, com arrastar e
   zoom. Se a banca quiser detalhes, voltamos a estes slides nas perguntas. \\
   % ---------------------------------------------------------------------------------------------
-  \secao{8. Resultados e Discussões}{2:03}
+  \secao{8. Resultados e Discussões}{3:33}
   27 — Roteiro & \tempo{0:03}{8:56} &
-  Capítulo 8, resultados e discussões. Começamos pelos testes. \\
-  28 — Testes e cenários de erro & \tempo{0:25}{9:21} &
+  Capítulo 8, resultados e discussões. Começamos mostrando a ferramenta funcionando. \\
+  28 — Demonstração da aplicação & \tempo{1:30}{10:26} &
+  \emph{(Alt+Tab para a Autosim.)} Com o \cad{example1.asl} aberto: simular uma cadeia aceita
+  passo a passo e uma rejeitada; rodar um arquivo com erro, como
+  \cad{sema\_nondeterministic.asl}, e mostrar o diagnóstico no terminal; se der tempo, abrir
+  \cad{afn\_epsilon.asl}. \emph{(Alt+Tab de volta e avançar.)} \\
+  29 — Testes e cenários de erro & \tempo{0:25}{10:51} &
   A ferramenta tem 51 testes automatizados, distribuídos pelas quatro partes, todos aprovados. Nos
   seis arquivos com erros propositais, cada erro foi detectado na fase certa e localizado; um
   arquivo com cinco erros semânticos gerou as cinco mensagens de uma só vez. \\
-  29 — Validação diferencial & \tempo{0:35}{9:56} &
+  30 — Validação diferencial & \tempo{0:35}{11:26} &
   Para o simulador, fizemos uma validação diferencial: todas as cadeias até o comprimento 12,
   em oito autômatos clássicos, foram simuladas pela Autosim e comparadas com a definição da
   linguagem e com um simulador de referência independente. Foram 57.368 cadeias, sem nenhuma
   divergência. Um AFN e o AFD equivalente aceitaram exatamente as mesmas cadeias. O limite é que
   a verificação é exaustiva só até esse comprimento. \\
-  30 — Avaliação preliminar & \tempo{0:30}{10:26} &
+  31 — Avaliação preliminar & \tempo{0:30}{11:56} &
   \emph{(Completar com os resultados do formulário.)} Depois da entrega do texto, aplicamos um
   formulário com estudantes, usando o guia rápido da ferramenta. Ele não faz parte da monografia
   e não mede aprendizagem, mas indica como a Autosim foi recebida: \ldots \\
-  31 — Discussão & \tempo{0:30}{10:56} &
+  32 — Discussão & \tempo{0:30}{12:26} &
   Voltando aos objetivos: os cinco foram atendidos, cada um com uma evidência. A interface foi
   demonstrada, mas não passou por testes automatizados. E o limite mais importante: mostramos que
   a retroalimentação é produzida corretamente, não que ela melhora a aprendizagem. \\
 
   % ---------------------------------------------------------------------------------------------
   \secao{9. Conclusão}{1:11}
-  32 — Roteiro & \tempo{0:03}{10:59} &
+  33 — Roteiro & \tempo{0:03}{12:29} &
   Capítulo 9, para concluir. \\
-  33 — Contribuições & \tempo{0:30}{11:29} &
+  34 — Contribuições & \tempo{0:30}{12:59} &
   Respondendo à pergunta de pesquisa no plano funcional: a Autosim oferece retroalimentação
   imediata na construção e na execução de autômatos. O trabalho entrega a DSL em português, o
   compilador com diagnósticos localizados, o simulador de caminho único e a interface animada,
   validados por testes e por mais de 57 mil simulações, e distribuídos para os três sistemas
   operacionais. \\
-  34 — Limitações e trabalhos futuros & \tempo{0:30}{11:59} &
+  35 — Limitações e trabalhos futuros & \tempo{0:30}{13:29} &
   Como limitações: um alfabeto por arquivo, sem modo de linha de comando, sem editor embutido e
   sem conversão de AFN para AFD. Como trabalhos futuros, queremos tratar esses pontos, estender a
   ferramenta a autômatos com pilha e máquinas de Turing e fazer estudos controlados com
   estudantes. \\
-  35 — Obrigado & \tempo{0:08}{12:07} &
+  36 — Obrigado & \tempo{0:08}{13:37} &
   Obrigado pela atenção. Ficamos à disposição para as perguntas da banca. \\
 \end{longtable}
 
