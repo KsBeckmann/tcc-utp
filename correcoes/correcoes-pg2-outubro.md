@@ -98,3 +98,5 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [ ] Preencher o slide 31 (avaliação preliminar) com os resultados do formulário
 - [ ] Testar no computador da defesa a demonstração ao vivo (slide 28, Alt+Tab para a Autosim) e o vídeo de reserva
 - [ ] Ensaiar cronometrando
+- [x] Perguntas prováveis da banca: índice + 17 respostas depois do "Obrigado" (antes do índice "Outros")
+- [ ] Autosim: conferir a cadeia do `simular` contra o alfabeto (hoje um símbolo fora de Σ só rejeita, sem mensagem; ver P8)

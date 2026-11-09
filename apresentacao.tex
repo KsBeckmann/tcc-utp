@@ -55,6 +55,17 @@
 % Item do índice de reserva: link para o slide, com a seção da monografia ao lado
 \newcommand{\itemreserva}[3]{\item \hyperlink{#1}{\textcolor{acento}{#2}} {\scriptsize\color{gray}(#3)}}
 
+% Perguntas prováveis da banca (depois do "Obrigado"): botão para voltar ao índice de perguntas
+\newcommand{\voltarperguntas}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south east,inner sep=0pt] at ([xshift=-6pt,yshift=13pt]current page.south east)
+      {\hyperlink{perguntas}{\beamerreturnbutton{Perguntas}}};
+  \end{tikzpicture}}
+% Item do índice de perguntas: número e link para o slide de resposta
+\newcommand{\itempergunta}[3]{\item[\textbf{#1}] \hyperlink{#2}{\textcolor{acento}{#3}}}
+% Corpo do slide de resposta: o que dizer primeiro e os detalhes, se a banca insistir
+\newcommand{\respostacurta}[1]{\begin{block}{Resposta curta}\small #1\end{block}\vspace{2pt}}
+
 % Slide de abertura de cada seção com o roteiro destacado: a banca acompanha a apresentação
 % junto com o texto da monografia, cujos capítulos têm a mesma numeração
 \AtBeginSection[]{%
@@ -706,6 +717,316 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 % =================================================================================================
 \appendix
 
+% =================================================================================================
+% PERGUNTAS PROVÁVEIS DA BANCA: índice com link para cada resposta. Cada slide tem a resposta
+% curta (o que dizer primeiro), os detalhes (se a banca insistir) e onde o assunto está no texto.
+% =================================================================================================
+\begin{frame}[label=perguntas]{Perguntas prováveis da banca}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \textbf{Proposta e contribuição}
+      \begin{itemize}\setlength{\itemsep}{0pt}
+        \itempergunta{P1}{q-aprendizagem}{Como sabem que a ferramenta ajuda o aluno?}
+        \itempergunta{P2}{q-contribuicao}{Qual é a contribuição original?}
+        \itempergunta{P3}{q-jflap}{O que a Autosim faz que o JFLAP não faz?}
+        \itempergunta{P4}{q-fsm}{Por que DSL externa, e não biblioteca como a FSM?}
+      \end{itemize}
+      \textbf{Linguagem e teoria}
+      \begin{itemize}\setlength{\itemsep}{0pt}
+        \itempergunta{P5}{q-ll1}{A gramática é LL(1)?}
+        \itempergunta{P6}{q-parcial}{O AFD exige função de transição total?}
+        \itempergunta{P7}{q-afnafd}{E se um AFD for declarado como AFN?}
+        \itempergunta{P8}{q-foraalfabeto}{E se a cadeia tiver símbolo fora do alfabeto?}
+        \itempergunta{P9}{q-alfabeto}{Por que um alfabeto único por arquivo?}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \begin{itemize}\setlength{\itemsep}{0pt}
+        \itempergunta{P10}{q-portugues}{Por que a sintaxe em português?}
+      \end{itemize}
+      \textbf{Implementação}
+      \begin{itemize}\setlength{\itemsep}{0pt}
+        \itempergunta{P11}{q-rust}{Por que Rust, e não Python ou Java?}
+        \itempergunta{P12}{q-caminho}{Por que um caminho, e não o conjunto de estados?}
+        \itempergunta{P13}{q-escala}{Funciona com autômatos grandes?}
+      \end{itemize}
+      \textbf{Validação, escopo e trabalho}
+      \begin{itemize}\setlength{\itemsep}{0pt}
+        \itempergunta{P14}{q-correcao}{Como garantem que o simulador está correto?}
+        \itempergunta{P15}{q-conversao}{Por que não há conversão AFN$\to$AFD?}
+        \itempergunta{P16}{q-instalacao}{Como o estudante instala e usa?}
+        \itempergunta{P17}{q-dupla}{Como o trabalho foi dividido na dupla?}
+      \end{itemize}
+      \vspace{4pt}
+      \hyperlink{reserva}{\beamergotobutton{Outros slides de apoio}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ----- Proposta e contribuição -------------------------------------------------------------------
+\begin{frame}[label=q-aprendizagem]{P1. Como sabem que a ferramenta ajuda o aluno?\notexto{Seções 4.4 e 8.9}}
+  \respostacurta{Não afirmamos isso. A validação é \textbf{funcional}: mostra que a retroalimentação
+  é \textbf{produzida corretamente}. O efeito sobre a aprendizagem é uma \textbf{hipótese}, a ser
+  verificada em estudo com turmas.}
+  \begin{itemize}\small
+    \item O recorte está declarado desde os objetivos (Cap. 1) e nas limitações (Seção 8.9).
+    \item Um estudo controlado exigiria turmas comparáveis, pré e pós-teste e um semestre letivo:
+          fora do prazo de um TCC.
+    \item O formulário aplicado com estudantes é uma \textbf{percepção preliminar}, fora da
+          monografia: indica aceitação, não aprendizagem.
+    \item A motivação vem da literatura: falta de retroalimentação imediata (Morazán e Antunez, 2014).
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-contribuicao]{P2. Qual é a contribuição original?\notexto{Seções 3.6 e 4.1}}
+  \respostacurta{Compiladores e simuladores existem; a contribuição é o \textbf{acoplamento}: o
+  estudante escreve texto, um compilador aponta os erros no vocabulário dos autômatos, e o diagrama
+  é gerado e animado a partir desse texto.}
+  \begin{itemize}\small
+    \item Entre as ferramentas analisadas, as gráficas não têm texto nem diagnóstico, e a textual
+          (FSM) não visualiza.
+    \item Wazlawick (2014): um novo artefato deve mostrar \textbf{em que difere} das soluções
+          existentes (análise comparativa) e \textbf{verificar que funciona} (Cap. 8).
+    \item Contribuições técnicas: a DSL em português com EBNF, o simulador de caminho único e a
+          validação diferencial reprodutível.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-jflap]{P3. O que a Autosim faz que o JFLAP não faz?\notexto{Seções 3.2 e 3.6}}
+  \respostacurta{A Autosim descreve o autômato em \textbf{texto}, versionável, e o valida com um
+  \textbf{compilador} que localiza os erros. O JFLAP é muito mais abrangente; as duas são
+  \textbf{complementares}.}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Autosim}
+        \footnotesize
+        \begin{itemize}
+          \item Arquivo de texto: Git, \textit{diff}, reaproveitamento.
+          \item Erros com linha, coluna e descrição.
+          \item Determinismo verificado quando o aluno declara AFD.
+          \item Binário nativo, sem instalar Java.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{JFLAP}
+        \footnotesize
+        \begin{itemize}
+          \item Toda a hierarquia de Chomsky (pilha, Turing, gramáticas).
+          \item Conversão AFN$\to$AFD, minimização, expressões regulares.
+          \item Décadas de uso e maturidade.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-fsm]{P4. Por que DSL externa, e não biblioteca (FSM)?\notexto{Seções 2.2.6 e 3.5}}
+  \respostacurta{Uma DSL externa tem \textbf{só a sintaxe do domínio}: o estudante não precisa
+  aprender a linguagem hospedeira, e o compilador fala em estados, transições e alfabeto.}
+  \begin{itemize}\small
+    \item Na FSM, o autômato é escrito na sintaxe de Racket; na Autosim, só com as construções
+          do próprio domínio.
+    \item A gramática restrita permite \textbf{verificações específicas}: estado não declarado,
+          símbolo fora do alfabeto, determinismo do AFD.
+    \item Custo: é preciso manter um compilador próprio, e a linguagem é menos expressiva
+          (a FSM permite programar com os autômatos, compor, gerar testes aleatórios).
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+% ----- Linguagem e teoria ------------------------------------------------------------------------
+\begin{frame}[fragile,label=q-ll1]{P5. A gramática é LL(1)?\notexto{Seções 6.2 e 7.3}}
+  \respostacurta{A \textbf{linguagem} é LL(1). A EBNF, \textbf{como está escrita}, não é: na lista
+  com vírgula final opcional, ao ver ``\texttt{,}'' é preciso olhar o próximo \textit{token}
+  (outro item ou ``\texttt{\}}'') para decidir.}
+  \begin{itemize}\small
+    \item Fatorando à esquerda, a decisão passa a usar um único \textit{token}:
+  \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,literate={->}{->}2]
+lista ::= "{" [ item resto ] "}"
+resto ::= [ "," [ item resto ] ]
+\end{lstlisting}
+  \begin{itemize}\small
+    \item O Chumsky não exige gramática LL(1): os combinadores tentam as alternativas em ordem.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-parcial]{P6. O AFD da Autosim exige função de transição total?\notexto{Seções 2.1.3 e 7.5}}
+  \respostacurta{Não. Transições ausentes são permitidas: quando falta a transição, a simulação
+  para e \textbf{rejeita}. Equivale a um \textbf{estado de rejeição implícito}, e a linguagem
+  reconhecida não muda.}
+  \begin{itemize}\small
+    \item O estado implícito é não final e tem laço para todos os símbolos; acrescentá-lo
+          torna $\delta$ total sem alterar a linguagem.
+    \item É a convenção usual nos diagramas dos livros, e poupa o aluno de desenhar o estado de
+          ``lixo''.
+    \item O que a Autosim exige do AFD é o que \textbf{contradiz} o determinismo: transição
+          $\varepsilon$ ou duas saídas para o mesmo (estado, símbolo).
+    \item Coberto pelo teste ``rejeição por falta de transição'' (Seção 8.5).
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-afnafd]{P7. E se um autômato determinístico for declarado como AFN?\notexto{Seção 6.4.2}}
+  \respostacurta{É aceito: \textbf{todo AFD é um AFN} em que cada transição leva a um único
+  estado. A classificação explícita serve para exigir determinismo quando o aluno
+  \textbf{afirma} que o autômato é um AFD.}
+  \begin{itemize}\small
+    \item Declarar AFD é uma afirmação que o compilador verifica: se houver $\varepsilon$ ou duas
+          saídas com o mesmo símbolo, o erro aponta as duas transições.
+    \item Assim o erro conceitual ``achei que era determinístico'' vira um diagnóstico localizado.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-foraalfabeto]{P8. E se a cadeia simulada tiver um símbolo fora do alfabeto?\notexto{Seção 7.4}}
+  \respostacurta{Hoje a cadeia do \texttt{simular} \textbf{não é conferida} contra o alfabeto:
+  o símbolo não tem transição, e a cadeia é \textbf{rejeitada}, sem mensagem específica.}
+  \begin{itemize}\small
+    \item O veredito está correto: uma cadeia com símbolo fora de $\Sigma$ não pertence a $L(M)
+          \subseteq \Sigma^*$.
+    \item Mas o diagnóstico seria mais útil: a verificação natural é ``símbolo `z' fora do
+          alfabeto'' na análise semântica, como já ocorre nas \textbf{transições}.
+    \item Reconhecemos como uma \textbf{melhoria} a fazer.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-alfabeto]{P9. Por que um alfabeto único por arquivo?\notexto{Seção 6.4.1}}
+  \respostacurta{Para reforçar o conceito de $\Sigma$ como conjunto declarado antes dos autômatos e
+  ter \textbf{um único conjunto de referência} na verificação semântica.}
+  \begin{itemize}\small
+    \item Todo símbolo usado em transição é conferido contra esse conjunto.
+    \item É uma \textbf{limitação reconhecida}: autômatos com alfabetos distintos exigem arquivos
+          separados.
+    \item Trabalho futuro: alfabeto por autômato.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-portugues]{P10. Por que a sintaxe em português?\notexto{Seções 6.3 e 6.4.3}}
+  \respostacurta{Para reduzir a barreira linguística e manter o foco nos conceitos: as
+  palavras-chave são os próprios termos usados em aula (\texttt{estados}, \texttt{inicial},
+  \texttt{finais}, \texttt{transicoes}).}
+  \begin{itemize}\small
+    \item As mensagens de erro também são em português e usam o vocabulário do domínio.
+    \item Palavras-chave sem acento e sem diferenciar maiúsculas: \texttt{AFD}, \texttt{afd} e
+          \texttt{Afd} são iguais.
+    \item Contraponto: as linguagens de programação usam inglês; como a DSL é restrita ao ensino
+          de autômatos, priorizamos a proximidade com a aula.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+% ----- Implementação -----------------------------------------------------------------------------
+\begin{frame}[label=q-rust]{P11. Por que Rust, e não Python ou Java?\notexto{Seção 5.4}}
+  \respostacurta{Por quatro requisitos: \textbf{binário nativo} sem ambiente de execução,
+  \textbf{enumerações com \texttt{match} exaustivo} para AST e erros, \textbf{bibliotecas de
+  diagnóstico} (Chumsky, Ariadne) e \textbf{interface multiplataforma} (Iced).}
+  \begin{itemize}\small
+    \item Python e Java exigiriam interpretador ou JVM, ou empacotar o ambiente junto.
+    \item C++ gera binário nativo, mas sem gerência de memória segura nem gerenciador de pacotes
+          padrão.
+    \item Custos aceitos: curva de aprendizado do \textit{ownership}, compilação mais lenta e
+          Iced ainda antes da versão 1.0.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-caminho]{P12. Por que mostrar um caminho, e não o conjunto de estados?\notexto{Seção 7.5}}
+  \respostacurta{Com vários estados acesos ao mesmo tempo, a execução ficava \textbf{difícil de
+  acompanhar}. Um caminho único é legível, e a escolha garante que ele seja \textbf{aceitador}
+  sempre que a cadeia pertence à linguagem.}
+  \begin{itemize}\small
+    \item Busca em largura sobre (estado, símbolos consumidos): vence quem consumiu mais e está
+          mais perto de um estado final.
+    \item O veredito é sempre o da definição formal: a busca explora todas as configurações.
+    \item \textbf{Ciclos de $\varepsilon$} não travam: cada par é visitado uma vez.
+    \item Detalhes: \hyperlink{res-caminho}{\textcolor{acento}{como o caminho é escolhido}}.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-escala]{P13. A ferramenta funciona com autômatos grandes?\notexto{Seções 7.5, 7.6 e 8.7}}
+  \respostacurta{A \textbf{simulação}, sim: a busca visita no máximo $|Q|\cdot(n+1)$ pares, um
+  custo polinomial. O limite está no \textbf{desenho}: o arranjo circular perde legibilidade com
+  muitos estados.}
+  \begin{itemize}\small
+    \item Na validação, 8.191 cadeias de um AFN foram simuladas em frações de segundo.
+    \item O diagrama foi testado com um AFD de 14 estados: o raio cresce com o número de estados,
+          e há \textit{pan} e \textit{zoom}.
+    \item Para autômatos de dezenas de estados, um algoritmo de desenho de grafos reduziria
+          cruzamentos de arestas: possível melhoria.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+% ----- Validação, escopo e trabalho --------------------------------------------------------------
+\begin{frame}[label=q-correcao]{P14. Como garantem que o simulador está correto?\notexto{Seções 8.5 a 8.7}}
+  \respostacurta{Por \textbf{validação diferencial}: 57.368 cadeias, todas as possíveis até o
+  comprimento 12 em 8 autômatos clássicos, comparadas com a definição da linguagem e com um
+  simulador de referência independente. \textbf{Zero divergências.}}
+  \begin{itemize}\small
+    \item Além disso, 9 testes do simulador verificam a \textbf{forma} do caminho (contíguo, parte
+          do inicial, usa transições existentes).
+    \item O verificador foi testado: com uma definição alterada de propósito, as divergências
+          apareceram na hora.
+    \item Limite: exaustiva só até o comprimento testado; o código está em \texttt{validacao/}.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-conversao]{P15. Por que não há conversão AFN$\to$AFD?\notexto{Cap. 1 e Cap. 9}}
+  \respostacurta{Por \textbf{escopo}: já na proposta do PG I, conversões e minimização ficaram de
+  fora. A prioridade foi entregar o ciclo completo: texto, compilador com diagnósticos,
+  simulação e visualização.}
+  \begin{itemize}\small
+    \item As conversões estão nos \textbf{trabalhos futuros} (Cap. 9), junto com expressões
+          regulares, autômatos com pilha e máquinas de Turing.
+    \item A arquitetura facilita: a conversão operaria sobre a AST já validada, e o resultado
+          poderia ser desenhado pela mesma interface.
+    \item A equivalência AFN/AFD aparece na validação: um AFN e o AFD obtido por subconjuntos
+          aceitaram as mesmas 4.092 cadeias.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-instalacao]{P16. Como o estudante instala e usa a ferramenta?\notexto{Apêndices A a D}}
+  \respostacurta{Baixa o pacote pronto da versão 1.0.4 para \textbf{Linux, Windows ou macOS},
+  extrai e executa: \textbf{não precisa instalar o Rust}. Os Apêndices A a D são o manual.}
+  \begin{itemize}\small
+    \item Pacotes gerados pelo GitHub Actions, que roda os testes antes de publicar.
+    \item Uso: \texttt{autosim -{}-path arquivo.asl} abre a interface com o diagrama e as
+          simulações do arquivo.
+    \item Quem tem Rust pode instalar com \texttt{cargo install -{}-git} a partir do repositório.
+    \item O manual cobre instalação, interface, escrita na DSL e interpretação dos diagnósticos.
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+\begin{frame}[label=q-dupla]{P17. Como o trabalho foi dividido na dupla?\notexto{Seção 4.3}}
+  \respostacurta{A \textbf{implementação} concentrou-se no Klaus, e a \textbf{monografia} foi
+  dividida entre os dois. As decisões de projeto foram discutidas nas reuniões semanais com o
+  orientador.}
+  \begin{itemize}\small
+    \item Ferramenta e monografia em repositórios Git separados: cada um acompanhava as mudanças
+          do outro, e o texto era conferido contra o código.
+    \item Na revisão final, divergências entre texto e código foram corrigidas na ferramenta
+          (versões 1.0.1 a 1.0.4).
+  \end{itemize}
+  \voltarperguntas
+\end{frame}
+
+% =================================================================================================
+% SLIDES DE APOIO POR ASSUNTO (índice "Outros")
+% =================================================================================================
 \begin{frame}[label=reserva]{Outros}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
@@ -738,6 +1059,8 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
         \itemreserva{res-classicos}{Simulações com autômatos clássicos}{8.6}
         \itemreserva{res-dificuldades}{Dificuldades encontradas}{Cap. 9}
       \end{itemize}
+      \vspace{4pt}
+      \hyperlink{perguntas}{\beamergotobutton{Perguntas prováveis da banca}}
     \end{column}
   \end{columns}
 \end{frame}
