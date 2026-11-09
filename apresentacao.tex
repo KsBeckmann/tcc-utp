@@ -727,37 +727,37 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
       \footnotesize
       \textbf{Proposta e contribuição}
       \begin{itemize}\setlength{\itemsep}{0pt}
-        \itempergunta{P1}{q-aprendizagem}{Como sabem que a ferramenta ajuda o aluno?}
-        \itempergunta{P2}{q-contribuicao}{Qual é a contribuição original?}
+        \itempergunta{P1}{q-aprendizagem}{Como vocês sabem que a ferramenta ajuda o aluno?}
+        \itempergunta{P2}{q-contribuicao}{Qual é a contribuição original do trabalho?}
         \itempergunta{P3}{q-jflap}{O que a Autosim faz que o JFLAP não faz?}
-        \itempergunta{P4}{q-fsm}{Por que DSL externa, e não biblioteca como a FSM?}
+        \itempergunta{P4}{q-fsm}{Por que uma DSL externa, e não uma biblioteca?}
       \end{itemize}
       \textbf{Linguagem e teoria}
       \begin{itemize}\setlength{\itemsep}{0pt}
-        \itempergunta{P5}{q-ll1}{A gramática é LL(1)?}
-        \itempergunta{P6}{q-parcial}{O AFD exige função de transição total?}
+        \itempergunta{P5}{q-ll1}{A gramática da linguagem é LL(1)?}
+        \itempergunta{P6}{q-parcial}{O AFD precisa ter todas as transições?}
         \itempergunta{P7}{q-afnafd}{E se um AFD for declarado como AFN?}
-        \itempergunta{P8}{q-foraalfabeto}{E se a cadeia tiver símbolo fora do alfabeto?}
-        \itempergunta{P9}{q-alfabeto}{Por que um alfabeto único por arquivo?}
+        \itempergunta{P8}{q-foraalfabeto}{E se a cadeia tiver um símbolo fora do alfabeto?}
+        \itempergunta{P9}{q-alfabeto}{Por que um único alfabeto por arquivo?}
       \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
       \footnotesize
       \begin{itemize}\setlength{\itemsep}{0pt}
-        \itempergunta{P10}{q-portugues}{Por que a sintaxe em português?}
+        \itempergunta{P10}{q-portugues}{Por que a linguagem é em português?}
       \end{itemize}
       \textbf{Implementação}
       \begin{itemize}\setlength{\itemsep}{0pt}
-        \itempergunta{P11}{q-rust}{Por que Rust, e não Python ou Java?}
-        \itempergunta{P12}{q-caminho}{Por que um caminho, e não o conjunto de estados?}
-        \itempergunta{P13}{q-escala}{Funciona com autômatos grandes?}
+        \itempergunta{P11}{q-rust}{Por que usaram Rust?}
+        \itempergunta{P12}{q-caminho}{Por que mostrar um caminho, e não todos os estados?}
+        \itempergunta{P13}{q-escala}{A ferramenta funciona com autômatos grandes?}
       \end{itemize}
       \textbf{Validação, escopo e trabalho}
       \begin{itemize}\setlength{\itemsep}{0pt}
         \itempergunta{P14}{q-correcao}{Como garantem que o simulador está correto?}
-        \itempergunta{P15}{q-conversao}{Por que não há conversão AFN$\to$AFD?}
-        \itempergunta{P16}{q-instalacao}{Como o estudante instala e usa?}
-        \itempergunta{P17}{q-dupla}{Como o trabalho foi dividido na dupla?}
+        \itempergunta{P15}{q-conversao}{Por que não fizeram a conversão de AFN para AFD?}
+        \itempergunta{P16}{q-instalacao}{Como o estudante instala e usa a ferramenta?}
+        \itempergunta{P17}{q-dupla}{Como vocês dividiram o trabalho?}
       \end{itemize}
       \vspace{4pt}
       \hyperlink{reserva}{\beamergotobutton{Outros slides de apoio}}
@@ -766,7 +766,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \end{frame}
 
 % ----- Proposta e contribuição -------------------------------------------------------------------
-\begin{frame}[label=q-aprendizagem]{P1. Como sabem que a ferramenta ajuda o aluno?\notexto{Seções 4.4 e 8.9}}
+\begin{frame}[label=q-aprendizagem]{Como vocês sabem que a ferramenta ajuda o aluno?\notexto{Seções 4.4 e 8.9}}
   \respostacurta{Não afirmamos isso. A validação é \textbf{funcional}: mostra que a retroalimentação
   é \textbf{produzida corretamente}. O efeito sobre a aprendizagem é uma \textbf{hipótese}, a ser
   verificada em estudo com turmas.}
@@ -781,7 +781,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-contribuicao]{P2. Qual é a contribuição original?\notexto{Seções 3.6 e 4.1}}
+\begin{frame}[label=q-contribuicao]{Qual é a contribuição original do trabalho?\notexto{Seções 3.6 e 4.1}}
   \respostacurta{Compiladores e simuladores existem; a contribuição é o \textbf{acoplamento}: o
   estudante escreve texto, um compilador aponta os erros no vocabulário dos autômatos, e o diagrama
   é gerado e animado a partir desse texto.}
@@ -796,7 +796,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-jflap]{P3. O que a Autosim faz que o JFLAP não faz?\notexto{Seções 3.2 e 3.6}}
+\begin{frame}[label=q-jflap]{O que a Autosim faz que o JFLAP não faz?\notexto{Seções 3.2 e 3.6}}
   \respostacurta{A Autosim descreve o autômato em \textbf{texto}, versionável, e o valida com um
   \textbf{compilador} que localiza os erros. O JFLAP é muito mais abrangente; as duas são
   \textbf{complementares}.}
@@ -826,7 +826,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-fsm]{P4. Por que DSL externa, e não biblioteca (FSM)?\notexto{Seções 2.2.6 e 3.5}}
+\begin{frame}[label=q-fsm]{Por que uma DSL externa, e não uma biblioteca?\notexto{Seções 2.2.6 e 3.5}}
   \respostacurta{Uma DSL externa tem \textbf{só a sintaxe do domínio}: o estudante não precisa
   aprender a linguagem hospedeira, e o compilador fala em estados, transições e alfabeto.}
   \begin{itemize}\small
@@ -841,7 +841,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \end{frame}
 
 % ----- Linguagem e teoria ------------------------------------------------------------------------
-\begin{frame}[fragile,label=q-ll1]{P5. A gramática é LL(1)?\notexto{Seções 6.2 e 7.3}}
+\begin{frame}[fragile,label=q-ll1]{A gramática da linguagem é LL(1)?\notexto{Seções 6.2 e 7.3}}
   \respostacurta{A \textbf{linguagem} é LL(1). A EBNF, \textbf{como está escrita}, não é: na lista
   com vírgula final opcional, ao ver ``\texttt{,}'' é preciso olhar o próximo \textit{token}
   (outro item ou ``\texttt{\}}'') para decidir.}
@@ -858,7 +858,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-parcial]{P6. O AFD da Autosim exige função de transição total?\notexto{Seções 2.1.3 e 7.5}}
+\begin{frame}[label=q-parcial]{O AFD precisa ter todas as transições?\notexto{Seções 2.1.3 e 7.5}}
   \respostacurta{Não. Transições ausentes são permitidas: quando falta a transição, a simulação
   para e \textbf{rejeita}. Equivale a um \textbf{estado de rejeição implícito}, e a linguagem
   reconhecida não muda.}
@@ -874,7 +874,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-afnafd]{P7. E se um autômato determinístico for declarado como AFN?\notexto{Seção 6.4.2}}
+\begin{frame}[label=q-afnafd]{E se um AFD for declarado como AFN?\notexto{Seção 6.4.2}}
   \respostacurta{É aceito: \textbf{todo AFD é um AFN} em que cada transição leva a um único
   estado. A classificação explícita serve para exigir determinismo quando o aluno
   \textbf{afirma} que o autômato é um AFD.}
@@ -886,7 +886,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-foraalfabeto]{P8. E se a cadeia simulada tiver um símbolo fora do alfabeto?\notexto{Seção 7.4}}
+\begin{frame}[label=q-foraalfabeto]{E se a cadeia tiver um símbolo fora do alfabeto?\notexto{Seção 7.4}}
   \respostacurta{Hoje a cadeia do \texttt{simular} \textbf{não é conferida} contra o alfabeto:
   o símbolo não tem transição, e a cadeia é \textbf{rejeitada}, sem mensagem específica.}
   \begin{itemize}\small
@@ -899,7 +899,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-alfabeto]{P9. Por que um alfabeto único por arquivo?\notexto{Seção 6.4.1}}
+\begin{frame}[label=q-alfabeto]{Por que um único alfabeto por arquivo?\notexto{Seção 6.4.1}}
   \respostacurta{Para reforçar o conceito de $\Sigma$ como conjunto declarado antes dos autômatos e
   ter \textbf{um único conjunto de referência} na verificação semântica.}
   \begin{itemize}\small
@@ -911,7 +911,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-portugues]{P10. Por que a sintaxe em português?\notexto{Seções 6.3 e 6.4.3}}
+\begin{frame}[label=q-portugues]{Por que a linguagem é em português?\notexto{Seções 6.3 e 6.4.3}}
   \respostacurta{Para reduzir a barreira linguística e manter o foco nos conceitos: as
   palavras-chave são os próprios termos usados em aula (\texttt{estados}, \texttt{inicial},
   \texttt{finais}, \texttt{transicoes}).}
@@ -926,7 +926,7 @@ resto ::= [ "," [ item resto ] ]
 \end{frame}
 
 % ----- Implementação -----------------------------------------------------------------------------
-\begin{frame}[label=q-rust]{P11. Por que Rust, e não Python ou Java?\notexto{Seção 5.4}}
+\begin{frame}[label=q-rust]{Por que usaram Rust?\notexto{Seção 5.4}}
   \respostacurta{Por quatro requisitos: \textbf{binário nativo} sem ambiente de execução,
   \textbf{enumerações com \texttt{match} exaustivo} para AST e erros, \textbf{bibliotecas de
   diagnóstico} (Chumsky, Ariadne) e \textbf{interface multiplataforma} (Iced).}
@@ -940,7 +940,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-caminho]{P12. Por que mostrar um caminho, e não o conjunto de estados?\notexto{Seção 7.5}}
+\begin{frame}[label=q-caminho]{Por que mostrar um caminho, e não todos os estados?\notexto{Seção 7.5}}
   \respostacurta{Com vários estados acesos ao mesmo tempo, a execução ficava \textbf{difícil de
   acompanhar}. Um caminho único é legível, e a escolha garante que ele seja \textbf{aceitador}
   sempre que a cadeia pertence à linguagem.}
@@ -954,7 +954,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-escala]{P13. A ferramenta funciona com autômatos grandes?\notexto{Seções 7.5, 7.6 e 8.7}}
+\begin{frame}[label=q-escala]{A ferramenta funciona com autômatos grandes?\notexto{Seções 7.5, 7.6 e 8.7}}
   \respostacurta{A \textbf{simulação}, sim: a busca visita no máximo $|Q|\cdot(n+1)$ pares, um
   custo polinomial. O limite está no \textbf{desenho}: o arranjo circular perde legibilidade com
   muitos estados.}
@@ -969,7 +969,7 @@ resto ::= [ "," [ item resto ] ]
 \end{frame}
 
 % ----- Validação, escopo e trabalho --------------------------------------------------------------
-\begin{frame}[label=q-correcao]{P14. Como garantem que o simulador está correto?\notexto{Seções 8.5 a 8.7}}
+\begin{frame}[label=q-correcao]{Como garantem que o simulador está correto?\notexto{Seções 8.5 a 8.7}}
   \respostacurta{Por \textbf{validação diferencial}: 57.368 cadeias, todas as possíveis até o
   comprimento 12 em 8 autômatos clássicos, comparadas com a definição da linguagem e com um
   simulador de referência independente. \textbf{Zero divergências.}}
@@ -983,7 +983,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-conversao]{P15. Por que não há conversão AFN$\to$AFD?\notexto{Cap. 1 e Cap. 9}}
+\begin{frame}[label=q-conversao]{Por que não fizeram a conversão de AFN para AFD?\notexto{Cap. 1 e Cap. 9}}
   \respostacurta{Por \textbf{escopo}: já na proposta do PG I, conversões e minimização ficaram de
   fora. A prioridade foi entregar o ciclo completo: texto, compilador com diagnósticos,
   simulação e visualização.}
@@ -998,7 +998,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-instalacao]{P16. Como o estudante instala e usa a ferramenta?\notexto{Apêndices A a D}}
+\begin{frame}[label=q-instalacao]{Como o estudante instala e usa a ferramenta?\notexto{Apêndices A a D}}
   \respostacurta{Baixa o pacote pronto da versão 1.0.4 para \textbf{Linux, Windows ou macOS},
   extrai e executa: \textbf{não precisa instalar o Rust}. Os Apêndices A a D são o manual.}
   \begin{itemize}\small
@@ -1011,7 +1011,7 @@ resto ::= [ "," [ item resto ] ]
   \voltarperguntas
 \end{frame}
 
-\begin{frame}[label=q-dupla]{P17. Como o trabalho foi dividido na dupla?\notexto{Seção 4.3}}
+\begin{frame}[label=q-dupla]{Como vocês dividiram o trabalho?\notexto{Seção 4.3}}
   \respostacurta{A \textbf{implementação} concentrou-se no Klaus, e a \textbf{monografia} foi
   dividida entre os dois. As decisões de projeto foram discutidas nas reuniões semanais com o
   orientador.}
