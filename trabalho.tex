@@ -99,11 +99,14 @@ como requisito à obtenção do grau de Bacharel.}
     cadeias de entrada. A validação foi realizada por meio de 51 testes automatizados, cobrindo
     as fases de análise e o simulador, de simulações com autômatos clássicos da literatura e de
     cenários com erros propositais; todos os resultados concordaram com o esperado, confirmando
-    a correção do simulador e a qualidade dos diagnósticos gerados. A ferramenta conecta, em um
+    a correção do simulador e a qualidade dos diagnósticos gerados. Complementarmente, um
+    questionário respondido por 11 estudantes que utilizaram a ferramenta indicou percepção
+    favorável, com a concordância de ao menos 82\% dos participantes em cada afirmação avaliada.
+    A ferramenta conecta, em um
     único instrumento, a teoria de autômatos à prática de compiladores, oferecendo ao estudante
     um ambiente para descrever, validar e executar autômatos finitos. Espera-se que esse
     ambiente favoreça a compreensão dos conceitos de autômatos, benefício pedagógico cuja
-    avaliação com estudantes permanece como trabalho futuro.
+    verificação exige estudos controlados com estudantes e permanece como trabalho futuro.
 
     \palavraschave{autômatos finitos; linguagem de domínio específico; compiladores; simulação visual; ensino de computação}
 \end{resumo}
@@ -275,9 +278,11 @@ específicos:
 \end{alineas}
 
 A validação prevista nesses objetivos é funcional, isto é, verifica se a ferramenta se
-comporta conforme especificado. A avaliação da eficácia pedagógica da ferramenta com
-estudantes, que exigiria um estudo com turmas reais, não faz parte do escopo deste trabalho
-e é proposta como trabalho futuro no Capítulo~\ref{cap:conclusao}.
+comporta conforme especificado. Complementarmente, a percepção de estudantes sobre a
+ferramenta foi levantada por meio de um questionário respondido por um pequeno grupo de
+usuários. A avaliação da eficácia pedagógica da ferramenta, isto é, de seu efeito sobre a
+aprendizagem, exigiria um estudo controlado com turmas reais, não faz parte do escopo deste
+trabalho e é proposta como trabalho futuro no Capítulo~\ref{cap:conclusao}.
 
 Este trabalho está organizado como segue.
 O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica: os conceitos de autômatos finitos e linguagens formais (Seção~\ref{cap:automatos}) e as fases de compilação e as linguagens de domínio específico (Seção~\ref{cap:compiladores}).
@@ -286,11 +291,12 @@ O Capítulo~\ref{cap:metodologia} descreve a metodologia de construção da solu
 O Capítulo~\ref{cap:ferramentas} apresenta as ferramentas utilizadas na implementação, com destaque para a linguagem Rust, cuja adoção é justificada, e para as bibliotecas e os serviços de versionamento e distribuição empregados.
 O Capítulo~\ref{cap:projeto} descreve o projeto da DSL, sua sintaxe e gramática.
 O Capítulo~\ref{cap:implementacao} detalha a implementação do compilador e da interface gráfica.
-O Capítulo~\ref{cap:resultados} apresenta e discute os testes e os resultados obtidos.
+O Capítulo~\ref{cap:resultados} apresenta e discute os resultados da validação funcional e do levantamento com estudantes.
 Por fim, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e trabalhos futuros.
 Os Apêndices A a D compõem o manual de uso da ferramenta: o Apêndice A descreve a instalação,
 o Apêndice B a execução e a interface gráfica, o Apêndice C a escrita de programas na DSL e o
-Apêndice D a interpretação dos diagnósticos de erro.
+Apêndice D a interpretação dos diagnósticos de erro. O Apêndice E reproduz o questionário
+aplicado aos estudantes.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -2029,7 +2035,8 @@ Seção~\ref{sec:met-etapas} apresenta as etapas em que a construção da ferram
 organizada; a Seção~\ref{sec:met-organizacao} descreve a divisão do trabalho entre os autores e
 o acompanhamento ao longo do desenvolvimento; e a Seção~\ref{sec:met-validacao} define os
 critérios adotados para verificar se a ferramenta construída atende aos objetivos específicos
-enunciados no Capítulo~\ref{cap:introducao}. As ferramentas utilizadas na implementação são
+enunciados no Capítulo~\ref{cap:introducao}, bem como o levantamento complementar da
+percepção de estudantes. As ferramentas utilizadas na implementação são
 apresentadas no Capítulo~\ref{cap:ferramentas}.
 
 \section{Caracterização da Pesquisa}
@@ -2049,7 +2056,9 @@ trabalho combina a pesquisa bibliográfica, realizada a partir de livros e artig
 publicados \cite{gil2002}, que sustenta a fundamentação teórica do Capítulo~\ref{cap:fundamentacao}
 e a análise de ferramentas do Capítulo~\ref{cap:relacionados}, com o desenvolvimento e a
 verificação funcional do artefato proposto, descritos nos Capítulos~\ref{cap:projeto}
-a~\ref{cap:resultados}.
+a~\ref{cap:resultados}. Inclui, ainda, um levantamento, caracterizado pela interrogação direta
+das pessoas cuja opinião se deseja conhecer \cite{gil2002}, realizado por meio de um
+questionário respondido por estudantes que utilizaram a ferramenta.
 
 \citeonline{wazlawick2014} observa que, em Ciência da Computação, um trabalho que apresenta um
 novo artefato não deve limitar-se à sua descrição: é necessário mostrar em que ele se
@@ -2062,7 +2071,7 @@ definidos na Seção~\ref{sec:met-validacao}.
 \section{Etapas da Construção da Solução}
 \label{sec:met-etapas}
 
-A construção da solução foi organizada em seis etapas, sintetizadas no
+A construção da solução foi organizada em sete etapas, sintetizadas no
 Quadro~\ref{quad:etapas}. Os períodos indicados foram reconstituídos a partir do histórico de
 versões dos repositórios da ferramenta e da monografia, mantidos com o sistema de controle de
 versão Git (Seção~\ref{sec:ferr-versionamento}).
@@ -2101,6 +2110,10 @@ versão Git (Seção~\ref{sec:ferr-versionamento}).
           & nov. 2026
           & Versões 1.0.0 a 1.0.4, pacotes para Linux, Windows e macOS e manual de uso (Apêndices A a D) \\
         \hline
+        7 & Levantamento com estudantes
+          & nov. 2026
+          & Questionário de percepção respondido por 11 estudantes (Seção~\ref{sec:res-percepcao} e Apêndice E) \\
+        \hline
     \end{tabularx}
     \fonte{Os autores (\the\year)}
 \end{quadro}
@@ -2131,6 +2144,11 @@ nos diagnósticos, a correção de uma mensagem de erro e a de um exemplo distri
 ferramenta, que declarava como AFD um autômato não determinístico. Nessa etapa também foi automatizada a
 geração dos pacotes de distribuição (Seção~\ref{sec:ferr-versionamento}) e foi redigido o
 manual de uso que compõe os apêndices.
+
+Na sétima etapa, a versão 1.0.4 da ferramenta foi disponibilizada a um grupo de estudantes,
+acompanhada de um guia rápido de uso derivado desses apêndices, e a percepção dos
+participantes foi levantada por meio de um questionário, cujos resultados são apresentados
+na Seção~\ref{sec:res-percepcao}.
 
 A redação da monografia ocorreu em paralelo a todas as etapas, ao longo das disciplinas de
 Projeto de Graduação~I e~II.
@@ -2176,6 +2194,12 @@ específico verificável, foi definido um instrumento e um critério de aceitaç
     critério é que cada erro seja detectado na fase correspondente e que o diagnóstico
     indique sua linha e coluna, destaque o trecho do código-fonte e descreva o problema.
 \end{alineas}
+
+Além desses instrumentos, foi aplicado um questionário de percepção a estudantes que
+utilizaram a ferramenta, reproduzido no Apêndice E. Diferentemente dos anteriores, esse
+instrumento não possui critério de aceitação nem mede a aprendizagem: ele registra como os
+participantes perceberam a facilidade de uso, a linguagem, a simulação e os diagnósticos, e
+seus resultados são tratados como indicativos.
 
 Os resultados obtidos com cada instrumento são apresentados e discutidos no
 Capítulo~\ref{cap:resultados}.
@@ -3317,9 +3341,10 @@ A validação foi realizada por meio de uma suíte de testes automatizados, cobr
 fases de análise (léxica, sintática e semântica) e o simulador, totalizando 51 casos de
 teste. Além dos testes, foram conduzidas simulações com autômatos clássicos da literatura,
 uma validação diferencial do simulador sobre mais de 57 mil cadeias e cenários com erros
-induzidos, para verificar a correção do simulador e os diagnósticos de erro. O capítulo se
-encerra com a discussão dos resultados em relação aos objetivos específicos
-(Seção~\ref{sec:res-discussao}).
+induzidos, para verificar a correção do simulador e os diagnósticos de erro. Em seguida, são
+apresentados os resultados do levantamento da percepção de estudantes
+(Seção~\ref{sec:res-percepcao}), e o capítulo se encerra com a discussão dos resultados em
+relação aos objetivos específicos (Seção~\ref{sec:res-discussao}).
 
 \section{Estratégia de Testes}
 \label{sec:res-estrategia}
@@ -3675,6 +3700,81 @@ localizam e descrevem cada erro previsto. No arquivo \texttt{sema\_error.asl}, a
 semântica não parou no primeiro erro: os cinco foram reportados em uma única execução, o que
 permite ao estudante corrigi-los de uma só vez.
 
+\section{Percepção de Estudantes}
+\label{sec:res-percepcao}
+
+Complementarmente aos instrumentos de validação funcional, foi realizado um levantamento da
+percepção de estudantes sobre a ferramenta, conforme a Seção~\ref{sec:met-validacao}. Entre 9
+e 13 de novembro de 2026, estudantes do curso de Ciência da Computação da Universidade Tuiuti
+do Paraná receberam o endereço de um questionário no Google Forms e um guia rápido de uso, versão resumida dos Apêndices A a D disponibilizada no repositório da ferramenta
+\cite{autosim2026}. O guia orientava o participante a baixar a versão 1.0.4 da Autosim, abrir
+um dos exemplos distribuídos, simular cadeias aceitas e rejeitadas e executar um arquivo com
+erro proposital, para observar o diagnóstico produzido. Em seguida, o participante respondia
+ao questionário, reproduzido no Apêndice E.
+
+O questionário não coletava nome, endereço de e-mail ou qualquer outro dado que permitisse
+identificar o participante, e sua primeira pergunta registrava o consentimento: apenas quem
+concordava em participar tinha acesso às demais. Além de duas perguntas de perfil, o
+questionário pedia ao participante que indicasse se conseguira abrir e simular um exemplo,
+que avaliasse seis afirmações sobre a ferramenta em uma escala de 1 (discordo totalmente) a 5
+(concordo totalmente) e que informasse se prefere descrever autômatos em texto ou desenhá-los.
+Duas perguntas abertas, não obrigatórias, recolhiam dificuldades e sugestões.
+
+Responderam ao questionário 11 estudantes, todos com o consentimento registrado. Seis já
+haviam cursado a disciplina que aborda autômatos finitos, três a cursavam no momento e dois
+ainda não haviam estudado o assunto; quatro já haviam utilizado o JFLAP, e os demais não
+haviam utilizado nenhuma ferramenta para criar ou simular autômatos. Todos conseguiram abrir
+e simular um exemplo, dois deles relatando alguma dificuldade. O Quadro~\ref{quad:percepcao}
+apresenta a distribuição das notas atribuídas às seis afirmações, a quantidade de
+participantes que concordaram com cada uma, isto é, que atribuíram nota 4 ou 5, e a média
+das notas.
+
+\begin{quadro}[h]
+    \centering
+    \caption{AVALIAÇÃO DA FERRAMENTA PELOS ESTUDANTES}
+    \label{quad:percepcao}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|Z|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Afirmação} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{Concordam} & \textbf{Média} \\
+        \hline
+        A Autosim atende às minhas necessidades. & 0 & 1 & 1 & 4 & 5 & 9 (82\%) & 4,2 \\
+        \hline
+        A Autosim é fácil de usar. & 0 & 0 & 1 & 5 & 5 & 10 (91\%) & 4,4 \\
+        \hline
+        A linguagem para escrever o autômato é fácil de entender. & 0 & 1 & 0 & 4 & 6 & 10 (91\%) & 4,4 \\
+        \hline
+        A simulação passo a passo ajuda a entender como o autômato processa a cadeia. & 0 & 1 & 1 & 2 & 7 & 9 (82\%) & 4,4 \\
+        \hline
+        As mensagens de erro deixam claro o que está errado. & 0 & 0 & 0 & 6 & 5 & 11 (100\%) & 4,5 \\
+        \hline
+        Eu usaria a Autosim para estudar ou resolver exercícios. & 0 & 0 & 2 & 2 & 7 & 9 (82\%) & 4,5 \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
+
+Todas as afirmações obtiveram a concordância de ao menos nove dos onze participantes. A
+afirmação sobre a clareza das mensagens de erro foi a única com concordância unânime,
+resultado coerente com o papel central atribuído ao diagnóstico no projeto da ferramenta
+(Seção~\ref{sec:diagnostico-erro}). Das oito notas inferiores a 4, sete foram atribuídas pelos
+dois participantes que ainda não haviam estudado autômatos finitos, o que é esperado, pois a
+ferramenta pressupõe o conhecimento dos conceitos que permite exercitar. Quanto à forma de
+descrever autômatos, sete participantes declararam preferir a escrita em texto, dois o desenho
+com o \textit{mouse} e dois manifestaram indiferença. Nas perguntas abertas, um participante
+relatou que, ``inicialmente surgiu uma dificuldade de entender como o fluxo e a solução
+funcionava, mas foi rápido de entender pela intuitividade'', e outro afirmou não ter
+encontrado dificuldades; não foram registradas sugestões.
+
+Esses resultados devem ser interpretados com cautela. A amostra é pequena e não foi
+selecionada aleatoriamente: responderam apenas os estudantes que se dispuseram a participar,
+possivelmente os mais interessados na ferramenta; as
+respostas são autodeclaradas, e não é possível verificar se todos os participantes executaram
+todos os passos do guia, em particular o arquivo com erro proposital; e o questionário mede a
+percepção dos participantes sobre a ferramenta, e não o efeito de seu uso sobre a
+aprendizagem, cuja avaliação exige um estudo controlado (Capítulo~\ref{cap:conclusao}).
+
 \section{Discussão dos Resultados}
 \label{sec:res-discussao}
 
@@ -3698,9 +3798,11 @@ Capítulo~\ref{cap:introducao}:
     interface foi descrita e ilustrada na Seção~\ref{sec:impl-ui}. Diferentemente dos demais
     objetivos, este não foi submetido a testes automatizados, e sua verificação limitou-se ao
     uso da ferramenta pelos autores com os exemplos distribuídos e com autômatos maiores, como
-    o da Figura~\ref{fig:screenshot-automato-grande};
+    o da Figura~\ref{fig:screenshot-automato-grande}, e ao levantamento da
+    Seção~\ref{sec:res-percepcao}, em que todos os participantes conseguiram abrir e simular um
+    exemplo;
     \item \textbf{validar a ferramenta por meio de testes, simulações e cenários de erro}: os
-    três instrumentos definidos na Seção~\ref{sec:met-validacao} foram aplicados, e todos os
+    três instrumentos de validação definidos na Seção~\ref{sec:met-validacao} foram aplicados, e todos os
     critérios de aceitação foram atendidos.
 \end{alineas}
 
@@ -3716,9 +3818,11 @@ Os resultados também têm limites que devem ser explicitados. Os testes e os ce
 foram elaborados pelos próprios autores e, por isso, exercitam os erros que os autores
 anteciparam; erros cometidos por estudantes reais podem revelar mensagens pouco claras ou
 situações não previstas. A interface gráfica, como observado, não foi avaliada de forma
-sistemática. Por fim, nenhum dos instrumentos mede o efeito da ferramenta sobre a
-aprendizagem: os resultados mostram que a retroalimentação é produzida corretamente, mas não
-que ela melhora o desempenho dos estudantes, questão que permanece como trabalho futuro.
+sistemática: além do uso pelos autores, conta apenas com a percepção de um grupo pequeno de
+estudantes. Por fim, nem os instrumentos de validação nem o questionário medem o efeito da
+ferramenta sobre a aprendizagem: os resultados mostram que a retroalimentação é produzida
+corretamente e que foi bem recebida pelos participantes, mas não que ela melhora o desempenho
+dos estudantes, questão que permanece como trabalho futuro.
 
 % -------------------------------------------------------------------------------------------------
 % -------------------------------------------------------------------------------------------------
@@ -3753,7 +3857,15 @@ semântica e o simulador, de simulações com autômatos clássicos da literatur
 validação diferencial que comparou 57.368 simulações com a definição das linguagens e com um
 simulador de referência independente, sem nenhuma divergência. Todos os resultados
 concordaram com o esperado, o que indica o funcionamento correto do simulador e mostra que os
-diagnósticos localizam e descrevem os erros previstos.
+diagnósticos localizam e descrevem os erros previstos. Os cinco objetivos específicos foram
+atendidos, conforme a discussão da Seção~\ref{sec:res-discussao}. Em relação às ferramentas
+analisadas, a Autosim reúne o que nelas aparece separado: a descrição textual, que permite
+versionar e compartilhar os autômatos como arquivos, ausente no JFLAP e nas demais ferramentas
+gráficas; o diagnóstico de um compilador, com erros localizados no texto; e o diagrama gerado
+e animado automaticamente, que os autores da FSM indicavam como trabalho futuro.
+Complementarmente, um levantamento com onze estudantes que utilizaram a ferramenta indicou percepção favorável: todos conseguiram
+abrir e simular um exemplo, cada uma das seis afirmações avaliadas obteve a concordância de
+ao menos nove participantes, e a clareza das mensagens de erro, a de todos.
 
 Quanto à pergunta que orientou esta pesquisa, os resultados indicam que uma linguagem
 textual de domínio específico, processada por um compilador com diagnósticos localizados e
@@ -3761,9 +3873,10 @@ acoplada a uma simulação visual, é capaz de oferecer retroalimentação imedi
 e na execução de autômatos finitos: a cada execução, erros de estrutura e de conceito são
 apontados com sua localização no texto, e autômatos válidos são desenhados e simulados passo
 a passo. Essa resposta, contudo, restringe-se ao plano funcional. Os testes demonstram que a
-retroalimentação é produzida corretamente, mas não avaliam seus efeitos sobre estudantes. Se
-a ferramenta de fato atenua as dificuldades de aprendizagem que motivaram o trabalho
-permanece, portanto, uma hipótese, cuja verificação depende dos estudos com estudantes
+retroalimentação é produzida corretamente, e o levantamento indica que ela foi percebida como
+clara e útil por um pequeno grupo de estudantes, mas nenhum dos dois avalia seus efeitos sobre
+a aprendizagem. Se a ferramenta de fato atenua as dificuldades de aprendizagem que motivaram o
+trabalho permanece, portanto, uma hipótese, cuja verificação depende dos estudos controlados
 propostos ao final deste capítulo.
 
 O desenvolvimento enfrentou dificuldades que levaram a revisões do projeto inicial. A
@@ -4093,6 +4206,58 @@ acrescentada para que a interface gráfica seja aberta. Os arquivos
 \texttt{sema\_dfa\_epsilon.asl} e \texttt{sema\_nondeterministic.asl}, da pasta
 \texttt{examples}, reproduzem esses erros e podem ser usados para observar cada
 diagnóstico.
+
+\apendice{Questionário de Percepção Aplicado aos Estudantes}
+
+O questionário cujos resultados são apresentados na Seção~\ref{sec:res-percepcao} foi
+aplicado por meio do Google Forms entre 9 e 13 de novembro de 2026 e organizado em duas
+seções. A primeira apresentava o trabalho, os autores e o orientador, os endereços para obter
+a ferramenta e o guia rápido de uso e as condições de participação: participação voluntária
+e anônima, sem coleta de nome, endereço de e-mail ou matrícula, possibilidade de desistência
+a qualquer momento e uso das respostas apenas de forma agregada, neste trabalho. Essa seção
+terminava com a pergunta de consentimento ``Li as informações acima e concordo em participar
+da pesquisa'', com as opções \textit{Concordo} e \textit{Não concordo}; a segunda opção
+encerrava o questionário.
+
+A segunda seção, intitulada ``Sua experiência com a Autosim'', pedia ao participante que
+seguisse os passos do guia rápido antes de responder, abrindo um exemplo, simulando cadeias e
+observando uma mensagem de erro, e continha as perguntas do Quadro~\ref{quad:questionario}.
+As perguntas 1 a 5 eram obrigatórias.
+
+\begin{quadro}[h]
+    \centering
+    \caption{PERGUNTAS DA SEGUNDA SEÇÃO DO QUESTIONÁRIO}
+    \label{quad:questionario}
+    \small
+    \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\textwidth}{|c|Z|Z|}
+        \hline
+        \textbf{Nº} & \textbf{Pergunta} & \textbf{Tipo e opções de resposta} \\
+        \hline
+        1 & Você já estudou autômatos finitos? & Múltipla escolha: Estou cursando a disciplina; Já cursei; Não \\
+        \hline
+        2 & Você já usou alguma outra ferramenta para criar ou simular autômatos? & Múltipla escolha: JFLAP; Nenhuma; Outro (resposta livre) \\
+        \hline
+        3 & Você conseguiu abrir e simular um exemplo na Autosim? & Múltipla escolha: Sim; Sim, com dificuldade; Não \\
+        \hline
+        4 & Avalie as afirmações abaixo de 1 (discordo totalmente) a 5 (concordo totalmente):
+            (a) A Autosim atende às minhas necessidades;
+            (b) A Autosim é fácil de usar;
+            (c) A linguagem para escrever o autômato é fácil de entender;
+            (d) A simulação passo a passo ajuda a entender como o autômato processa a cadeia;
+            (e) As mensagens de erro deixam claro o que está errado;
+            (f) Eu usaria a Autosim para estudar ou resolver exercícios.
+          & Grade: uma nota de 1 a 5 para cada afirmação \\
+        \hline
+        5 & Para criar um autômato, você prefere: & Múltipla escolha: Escrever em texto (como na Autosim); Desenhar com o \textit{mouse} (como no JFLAP); Tanto faz \\
+        \hline
+        6 & O que foi mais difícil ou confuso ao usar a Autosim? & Resposta aberta, não obrigatória \\
+        \hline
+        7 & Sugestões ou comentários & Resposta aberta, não obrigatória \\
+        \hline
+    \end{tabularx}
+    \fonte{Os autores (\the\year)}
+\end{quadro}
 
 
 % -------------------------------------------------------------------------------------------------
