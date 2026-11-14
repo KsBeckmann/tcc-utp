@@ -3,6 +3,8 @@ name = "validacao"
 version = "0.1.0"
 edition = "2024"
 publish = false
+# `cargo run --release` roda a validação; `cargo run --release --bin desempenho` mede o tempo.
+default-run = "validacao"
 
 # Validação diferencial do simulador da Autosim (Capítulo 8 da monografia).
 # Usa a versão 1.0.4 da ferramenta, a mesma descrita no texto.

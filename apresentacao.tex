@@ -5,7 +5,7 @@
 %
 % Compilar: pdflatex apresentacao.tex  (2x)
 %
-% Tempo: limite de 15 minutos; o roteiro de fala (roteiro.tex) planeja 13:37.
+% Tempo: cerca de 20 minutos por equipe; o roteiro de fala (roteiro.tex) planeja 16:58.
 % As 9 seções têm os mesmos títulos e a mesma numeração dos capítulos da monografia, e cada uma
 % abre com o slide de Roteiro, para que a banca acompanhe a apresentação junto com o texto.
 %
@@ -13,7 +13,10 @@
 % repositório como recurso de reserva, para abrir à mão no reprodutor de vídeo se for necessário.
 % =================================================================================================
 
-\documentclass[aspectratio=169,11pt]{beamer}
+% Fonte base de 12pt: no slide 16:9 do Beamer (16 cm de largura), equivale a ~25pt no modelo de
+% PowerPoint da disciplina (33,9 cm), acima do mínimo de 24pt pedido no checklist. Os slides da
+% apresentação não usam tamanhos menores; os de apoio, depois do "Obrigado", podem usar.
+\documentclass[aspectratio=169,12pt]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -27,6 +30,8 @@
 \usetikzlibrary{arrows.meta,positioning,automata,calc}
 \usepackage{graphicx}
 \usepackage{appendixnumberbeamer}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 % ----- Tema -----------------------------------------------------------------------------------
 \usetheme{Madrid}
@@ -44,7 +49,7 @@
 \setbeamercolor{block body}{bg=acento!8}
 
 % Rótulo no canto direito do título: onde o conteúdo do slide está na monografia
-\newcommand{\notexto}[1]{\hskip 0pt plus 1filll{\normalfont\footnotesize\color{white!85!acento}#1}}
+\newcommand{\notexto}[1]{\hskip 0pt plus 1filll{\normalfont\small\color{white!85!acento}#1}}
 
 % Slides de reserva (depois do "Obrigado"): botão para voltar ao índice de reserva
 \newcommand{\voltar}{%
@@ -102,6 +107,21 @@
 \author[Vieira \and Beckmann]{João Thomaz Vieira \and Klaus Siegfried Beckmann}
 \institute[UTP]{Bacharelado em Ciência da Computação\\Universidade Tuiuti do Paraná\\[2pt]\footnotesize Orientador: Prof. Diógenes Cogo Furlan}
 \date{Curitiba, 2026}
+% Imagem da capa (pedida no modelo da disciplina): o autômato de exemplo, que reaparece na DSL
+\titlegraphic{%
+  \begin{tikzpicture}[shorten >=1pt,node distance=2.2cm,on grid,>={Stealth[]},scale=0.8,
+      every node/.style={transform shape},
+      every state/.style={draw=acento,thick,fill=acento!8,minimum size=8mm}]
+    \node[state,initial,initial text={}] (q0) {$q_0$};
+    \node[state] (q1) [right=of q0] {$q_1$};
+    \node[state,accepting] (q2) [right=of q1] {$q_2$};
+    \path[->]
+      (q0) edge[loop above] node{$b$} (q0)
+      (q0) edge node[above]{$a$} (q1)
+      (q1) edge[loop above] node{$a$} (q1)
+      (q1) edge node[above]{$b$} (q2)
+      (q2) edge[loop above] node{$a,b$} (q2);
+  \end{tikzpicture}}
 
 \begin{document}
 
@@ -121,58 +141,50 @@
 
 \begin{frame}{Contexto e problema\notexto{Cap. 1}}
   \begin{itemize}
-    \item Autômatos finitos são um pilar da Ciência da Computação, mas a disciplina é
-          \textbf{reconhecidamente difícil}.
-    \item Morazán e Antunez (2014): o estudante projeta autômatos \textbf{sem poder experimentar}
-          nem receber \textbf{retroalimentação imediata}, ao contrário da programação.
-    \item As ferramentas mais difundidas (\textbf{JFLAP}) são \textbf{só visuais}:
-          sem descrição textual, sem versionamento, \textbf{sem diagnóstico} de erros.
-    \item A alternativa textual (\textbf{FSM}, em Racket) descreve autômatos como código,
-          mas \textbf{não os desenha nem anima}.
+    \item Autômatos finitos: disciplina \textbf{difícil}, em que o estudante projeta
+          \textbf{sem experimentar} nem receber \textbf{retorno imediato}
+          (Morazán e Antunez, 2014).
+    \item \textbf{Público-alvo}: estudantes e professores de Linguagens Formais e Autômatos.
+    \item \textbf{JFLAP} e similares: só visuais, sem texto e sem diagnóstico de erros.
+    \item \textbf{FSM}: textual, mas não desenha nem anima o autômato.
   \end{itemize}
   \vspace{4pt}
   \begin{block}{Lacuna}
-    Unir a \textbf{descrição textual}, o \textbf{diagnóstico de um compilador} e a
-    \textbf{simulação visual} em uma única ferramenta.
+    Unir \textbf{texto}, \textbf{diagnóstico de compilador} e \textbf{simulação visual}.
   \end{block}
 \end{frame}
 
 \begin{frame}{Pergunta de pesquisa e proposta\notexto{Cap. 1}}
   \begin{block}{Pergunta de pesquisa}
-    Como uma linguagem textual de domínio específico, processada por um compilador com
-    diagnósticos localizados e acoplada a uma simulação visual, pode oferecer ao estudante
-    \textbf{retroalimentação imediata} na construção e na execução de autômatos finitos?
+    Como uma DSL textual, com compilador e simulação visual, pode dar ao estudante
+    \textbf{retroalimentação imediata} ao construir e executar autômatos finitos?
   \end{block}
-  \vspace{6pt}
+  \vspace{8pt}
   \centering
   \begin{tikzpicture}[
-      node distance=9mm,
+      node distance=8mm,
       parte/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                    minimum height=13mm,text width=33mm,inner sep=4pt,font=\small},
+                    minimum height=15mm,text width=36mm,inner sep=4pt},
       seta/.style={-{Stealth[length=2.5mm]},very thick,acento}]
-    \node[parte] (d) {\textbf{DSL textual}\\em português};
-    \node[parte,right=of d] (c) {\textbf{Compilador}\\diagnósticos com\\linha e coluna};
-    \node[parte,right=of c] (i) {\textbf{Interface gráfica}\\diagrama e simulação\\passo a passo};
+    \node[parte] (d) {\textbf{DSL}\\em português};
+    \node[parte,right=of d] (c) {\textbf{Compilador}\\erros com linha\\e coluna};
+    \node[parte,right=of c] (i) {\textbf{Interface}\\diagrama e\\simulação};
     \draw[seta] (d)--(c); \draw[seta] (c)--(i);
-    \node[below=3mm of c,font=\small] {\textbf{Autosim}: o estudante escreve o texto; o diagrama é gerado e animado automaticamente};
-  \end{tikzpicture}
+  \end{tikzpicture}\\[8pt]
+  \textbf{Autosim}: o estudante escreve o texto; o diagrama é gerado e animado.
 \end{frame}
 
 \begin{frame}{Objetivos\notexto{Cap. 1}}
-  \textbf{Objetivo geral:} desenvolver uma ferramenta educacional que integra a descrição textual
-  de autômatos, sua compilação pedagógica e sua simulação visual em um único ambiente.
+  \textbf{Geral:} integrar descrição textual, compilação e simulação visual de autômatos em
+  uma única ferramenta educacional.
   \vspace{6pt}
-  \begin{block}{Objetivos específicos}
-    \begin{enumerate}
-      \item Projetar uma \textbf{DSL} textual para AFDs e AFNs, com gramática em EBNF;
-      \item Implementar um \textbf{compilador pedagógico} com diagnósticos localizados;
-      \item Desenvolver um \textbf{simulador} de cadeias sobre os autômatos descritos;
-      \item Construir uma \textbf{interface gráfica} que desenhe e anime o autômato;
-      \item \textbf{Validar} a ferramenta com testes, autômatos clássicos e cenários de erro.
-    \end{enumerate}
-  \end{block}
-  \vspace{2pt}
-  {\footnotesize Validação \textbf{funcional}; a eficácia pedagógica com estudantes é trabalho futuro.}
+  \begin{enumerate}
+    \item Projetar uma \textbf{DSL} para AFDs e AFNs, com gramática em EBNF;
+    \item Implementar um \textbf{compilador} com diagnósticos localizados;
+    \item Desenvolver um \textbf{simulador} de cadeias;
+    \item Construir uma \textbf{interface} que desenhe e anime o autômato;
+    \item \textbf{Validar} a ferramenta de forma funcional.
+  \end{enumerate}
 \end{frame}
 
 % =================================================================================================
@@ -180,25 +192,19 @@
 
 \begin{frame}{Autômatos finitos\notexto{Seção 2.1}}
   \begin{columns}[T]
-    \begin{column}{0.47\textwidth}
-      Um \textbf{AFD} é uma quíntupla $M = (Q, \Sigma, \delta, q_0, F)$:
-      \begin{itemize}\small
-        \item $Q$: estados \quad $\Sigma$: alfabeto
-        \item $\delta: Q \times \Sigma \to Q$: transições
-        \item $q_0$: inicial \quad $F \subseteq Q$: finais
-      \end{itemize}
-      \vspace{4pt}
-      No \textbf{AFN}, $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to \mathcal{P}(Q)$:
-      vários destinos e transições vazias $\varepsilon$.
-      \vspace{4pt}
+    \begin{column}{0.48\textwidth}
+      \textbf{AFD}: $M = (Q, \Sigma, \delta, q_0, F)$, com uma transição por (estado, símbolo).
+      \vspace{6pt}
 
-      AFD e AFN são \textbf{equivalentes} (construção de subconjuntos) e reconhecem as
-      \textbf{linguagens regulares}.
+      \textbf{AFN}: vários destinos e transições vazias $\varepsilon$.
+      \vspace{6pt}
+
+      Os dois são \textbf{equivalentes} e reconhecem as \textbf{linguagens regulares}.
     \end{column}
-    \begin{column}{0.53\textwidth}
+    \begin{column}{0.52\textwidth}
       \centering
-      \vspace{14pt}
-      \begin{tikzpicture}[shorten >=1pt,node distance=2.3cm,on grid,>={Stealth[]},
+      \vspace{12pt}
+      \begin{tikzpicture}[shorten >=1pt,node distance=2.2cm,on grid,>={Stealth[]},
           every state/.style={draw=acento,thick,fill=acento!8,minimum size=9mm}]
         \node[state,initial,initial text={}] (q0) {$q_0$};
         \node[state] (q1) [right=of q0] {$q_1$};
@@ -209,41 +215,12 @@
           (q1) edge[loop above] node{$a$} (q1)
           (q1) edge node[above]{$b$} (q2)
           (q2) edge[loop above] node{$a,b$} (q2);
-      \end{tikzpicture}
-      \vspace{8pt}
-
-      \small Cadeias que \textbf{contêm ``$ab$''}\\[3pt]
-      \textcolor{aceita}{\textbf{aceita:}} \texttt{ab}, \texttt{aab}, \texttt{bab}\\
-      \textcolor{rejeita}{\textbf{rejeita:}} $\varepsilon$, \texttt{ba}, \texttt{bbb}\\[3pt]
-      \footnotesize\emph{Reaparece na DSL e na interface.}
+      \end{tikzpicture}\\[10pt]
+      Cadeias que \textbf{contêm ``$ab$''}\\[4pt]
+      \textcolor{aceita}{\textbf{aceita}} \texttt{ab}, \texttt{bab}\\
+      \textcolor{rejeita}{\textbf{rejeita}} \texttt{ba}, \texttt{bbb}
     \end{column}
   \end{columns}
-\end{frame}
-
-\begin{frame}{Compiladores e linguagens de domínio específico\notexto{Seção 2.2}}
-  \begin{center}
-    \begin{tikzpicture}[
-        node distance=6mm and 10mm,
-        etapa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                      minimum height=11mm,inner sep=5pt,font=\small},
-        seta/.style={-{Stealth[length=2mm]},thick,acento}]
-      \node[etapa] (a) {Análise\\\textbf{Léxica}};
-      \node[etapa,right=of a] (b) {Análise\\\textbf{Sintática}};
-      \node[etapa,right=of b] (c) {Análise\\\textbf{Semântica}};
-      \draw[seta] (a)--(b); \draw[seta] (b)--(c);
-      \node[below=1mm of a,font=\footnotesize\itshape] {texto $\to$ \emph{tokens}};
-      \node[below=1mm of b,font=\footnotesize\itshape] {\emph{tokens} $\to$ AST};
-      \node[below=1mm of c,font=\footnotesize\itshape,text width=30mm,align=center] {referências e consistência};
-    \end{tikzpicture}
-  \end{center}
-  \vspace{2pt}
-  \begin{block}{DSL (Fowler, 2010)}
-    Linguagem de \textbf{expressividade limitada}, voltada a um \textbf{domínio específico}.
-    \begin{itemize}
-      \item \textbf{Interna:} embutida em uma linguagem hospedeira (ex.: FSM, em Racket).
-      \item \textbf{Externa:} sintaxe própria e \textbf{compilador dedicado} --- é o caso da \textbf{Autosim}.
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 % =================================================================================================
@@ -251,83 +228,85 @@
 
 \begin{frame}{Panorama: quatro ferramentas gráficas e uma textual\notexto{Seções 3.1--3.5}}
   \begin{itemize}
-    \item \textbf{JFLAP} --- referência mundial; cobre toda a hierarquia de Chomsky;
-          construção \textbf{só gráfica}, sem descrição textual nem diagnóstico.
-    \item \textbf{GAM} (UFLA) --- \emph{desktop}; limitado a 10 estados e 3 símbolos.
-    \item \textbf{Simulador UFSC} --- \emph{web}, sem instalação; construção gráfica.
-    \item \textbf{AutomatoGraph} --- só AFDs; gera a gramática regular; simulação parcialmente visual.
-    \item \textbf{FSM} (Morazán e Antunez, 2014) --- \textbf{textual}: autômatos como código Racket,
-          testáveis e versionáveis; muitos formalismos; execução \textbf{só em texto}, visualização
-          como trabalho futuro.
+    \item \textbf{JFLAP}: referência mundial; só gráfico, sem diagnóstico.
+    \item \textbf{GAM}: \textit{desktop}; até 10 estados e 3 símbolos.
+    \item \textbf{Simulador UFSC}: \textit{web}; construção gráfica.
+    \item \textbf{AutomatoGraph}: só AFD; simulação parcialmente visual.
+    \item \textbf{FSM}: DSL \textbf{interna}, em Racket; textual e testável, mas
+          \textbf{sem visualização}.
   \end{itemize}
+  \vspace{6pt}
+  A Autosim é uma DSL \textbf{externa}: sintaxe própria e compilador dedicado.
 \end{frame}
 
 \begin{frame}{Análise comparativa\notexto{Seção 3.6}}
   \begin{center}
-    \small
     \setlength{\tabcolsep}{5pt}
     \begin{tabular}{@{}lccccc@{}}
       \toprule
-      \textbf{Trabalho} & \textbf{Descrição} & \textbf{Versiona-} & \textbf{Compilador/} & \textbf{Simulação} & \textbf{Voltada} \\
-                        & \textbf{textual}   & \textbf{mento}     & \textbf{diagnóstico} & \textbf{visual}    & \textbf{ao ensino} \\
+      & \textbf{Texto} & \textbf{Git} & \textbf{Diagnóstico} & \textbf{Visual} & \textbf{Ensino} \\
       \midrule
       JFLAP          & Não & Não & Não & Sim & Sim \\
       GAM            & Não & Não & Não & Sim & Sim \\
       Simulador UFSC & Não & Não & Não & Sim & Sim \\
       AutomatoGraph  & Não & Não & Não & Parcial & Sim \\
-      FSM            & Sim (interna) & Sim & Via Racket & Não & Sim \\
+      FSM            & Sim & Sim & Racket & Não & Sim \\
       \rowcolor{acento!15}
-      \textbf{Autosim} & \textbf{Sim (externa)} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} \\
+      \textbf{Autosim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} \\
       \bottomrule
     \end{tabular}
   \end{center}
-  \vspace{6pt}
+  \vspace{4pt}
   \begin{center}
-    As gráficas \textbf{visualizam sem texto}; a textual \textbf{descreve sem visualizar}.\\
-    \textbf{A Autosim une as duas coisas, com diagnóstico de compilador.}
+    As gráficas visualizam sem texto; a textual descreve sem visualizar.\\
+    \textbf{A Autosim une as duas, com diagnóstico de compilador.}
   \end{center}
 \end{frame}
 
 % =================================================================================================
 \section{Metodologia de Construção da Solução}
 
-\begin{frame}{Metodologia\notexto{Cap. 4}}
-  \small
-  \textbf{Pesquisa aplicada}, exploratória: pesquisa bibliográfica + desenvolvimento e
-  verificação funcional de um artefato, com levantamento junto a estudantes (Gil, 2002;
-  Wazlawick, 2014).
-  \vspace{6pt}
+\begin{frame}{Etapas da construção da solução\notexto{Seções 4.1--4.2}}
+  \textbf{Pesquisa aplicada}: bibliografia + desenvolvimento e verificação de um artefato
+  (Gil, 2002; Wazlawick, 2014).
+  \vspace{4pt}
   \begin{center}
-    \begin{tikzpicture}[
-        etapa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                      minimum height=14mm,text width=16mm,inner sep=2pt,font=\scriptsize},
-        seta/.style={-{Stealth[length=1.8mm]},thick,acento}]
-      \foreach \i/\t/\p in {1/{Revisão\\bibliográfica}/{mar--jun},
-                            2/{Especificação\\da DSL\\e léxico}/{mar--mai},
-                            3/{Sintático e\\semântico}/{mai},
-                            4/{Simulador e\\interface}/{mai--set},
-                            5/{Validação}/{mai--nov},
-                            6/{Revisão e\\distribuição}/{nov},
-                            7/{Levanta-\\mento com\\estudantes}/{nov}} {
-        \node[etapa] (e\i) at ({(\i-1)*2.0},0) {\textbf{\i}\\\t};
-        \node[below=1mm of e\i,font=\scriptsize\itshape] {\p\ 2026};
-      }
-      \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,6} { \draw[seta] (e\i)--(e\j); }
-    \end{tikzpicture}
+    \renewcommand{\arraystretch}{1.05}
+    \begin{tabular}{@{}rll@{}}
+      \toprule
+      & \textbf{Etapa} & \textbf{Período (2026)} \\
+      \midrule
+      1 & Revisão bibliográfica             & mar--jun \\
+      2 & Especificação da DSL e léxico     & mar--mai \\
+      3 & Analisadores sintático e semântico & mai \\
+      4 & Simulador e interface             & mai--set \\
+      5 & Validação                         & mai--nov \\
+      6 & Revisão e distribuição            & nov \\
+      7 & Levantamento com estudantes       & nov \\
+      \bottomrule
+    \end{tabular}
   \end{center}
-  \vspace{2pt}
+\end{frame}
+
+\begin{frame}{Organização e critérios de validação\notexto{Seções 4.3--4.4}}
   \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.46\textwidth}
       \begin{block}{Organização}
-        \footnotesize Dupla com divisão código/texto; reuniões semanais com o orientador;
-        devolutivas incorporadas ao texto e à ferramenta (versões 1.0.1 a 1.0.4).
+        \begin{itemize}
+          \item Código e texto divididos na dupla.
+          \item Reuniões semanais com o orientador.
+          \item Correções da revisão feitas na ferramenta (1.0.1 a 1.0.4).
+        \end{itemize}
       \end{block}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.54\textwidth}
       \begin{block}{Critérios de validação}
-        \footnotesize Testes por fase (todos aprovados) $\cdot$ autômatos de referência
-        (veredito = definição formal) $\cdot$ erros induzidos (detectados e localizados)
-        $\cdot$ questionário de percepção (indicativo).
+        \begin{itemize}
+          \item Testes por fase: todos aprovados.
+          \item Autômatos de referência: veredito = definição.
+          \item Erros induzidos: detectados e localizados.
+          \item Questionário: percepção (indicativo).
+        \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
@@ -338,32 +317,26 @@
 
 \begin{frame}{Por que Rust --- e as bibliotecas adotadas\notexto{Seções 5.4 e 5.6}}
   \begin{columns}[T]
-    \begin{column}{0.52\textwidth}
-      \begin{block}{Requisitos atendidos}
-        \begin{itemize}\small
-          \item \textbf{Binário nativo único}: sem instalar JVM ou interpretador.
-          \item \textbf{Enumerações com \texttt{match} exaustivo}: \emph{tokens}, AST e erros
-                tratados por completo, verificado pelo compilador.
-          \item \textbf{Ecossistema} para compiladores com bons diagnósticos.
-          \item \textbf{Interface multiplataforma}: Linux, Windows e macOS.
-        \end{itemize}
-      \end{block}
-      {\footnotesize Comparada a Python, Java e C++ (Seção 5.4). Custo: curva de aprendizado.}
+    \begin{column}{0.54\textwidth}
+      \begin{itemize}
+        \item \textbf{Binário nativo}: sem instalar JVM ou interpretador.
+        \item \textbf{\texttt{match} exaustivo}: AST e erros tratados por completo.
+        \item \textbf{Bibliotecas} de diagnóstico.
+        \item \textbf{Multiplataforma}: Linux, Windows, macOS.
+      \end{itemize}
     \end{column}
-    \begin{column}{0.48\textwidth}
+    \begin{column}{0.46\textwidth}
       \centering
-      \small
       \begin{tabular}{@{}ll@{}}
         \toprule
         \textbf{Biblioteca} & \textbf{Uso} \\
         \midrule
-        Logos 0.16   & analisador léxico \\
-        Chumsky 0.13 & analisador sintático \\
-        Ariadne 0.5  & diagnósticos de erro \\
-        Iced 0.14    & interface gráfica \\
+        Logos   & léxico \\
+        Chumsky & sintático \\
+        Ariadne & diagnósticos \\
+        Iced    & interface \\
         \midrule
-        GitHub Actions & testes + pacotes \\
-                       & para 3 sistemas \\
+        GitHub Actions & pacotes \\
         \bottomrule
       \end{tabular}
     \end{column}
@@ -375,31 +348,26 @@
 
 \begin{frame}[fragile]{A linguagem: o mesmo autômato, em texto\notexto{Seção 6.1}}
   \begin{columns}[T]
-    \begin{column}{0.60\textwidth}
-\begin{lstlisting}[language=asl]
+    \begin{column}{0.62\textwidth}
+\begin{lstlisting}[language=asl,basicstyle=\ttfamily\normalsize,aboveskip=0pt]
 alfabeto { 'a', 'b' }
-
-automato AFD exemplo_afd {
-    estados { q0, q1, q2 }
-    inicial q0
-    finais { q2 }
-    transicoes {
-        q0 -> q1 com 'a'    q0 -> q0 com 'b'
-        q1 -> q1 com 'a'    q1 -> q2 com 'b'
-        q2 -> q2 com 'a'    q2 -> q2 com 'b'
-    }
+automato AFD exemplo {
+  estados { q0, q1, q2 }
+  inicial q0
+  finais { q2 }
+  transicoes {
+    q0 -> q1 com 'a'   q0 -> q0 com 'b'
+    q1 -> q1 com 'a'   q1 -> q2 com 'b'
+    q2 -> q2 com 'a'   q2 -> q2 com 'b'
+  }
 }
-
-simular exemplo_afd com "ab"    // aceita
-simular exemplo_afd com "bbb"   // rejeita
+simular exemplo com "ab"
 \end{lstlisting}
     \end{column}
-    \begin{column}{0.40\textwidth}
-      \small
+    \begin{column}{0.38\textwidth}
       \begin{itemize}
-        \item DSL \textbf{externa}, declarativa, em \textbf{português}.
-        \item Cada elemento da quíntupla tem uma declaração própria.
-        \item Arquivo \texttt{.asl}: alfabeto comum, autômatos e comandos \texttt{simular}.
+        \item DSL \textbf{externa}, em \textbf{português}.
+        \item Uma declaração para cada parte da quíntupla.
         \item Texto puro: \textbf{versionável} com Git.
       \end{itemize}
     \end{column}
@@ -407,29 +375,17 @@ simular exemplo_afd com "bbb"   // rejeita
 \end{frame}
 
 \begin{frame}[fragile]{Gramática e decisões de projeto\notexto{Seções 6.2--6.4}}
-  \footnotesize Trecho da gramática em EBNF (completa na Seção 6.2):
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,literate={->}{->}2]
-declaracao_automato ::= "automato" ("AFD" | "AFN") ident "{"
-                        "estados" lista "inicial" ident "finais" lista
-                        "transicoes" "{" transicao* "}" "}"
-transicao           ::= ident "->" ident "com" (char_literal | "epsilon" | "eps")
-comando_simulacao   ::= "simular" ident "com" cadeia_literal
+  Gramática em \textbf{EBNF}; por exemplo, a transição:
+\begin{lstlisting}[basicstyle=\ttfamily\normalsize,literate={->}{->}2]
+transicao ::= ident "->" ident "com" (char | "eps")
 \end{lstlisting}
-  \vspace{2pt}
-  \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}\small
-        \item \textbf{Alfabeto único} por arquivo.
-        \item Tipo \textbf{AFD/AFN explícito}: determinismo só é exigido do AFD.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}\small
-        \item \textbf{Português} e \textbf{case-insensitive} (11 palavras reservadas).
-        \item Transições $\varepsilon$ com \texttt{epsilon} ou \texttt{eps}.
-      \end{itemize}
-    \end{column}
-  \end{columns}
+  \vspace{4pt}
+  \begin{itemize}
+    \item \textbf{Alfabeto único} por arquivo.
+    \item Tipo \textbf{AFD/AFN explícito}: determinismo só é exigido do AFD.
+    \item Palavras-chave em \textbf{português}, sem diferenciar maiúsculas.
+    \item Transições $\varepsilon$ com \texttt{eps} ou \texttt{epsilon}.
+  \end{itemize}
 \end{frame}
 
 % =================================================================================================
@@ -438,85 +394,76 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \begin{frame}{Pipeline de compilação\notexto{Seção 7.1}}
   \begin{center}
     \begin{tikzpicture}[
-        node distance=4mm,
+        node distance=5mm,
         etapa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                      minimum height=13mm,text width=16mm,inner sep=2pt,font=\footnotesize},
+                      minimum height=13mm,text width=20mm,inner sep=2pt},
         seta/.style={-{Stealth[length=2mm]},thick,acento}]
-      \node[etapa] (f) {Arquivo\\\texttt{.asl}};
-      \node[etapa,right=of f] (l) {Léxico\\\textbf{Logos}};
+      \node[etapa] (l) {Léxico\\\textbf{Logos}};
       \node[etapa,right=of l] (p) {Sintático\\\textbf{Chumsky}};
       \node[etapa,right=of p] (s) {Semântico};
       \node[etapa,right=of s] (r) {Simulador};
       \node[etapa,right=of r] (g) {Interface\\\textbf{Iced}};
+      \node[left=4mm of l,align=center] (f) {\texttt{.asl}};
       \draw[seta](f)--(l);\draw[seta](l)--(p);\draw[seta](p)--(s);\draw[seta](s)--(r);\draw[seta](r)--(g);
-      \node[draw=rejeita,fill=rejeita!8,rounded corners,font=\footnotesize,below=9mm of p,
-            text width=60mm,align=center] (e) {Erro em qualquer fase: diagnóstico com \textbf{Ariadne}
-            e a execução para};
+      \node[draw=rejeita,fill=rejeita!8,rounded corners,below=9mm of s,
+            text width=100mm,align=center] (e) {Erro em qualquer fase: diagnóstico com \textbf{Ariadne}};
       \draw[-{Stealth[length=2mm]},rejeita,dashed] (l.south) -- (e);
       \draw[-{Stealth[length=2mm]},rejeita,dashed] (p.south) -- (e);
       \draw[-{Stealth[length=2mm]},rejeita,dashed] (s.south) -- (e);
     \end{tikzpicture}
   \end{center}
-  \vspace{2pt}
-  \begin{itemize}\small
-    \item \textbf{Logos} gera o analisador léxico, um AFD, a partir de anotações: um autômato
-          lendo a linguagem de autômatos.
-    \item \textbf{Chumsky} (\emph{parser combinators}): a gramática é escrita compondo funções e
-          produz a AST.
+  \vspace{4pt}
+  \begin{itemize}
+    \item \textbf{Logos} gera o léxico como um AFD: um autômato lendo autômatos.
+    \item \textbf{Chumsky} monta a AST compondo funções (\textit{parser combinators}).
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Análise semântica e diagnósticos\notexto{Seções 7.4 e 7.7}}
   \begin{columns}[T]
-    \begin{column}{0.44\textwidth}
-      \begin{enumerate}\small
-        \item \textbf{Tabela de símbolos}: duplicatas; alfabeto vazio.
-        \item \textbf{Referências}: estados, símbolos e autômatos não declarados.
-        \item \textbf{Determinismo} (só AFD): sem $\varepsilon$ e uma transição por (estado, símbolo).
+    \begin{column}{0.42\textwidth}
+      \begin{enumerate}
+        \item \textbf{Duplicatas} e alfabeto vazio.
+        \item \textbf{Referências} não declaradas.
+        \item \textbf{Determinismo} do AFD.
       \end{enumerate}
-      \vspace{4pt}
-      \small Erros \textbf{acumulados}: todos aparecem em uma só execução.
+      \vspace{6pt}
+      Todos os erros aparecem em \textbf{uma só execução}.
     \end{column}
-    \begin{column}{0.56\textwidth}
+    \begin{column}{0.58\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/erro_lexico_token_invalido.png}\\[4pt]
-      \footnotesize Diagnóstico real da Autosim: arquivo, \textbf{linha e coluna},
-      trecho realçado e descrição em português.
+      \vspace{4pt}
+      \includegraphics[width=\textwidth]{img/erro_lexico_token_invalido.png}\\[6pt]
+      Diagnóstico real: \textbf{linha, coluna}, trecho e descrição.
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Simulador: um caminho, não uma nuvem de estados\notexto{Seção 7.5}}
   \begin{itemize}
-    \item No AFN, acender \textbf{todos os estados ativos} ao mesmo tempo dificultava acompanhar
-          a execução.
-    \item A Autosim exibe um \textbf{caminho único}:
+    \item Acender todos os estados do AFN \textbf{confundia} a leitura.
+    \item A Autosim mostra um \textbf{caminho único}:
           \begin{itemize}
-            \item cadeia aceita $\to$ um \textbf{caminho aceitador};
-            \item cadeia rejeitada $\to$ o caminho que \textbf{mais se aproximou} da aceitação.
+            \item aceita $\to$ um caminho \textbf{aceitador};
+            \item rejeita $\to$ o caminho que \textbf{chegou mais perto}.
           \end{itemize}
-    \item Escolhido por \textbf{busca em largura} sobre (estado, símbolos consumidos): o veredito
-          continua sendo o da definição formal.
-    \item \textbf{Histórico completo}: avançar e voltar passo a passo.
+    \item \textbf{Busca em largura} sobre (estado, símbolos lidos): o veredito é o da definição.
+    \item Histórico: \textbf{avançar e voltar} passo a passo.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Interface gráfica (Iced)\notexto{Seção 7.6}}
   \begin{columns}[T]
-    \begin{column}{0.45\textwidth}
-      \footnotesize
+    \begin{column}{0.40\textwidth}
       \begin{itemize}
-        \item Arquitetura Elm (\textit{Model-View-Update}).
-        \item \textbf{Cabeçalho}: autômato e seletor de simulação.
-        \item \textbf{Canvas}: diagrama, cadeia de entrada e histórico.
-        \item \textbf{Controles}: Passo, Voltar, Rodar/Pausar (800 ms), Reset, Centralizar.
-        \item \textit{Layout} circular; raio cresce com o número de estados.
-        \item Estado corrente em azul; no fim, \textcolor{aceita}{verde} ou
+        \item Diagrama gerado do texto.
+        \item Passo, voltar e rodar.
+        \item Estado atual destacado; no fim, \textcolor{aceita}{verde} ou
               \textcolor{rejeita}{vermelho}.
-        \item \textit{Pan} e \textit{zoom} (20\%--400\%); entrada e histórico ficam fixos.
+        \item \textit{Pan} e \textit{zoom}.
       \end{itemize}
     \end{column}
-    \begin{column}{0.55\textwidth}
+    \begin{column}{0.60\textwidth}
       \centering
       \includegraphics[width=\textwidth]{img/interface_visao_geral.png}
     \end{column}
@@ -527,30 +474,28 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_simulacao_aceita.png}\\[3pt]
-      \footnotesize \texttt{"ab"}: \textcolor{aceita}{\textbf{ACEITA}}, termina em $q_2$
+      \includegraphics[width=\textwidth]{img/interface_simulacao_aceita.png}\\[4pt]
+      \texttt{"ab"}: \textcolor{aceita}{\textbf{aceita}}
     \end{column}
     \begin{column}{0.5\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_simulacao_rejeita.png}\\[3pt]
-      \footnotesize \texttt{"bbb"}: \textcolor{rejeita}{\textbf{REJEITA}}, termina em $q_0$
+      \includegraphics[width=\textwidth]{img/interface_simulacao_rejeita.png}\\[4pt]
+      \texttt{"bbb"}: \textcolor{rejeita}{\textbf{rejeita}}
     \end{column}
   \end{columns}
-  \vspace{6pt}
-  \centering\small O mesmo AFD dos slides, que aceita as cadeias que contêm ``$ab$''.
 \end{frame}
 
 \begin{frame}{Telas: AFN-$\varepsilon$ e diagrama grande\notexto{Seções 6.5 e 7.6.2}}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_afn_epsilon.png}\\[3pt]
-      \footnotesize AFN-$\varepsilon$ para $a^*b^*$: a aresta $\varepsilon$ liga $q_0$ a $q_1$
+      \includegraphics[width=\textwidth]{img/interface_afn_epsilon.png}\\[4pt]
+      AFN-$\varepsilon$ para $a^*b^*$
     \end{column}
     \begin{column}{0.5\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_automato_grande.png}\\[3pt]
-      \footnotesize AFD de 14 estados: navegação por \textit{pan} e \textit{zoom}
+      \includegraphics[width=\textwidth]{img/interface_automato_grande.png}\\[4pt]
+      AFD de 14 estados
     \end{column}
   \end{columns}
 \end{frame}
@@ -562,9 +507,9 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \begin{frame}{Demonstração da aplicação}
   \vfill
   \begin{center}
-    {\Huge\bfseries\color{acento} Autosim em funcionamento}\\[14pt]
-    {\large demonstração ao vivo}\\[22pt]
-    {\small\color{gray} versão 1.0.4 \quad$\cdot$\quad Linux}
+    {\Huge\bfseries\color{acento} Autosim em funcionamento}\\[16pt]
+    {\Large demonstração ao vivo}\\[22pt]
+    {\color{gray} versão 1.0.4 \quad$\cdot$\quad Linux}
   \end{center}
   \vfill
 \end{frame}
@@ -572,26 +517,21 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \begin{frame}{Testes automatizados e cenários de erro\notexto{Seções 8.1--8.5 e 8.8}}
   \begin{columns}[T]
     \begin{column}{0.42\textwidth}
-      \begin{block}{51 testes automatizados}
-        \begin{tabular}{@{}lc@{}}
-          Analisador léxico    & 12 \\
-          Analisador sintático & 14 \\
-          Analisador semântico & 16 \\
-          Simulador            & 9 \\
-          \midrule
-          \textbf{Total}       & \textbf{51} \\
+      \begin{block}{51 testes, todos aprovados}
+        \begin{tabular}{@{}lr@{}}
+          Léxico     & 12 \\
+          Sintático  & 14 \\
+          Semântico  & 16 \\
+          Simulador  & 9 \\
         \end{tabular}
       \end{block}
-      \footnotesize Todos aprovados; executados também antes de cada versão publicada.
     \end{column}
     \begin{column}{0.58\textwidth}
-      \begin{block}{6 arquivos com erros propositais}
-        \small
+      \begin{block}{6 arquivos com erros}
         \begin{itemize}
-          \item Cada erro foi detectado \textbf{na fase correta}: léxica, sintática ou semântica.
-          \item Toda mensagem traz \textbf{linha, coluna, trecho realçado} e descrição.
-          \item Um arquivo com \textbf{5 erros semânticos} gerou as 5 mensagens em
-                \textbf{uma única execução}.
+          \item Cada erro detectado \textbf{na fase certa}.
+          \item Sempre com \textbf{linha e coluna}.
+          \item 5 erros, \textbf{5 mensagens} de uma vez.
         \end{itemize}
       \end{block}
     \end{column}
@@ -602,136 +542,159 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \begin{center}
     \begin{tikzpicture}[
         caixa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                      minimum height=9mm,text width=40mm,font=\footnotesize},
+                      minimum height=10mm,text width=40mm},
         seta/.style={-{Stealth[length=2mm]},thick,acento}]
-      \node[draw=acento,rounded corners,font=\footnotesize,align=center,text width=30mm] (c)
-        {todas as cadeias\\até o comprimento 12};
-      \node[caixa,right=12mm of c,yshift=12mm] (a) {\textbf{Autosim 1.0.4}};
-      \node[caixa,right=12mm of c] (d) {definição da linguagem};
-      \node[caixa,right=12mm of c,yshift=-12mm] (r) {simulador de referência\\(conjunto de estados)};
-      \node[draw=aceita,fill=aceita!8,rounded corners,right=12mm of d,align=center,
-            font=\small,text width=34mm] (v)
-        {\textbf{\large 57.368} cadeias\\\textbf{\large 0} divergências};
+      \node[draw=acento,rounded corners,align=center,text width=30mm] (c)
+        {todas as cadeias\\até 12 símbolos};
+      \node[caixa,right=10mm of c,yshift=14mm] (a) {\textbf{Autosim 1.0.4}};
+      \node[caixa,right=10mm of c] (d) {definição};
+      \node[caixa,right=10mm of c,yshift=-14mm] (r) {simulador de referência};
+      \node[draw=aceita,fill=aceita!8,rounded corners,right=10mm of d,align=center,
+            text width=32mm] (v)
+        {\textbf{\Large 57.368}\\cadeias\\\textbf{\Large 0}\\divergências};
       \foreach \n in {a,d,r} { \draw[seta] (c.east) -- (\n.west); \draw[seta] (\n.east) -- (v.west); }
     \end{tikzpicture}
   \end{center}
   \vspace{2pt}
-  \begin{itemize}\small
-    \item 8 autômatos clássicos (Hopcroft; Sipser): AFD, AFN e AFN-$\varepsilon$.
-    \item Um AFN e o AFD obtido dele por subconjuntos aceitaram \textbf{as mesmas 4.092 cadeias}.
-    \item Limite: exaustiva só até o comprimento testado; verifica o veredito, não o desenho do caminho.
-  \end{itemize}
+  8 autômatos clássicos; um AFN e o AFD equivalente aceitaram as \textbf{mesmas 4.092 cadeias}.
 \end{frame}
 
-\begin{frame}{Percepção de estudantes\notexto{Seção 8.9}}
-  % Fonte: pesquisa/respostas.csv (formulário anônimo, 11 respostas, 9 a 13 nov. 2026).
-  % Apresentar como percepção preliminar: não mede aprendizagem.
+\begin{frame}{Desempenho do simulador\notexto{complementar ao texto}}
+  % Fonte: validacao/src/bin/desempenho.rs (Autosim 1.0.4, notebook dos autores; mediana de 5
+  % repetições; média de duas execuções; 200 cadeias aleatórias por comprimento).
   \begin{columns}[T]
-    \begin{column}{0.36\textwidth}
-      \begin{block}{11 estudantes \textmd{\footnotesize(9 a 13 nov.)}}
-        \footnotesize
-        \begin{itemize}
-          \item 9 cursaram ou cursam a disciplina; 4 já usaram o JFLAP.
-          \item \textbf{Todos} abriram e simularam um exemplo (2 com dificuldade).
-          \item Para criar autômatos, \textbf{7 de 11 preferem escrever em texto}
-                (2 desenhar, 2 tanto faz).
-        \end{itemize}
-      \end{block}
+    \begin{column}{0.38\textwidth}
+      \vspace{6pt}
+      \textbf{2 a 14 µs} por cadeia nos 8 autômatos (até 12 símbolos).
+      \vspace{10pt}
+
+      Em cadeias longas, o tempo cresce de forma \textbf{linear}: cerca de
+      \textbf{1 ms} para 1.000 símbolos.
     \end{column}
-    \begin{column}{0.64\textwidth}
+    \begin{column}{0.62\textwidth}
       \centering
-      {\footnotesize Concordam (4 ou 5, na escala de 1 a 5) \color{gray}(média)}\\[6pt]
       \begin{tikzpicture}
-      \node[anchor=east,font=\scriptsize] at (-0.1,-0.00) {Atende às minhas necessidades};
-      \fill[acento!15] (0,-0.20) rectangle (3.0,0.20);
-      \fill[acento] (0,-0.20) rectangle (2.46,0.20);
-      \node[anchor=west,font=\scriptsize] at (3.05,-0.00) {\textbf{82\%} \color{gray}(4.2)};
-      \node[anchor=east,font=\scriptsize] at (-0.1,-0.62) {É fácil de usar};
-      \fill[acento!15] (0,-0.82) rectangle (3.0,-0.42);
-      \fill[acento] (0,-0.82) rectangle (2.73,-0.42);
-      \node[anchor=west,font=\scriptsize] at (3.05,-0.62) {\textbf{91\%} \color{gray}(4.4)};
-      \node[anchor=east,font=\scriptsize] at (-0.1,-1.24) {A linguagem é fácil de entender};
-      \fill[acento!15] (0,-1.44) rectangle (3.0,-1.04);
-      \fill[acento] (0,-1.44) rectangle (2.73,-1.04);
-      \node[anchor=west,font=\scriptsize] at (3.05,-1.24) {\textbf{91\%} \color{gray}(4.4)};
-      \node[anchor=east,font=\scriptsize] at (-0.1,-1.86) {O passo a passo ajuda a entender};
-      \fill[acento!15] (0,-2.06) rectangle (3.0,-1.66);
-      \fill[acento] (0,-2.06) rectangle (2.46,-1.66);
-      \node[anchor=west,font=\scriptsize] at (3.05,-1.86) {\textbf{82\%} \color{gray}(4.4)};
-      \node[anchor=east,font=\scriptsize] at (-0.1,-2.48) {As mensagens de erro são claras};
-      \fill[acento!15] (0,-2.68) rectangle (3.0,-2.28);
-      \fill[acento] (0,-2.68) rectangle (3.00,-2.28);
-      \node[anchor=west,font=\scriptsize] at (3.05,-2.48) {\textbf{100\%} \color{gray}(4.5)};
-      \node[anchor=east,font=\scriptsize] at (-0.1,-3.10) {Usaria para estudar};
-      \fill[acento!15] (0,-3.30) rectangle (3.0,-2.90);
-      \fill[acento] (0,-3.30) rectangle (2.46,-2.90);
-      \node[anchor=west,font=\scriptsize] at (3.05,-3.10) {\textbf{82\%} \color{gray}(4.5)};
+        \begin{axis}[
+            width=0.92\linewidth, height=0.70\textheight, scale only axis=false,
+            xlabel={símbolos na cadeia}, ylabel={µs por cadeia},
+            xmin=0, xmax=1100, ymin=0, ymax=1200, enlarge x limits=false,
+            xtick={0,250,500,750,1000}, ytick={0,300,600,900,1200},
+            /pgf/number format/1000 sep={.},
+            grid=major, grid style={gray!25},
+            title={AFN ``3º símbolo do fim é 1''}]
+          \addplot[very thick,color=acento,mark=*] coordinates {
+            (100,96.8) (200,189.7) (300,260.8) (400,406.6) (500,478.4)
+            (600,615.9) (700,626.1) (800,947.1) (900,1020.1) (1000,1104.0)};
+        \end{axis}
       \end{tikzpicture}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Percepção de estudantes: participantes\notexto{Seção 8.9}}
+  % Fonte: pesquisa/respostas.csv (formulário anônimo, 11 respostas, 9 a 13 nov. 2026).
+  \begin{itemize}
+    \item \textbf{11 estudantes} da UTP, de 9 a 13 de novembro, com o guia rápido.
+    \item 9 cursaram ou cursam a disciplina; 4 já usaram o JFLAP.
+    \item \textbf{Todos} abriram e simularam um exemplo.
+    \item \textbf{7 de 11} preferem escrever o autômato em texto.
+  \end{itemize}
   \vspace{8pt}
-  {\footnotesize\itshape ``Inicialmente surgiu uma dificuldade de entender como o fluxo e a solução
-  funcionava, mas foi rápido de entender pela intuitividade.''}\\[4pt]
-  {\scriptsize\color{gray} Percepção, não aprendizagem; amostra pequena e não aleatória.}
+  \begin{block}{Comentário de um participante}
+    \itshape ``[...] foi rápido de entender pela intuitividade.''
+  \end{block}
+\end{frame}
+
+\begin{frame}{Percepção de estudantes: avaliação\notexto{Seção 8.9}}
+  \begin{center}
+    Concordam (nota 4 ou 5, de 1 a 5) \textcolor{gray}{e média}\\[8pt]
+    \begin{tikzpicture}
+      \foreach \y/\t/\v/\p/\m in {0/Atende às necessidades/2.46/82/{4,2},
+                                  1/É fácil de usar/2.73/91/{4,4},
+                                  2/A linguagem é fácil/2.73/91/{4,4},
+                                  3/O passo a passo ajuda/2.46/82/{4,4},
+                                  4/As mensagens de erro são claras/3.00/100/{4,5},
+                                  5/Usaria para estudar/2.46/82/{4,5}} {
+        \node[anchor=east] at (-0.15,-\y*0.62) {\t};
+        \fill[acento!15] (0,-\y*0.62-0.22) rectangle (3.0,-\y*0.62+0.22);
+        \fill[acento] (0,-\y*0.62-0.22) rectangle (\v,-\y*0.62+0.22);
+        \node[anchor=west] at (3.1,-\y*0.62) {\textbf{\p\%} \textcolor{gray}{(\m)}};
+      }
+    \end{tikzpicture}
+  \end{center}
+  \vspace{2pt}
+  \centering\textcolor{gray}{Percepção, não aprendizagem; amostra pequena e não aleatória.}
 \end{frame}
 
 \begin{frame}{Discussão: os objetivos foram atendidos?\notexto{Seção 8.10}}
-  \small
-  \begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
-    \toprule
-    \textbf{Objetivo} & \textbf{Evidência} \\
-    \midrule
-    1. DSL em EBNF          & Todos os autômatos da validação escritos nela \\
-    2. Compilador           & 42 testes das 3 fases; 6 cenários de erro localizados \\
-    3. Simulador            & 9 testes + 57.368 simulações sem divergência \\
-    4. Interface            & \textbf{Sem} testes automatizados; usada pelos 11 estudantes (Seção 8.9) \\
-    5. Validação            & Os 3 instrumentos aplicados; critérios atendidos \\
-    \bottomrule
-  \end{tabular}
-  \vspace{6pt}
-  \begin{block}{Limites}
-    \footnotesize Casos de teste escritos pelos próprios autores $\cdot$ interface avaliada só por uso e percepção
-    $\cdot$ a retroalimentação é \textbf{produzida corretamente}, mas o efeito sobre a
-    \textbf{aprendizagem} não foi medido.
+  \begin{center}
+    \begin{tabular}{@{}ll@{}}
+      \toprule
+      \textbf{Objetivo} & \textbf{Evidência} \\
+      \midrule
+      1. DSL        & todos os autômatos escritos nela \\
+      2. Compilador & 42 testes e 6 cenários de erro \\
+      3. Simulador  & 57.368 simulações sem divergência \\
+      4. Interface  & demonstrada; usada por 11 estudantes \\
+      5. Validação  & todos os critérios atendidos \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{4pt}
+  \begin{block}{Limite}
+    A retroalimentação é \textbf{correta}, mas o efeito na \textbf{aprendizagem} não foi medido.
   \end{block}
 \end{frame}
 
 % =================================================================================================
 \section{Conclusão}
 
-\begin{frame}{Contribuições\notexto{Cap. 9}}
-  A pergunta de pesquisa foi respondida no \textbf{plano funcional}: a Autosim entrega
-  retroalimentação imediata na construção e na execução de autômatos.
+\begin{frame}{Contribuições e importância\notexto{Cap. 9}}
+  Pergunta respondida no \textbf{plano funcional}: a Autosim dá retorno imediato.
   \begin{itemize}
-    \item \textbf{DSL} declarativa em português para AFDs e AFNs com $\varepsilon$, em EBNF.
-    \item \textbf{Compilador pedagógico} com diagnósticos localizados.
-    \item \textbf{Simulador} de caminho único, com histórico nos dois sentidos.
-    \item \textbf{Interface gráfica} que desenha e anima o autômato a partir do texto.
-    \item Validação: \textbf{51 testes}, \textbf{57.368 simulações} sem divergência e cenários de erro.
-    \item Distribuída para Linux, Windows e macOS (versão 1.0.4), com manual de uso.
+    \item DSL em português, com \textbf{compilador} que localiza os erros.
+    \item Simulador de \textbf{caminho único} e interface animada.
+    \item Validada por \textbf{testes} e \textbf{57.368 simulações}; bem recebida por 11 estudantes.
+    \item Distribuída para \textbf{Linux, Windows e macOS}.
+  \end{itemize}
+  \vspace{4pt}
+  \begin{block}{Importância}
+    Entre as ferramentas analisadas, é a única que une texto, diagnóstico e simulação visual.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Dificuldades encontradas\notexto{Cap. 9}}
+  \begin{itemize}
+    \item \textbf{AFN com vários estados acesos}\\
+          $\to$ caminho único escolhido antes da exibição.
+    \item \textbf{Autômatos grandes} se sobrepunham\\
+          $\to$ raio que cresce, \textit{pan} e \textit{zoom}.
+    \item \textbf{Acentos deslocavam a coluna} dos erros\\
+          $\to$ \textit{bytes} em todo o diagnóstico.
+    \item \textbf{Alfabeto vazio} aceito, contra a teoria\\
+          $\to$ verificação semântica nova.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Limitações e trabalhos futuros\notexto{Cap. 9}}
   \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.48\textwidth}
       \begin{block}{Limitações}
-        \begin{itemize}\small
-          \item Alfabeto único por arquivo.
-          \item Sem modo de linha de comando.
-          \item Um arquivo por execução.
-          \item Sem editor embutido com realce.
-          \item Sem conversão AFN$\to$AFD nem minimização.
+        \begin{itemize}
+          \item Um alfabeto por arquivo.
+          \item Sem linha de comando.
+          \item Sem editor embutido.
+          \item Sem conversão AFN$\to$AFD.
         \end{itemize}
       \end{block}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.52\textwidth}
       \begin{block}{Trabalhos futuros}
-        \begin{itemize}\small
-          \item Editor com realce na interface.
-          \item Conversões AFN$\to$AFD, minimização e expressões regulares.
-          \item Autômatos com pilha e \textbf{máquinas de Turing}.
-          \item \textbf{Estudos controlados com estudantes}.
+        \begin{itemize}
+          \item Editor com realce.
+          \item Conversões e minimização.
+          \item Pilha e máquinas de Turing.
+          \item \textbf{Estudos com turmas}.
         \end{itemize}
       \end{block}
     \end{column}
@@ -743,10 +706,10 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \begin{frame}[plain]
   \centering
   \vfill
-  {\color{white}\Huge \textbf{Obrigado!}}\\[10pt]
-  {\color{white}\large Perguntas?}\\[24pt]
-  {\color{white!85}\footnotesize João Thomaz Vieira \quad$\cdot$\quad Klaus Siegfried Beckmann}\\[2pt]
-  {\color{white!85}\footnotesize Orientador: Prof. Diógenes Cogo Furlan \quad$\cdot$\quad UTP, 2026}
+  {\color{white}\Huge \textbf{Obrigado!}}\\[12pt]
+  {\color{white}\Large Perguntas?}\\[22pt]
+  {\color{white}Agradecemos ao Prof. Diógenes Cogo Furlan\\e aos 11 estudantes que participaram da pesquisa.}\\[14pt]
+  {\color{white!85}João Thomaz Vieira \quad$\cdot$\quad Klaus Siegfried Beckmann}
   \vfill
 \end{frame}}
 
@@ -761,7 +724,7 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 % PERGUNTAS PROVÁVEIS DA BANCA: índice com link para cada resposta. Cada slide tem a resposta
 % curta (o que dizer primeiro), os detalhes (se a banca insistir) e onde o assunto está no texto.
 % =================================================================================================
-\begin{frame}[label=perguntas]{Perguntas prováveis da banca}
+\begin{frame}[label=perguntas,shrink=8]{Perguntas prováveis da banca}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \footnotesize
@@ -1341,7 +1304,7 @@ automato AFN exemplo_afn_eps {
   \voltar
 \end{frame}
 
-\begin{frame}[label=res-lexsin]{Análise léxica e sintática\notexto{Seções 7.2--7.3}}
+\begin{frame}[label=res-lexsin,shrink=10]{Análise léxica e sintática\notexto{Seções 7.2--7.3}}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \begin{block}{Léxico (Logos)}
