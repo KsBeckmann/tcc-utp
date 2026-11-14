@@ -95,8 +95,14 @@ As páginas citadas se referem ao arquivo `Outubro.pdf`.
 - [x] Slides refeitos: 36 slides, seções = 9 capítulos atuais, Roteiro no início de cada seção
 - [x] Slide de vídeo retirado; `video/demo-autosim.mp4` (1min44s) fica no repositório como reserva, para abrir à mão se necessário
 - [x] Roteiro de fala refeito: 13:37 planejados
-- [ ] Preencher o slide 31 (avaliação preliminar) com os resultados do formulário
+- [x] Preencher o slide 31 (avaliação preliminar) com os resultados do formulário (11 respostas, `pesquisa/respostas.csv`)
 - [ ] Testar no computador da defesa a demonstração ao vivo (slide 28, Alt+Tab para a Autosim) e o vídeo de reserva
 - [ ] Ensaiar cronometrando
 - [x] Perguntas prováveis da banca: índice + 17 respostas depois do "Obrigado" (antes do índice "Outros")
 - [ ] Autosim: conferir a cadeia do `simular` contra o alfabeto (hoje um símbolo fora de Σ só rejeita, sem mensagem; ver P8)
+
+### Pesquisa com estudantes (13/11)
+- [x] Seção 8.9, Percepção de Estudantes: 11 respostas (9 a 13 nov.), Quadro 16 com as notas, limitações
+- [x] Apêndice E com o questionário; Metodologia com a 7ª etapa e o questionário como instrumento indicativo
+- [x] Resumo, Introdução, Discussão (8.10) e Conclusão: percepção levantada, aprendizagem continua como trabalho futuro
+- [x] Slides: Metodologia com 7 etapas, slide 31 com rótulo Seção 8.9, Discussão e P1 com Seção 8.10

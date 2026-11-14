@@ -294,23 +294,25 @@
 \begin{frame}{Metodologia\notexto{Cap. 4}}
   \small
   \textbf{Pesquisa aplicada}, exploratória: pesquisa bibliográfica + desenvolvimento e
-  verificação funcional de um artefato (Gil, 2002; Wazlawick, 2014).
+  verificação funcional de um artefato, com levantamento junto a estudantes (Gil, 2002;
+  Wazlawick, 2014).
   \vspace{6pt}
   \begin{center}
     \begin{tikzpicture}[
         etapa/.style={draw=acento,fill=acento!10,rounded corners,align=center,
-                      minimum height=14mm,text width=19mm,inner sep=2pt,font=\scriptsize},
+                      minimum height=14mm,text width=16mm,inner sep=2pt,font=\scriptsize},
         seta/.style={-{Stealth[length=1.8mm]},thick,acento}]
       \foreach \i/\t/\p in {1/{Revisão\\bibliográfica}/{mar--jun},
                             2/{Especificação\\da DSL\\e léxico}/{mar--mai},
                             3/{Sintático e\\semântico}/{mai},
                             4/{Simulador e\\interface}/{mai--set},
                             5/{Validação}/{mai--nov},
-                            6/{Revisão e\\distribuição}/{nov}} {
-        \node[etapa] (e\i) at ({(\i-1)*2.3},0) {\textbf{\i}\\\t};
+                            6/{Revisão e\\distribuição}/{nov},
+                            7/{Levanta-\\mento com\\estudantes}/{nov}} {
+        \node[etapa] (e\i) at ({(\i-1)*2.0},0) {\textbf{\i}\\\t};
         \node[below=1mm of e\i,font=\scriptsize\itshape] {\p\ 2026};
       }
-      \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,5} { \draw[seta] (e\i)--(e\j); }
+      \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,6} { \draw[seta] (e\i)--(e\j); }
     \end{tikzpicture}
   \end{center}
   \vspace{2pt}
@@ -324,7 +326,8 @@
     \begin{column}{0.5\textwidth}
       \begin{block}{Critérios de validação}
         \footnotesize Testes por fase (todos aprovados) $\cdot$ autômatos de referência
-        (veredito = definição formal) $\cdot$ erros induzidos (detectados e localizados).
+        (veredito = definição formal) $\cdot$ erros induzidos (detectados e localizados)
+        $\cdot$ questionário de percepção (indicativo).
       \end{block}
     \end{column}
   \end{columns}
@@ -620,22 +623,59 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Avaliação preliminar com estudantes}
-  % PREENCHER com os resultados do formulário antes da defesa.
-  % Este levantamento não faz parte da monografia: apresentá-lo como percepção preliminar.
-  \begin{alertblock}{Percepção preliminar --- fora do escopo da monografia}
-    \small Levantamento feito após a entrega do texto, com o guia rápido da ferramenta.
-    Não mede aprendizagem: indica como os estudantes perceberam a Autosim.
-  \end{alertblock}
-  \vspace{6pt}
-  \begin{itemize}
-    \item \textcolor{rejeita}{\textbf{[PREENCHER]}} participantes; período de aplicação.
-    \item \textcolor{rejeita}{\textbf{[PREENCHER]}} principais resultados (2 ou 3 perguntas).
-    \item \textcolor{rejeita}{\textbf{[PREENCHER]}} comentário que mais chamou atenção.
-  \end{itemize}
+\begin{frame}{Percepção de estudantes\notexto{Seção 8.9}}
+  % Fonte: pesquisa/respostas.csv (formulário anônimo, 11 respostas, 9 a 13 nov. 2026).
+  % Apresentar como percepção preliminar: não mede aprendizagem.
+  \begin{columns}[T]
+    \begin{column}{0.36\textwidth}
+      \begin{block}{11 estudantes \textmd{\footnotesize(9 a 13 nov.)}}
+        \footnotesize
+        \begin{itemize}
+          \item 9 cursaram ou cursam a disciplina; 4 já usaram o JFLAP.
+          \item \textbf{Todos} abriram e simularam um exemplo (2 com dificuldade).
+          \item Para criar autômatos, \textbf{7 de 11 preferem escrever em texto}
+                (2 desenhar, 2 tanto faz).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.64\textwidth}
+      \centering
+      {\footnotesize Concordam (4 ou 5, na escala de 1 a 5) \color{gray}(média)}\\[6pt]
+      \begin{tikzpicture}
+      \node[anchor=east,font=\scriptsize] at (-0.1,-0.00) {Atende às minhas necessidades};
+      \fill[acento!15] (0,-0.20) rectangle (3.0,0.20);
+      \fill[acento] (0,-0.20) rectangle (2.46,0.20);
+      \node[anchor=west,font=\scriptsize] at (3.05,-0.00) {\textbf{82\%} \color{gray}(4.2)};
+      \node[anchor=east,font=\scriptsize] at (-0.1,-0.62) {É fácil de usar};
+      \fill[acento!15] (0,-0.82) rectangle (3.0,-0.42);
+      \fill[acento] (0,-0.82) rectangle (2.73,-0.42);
+      \node[anchor=west,font=\scriptsize] at (3.05,-0.62) {\textbf{91\%} \color{gray}(4.4)};
+      \node[anchor=east,font=\scriptsize] at (-0.1,-1.24) {A linguagem é fácil de entender};
+      \fill[acento!15] (0,-1.44) rectangle (3.0,-1.04);
+      \fill[acento] (0,-1.44) rectangle (2.73,-1.04);
+      \node[anchor=west,font=\scriptsize] at (3.05,-1.24) {\textbf{91\%} \color{gray}(4.4)};
+      \node[anchor=east,font=\scriptsize] at (-0.1,-1.86) {O passo a passo ajuda a entender};
+      \fill[acento!15] (0,-2.06) rectangle (3.0,-1.66);
+      \fill[acento] (0,-2.06) rectangle (2.46,-1.66);
+      \node[anchor=west,font=\scriptsize] at (3.05,-1.86) {\textbf{82\%} \color{gray}(4.4)};
+      \node[anchor=east,font=\scriptsize] at (-0.1,-2.48) {As mensagens de erro são claras};
+      \fill[acento!15] (0,-2.68) rectangle (3.0,-2.28);
+      \fill[acento] (0,-2.68) rectangle (3.00,-2.28);
+      \node[anchor=west,font=\scriptsize] at (3.05,-2.48) {\textbf{100\%} \color{gray}(4.5)};
+      \node[anchor=east,font=\scriptsize] at (-0.1,-3.10) {Usaria para estudar};
+      \fill[acento!15] (0,-3.30) rectangle (3.0,-2.90);
+      \fill[acento] (0,-3.30) rectangle (2.46,-2.90);
+      \node[anchor=west,font=\scriptsize] at (3.05,-3.10) {\textbf{82\%} \color{gray}(4.5)};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \vspace{8pt}
+  {\footnotesize\itshape ``Inicialmente surgiu uma dificuldade de entender como o fluxo e a solução
+  funcionava, mas foi rápido de entender pela intuitividade.''}\\[4pt]
+  {\scriptsize\color{gray} Percepção, não aprendizagem; amostra pequena e não aleatória.}
 \end{frame}
 
-\begin{frame}{Discussão: os objetivos foram atendidos?\notexto{Seção 8.9}}
+\begin{frame}{Discussão: os objetivos foram atendidos?\notexto{Seção 8.10}}
   \small
   \begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
     \toprule
@@ -644,13 +684,13 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
     1. DSL em EBNF          & Todos os autômatos da validação escritos nela \\
     2. Compilador           & 42 testes das 3 fases; 6 cenários de erro localizados \\
     3. Simulador            & 9 testes + 57.368 simulações sem divergência \\
-    4. Interface            & Demonstrada; \textbf{não} submetida a testes automatizados \\
+    4. Interface            & \textbf{Sem} testes automatizados; usada pelos 11 estudantes (Seção 8.9) \\
     5. Validação            & Os 3 instrumentos aplicados; critérios atendidos \\
     \bottomrule
   \end{tabular}
   \vspace{6pt}
   \begin{block}{Limites}
-    \footnotesize Casos de teste escritos pelos próprios autores $\cdot$ interface avaliada só pelo uso
+    \footnotesize Casos de teste escritos pelos próprios autores $\cdot$ interface avaliada só por uso e percepção
     $\cdot$ a retroalimentação é \textbf{produzida corretamente}, mas o efeito sobre a
     \textbf{aprendizagem} não foi medido.
   \end{block}
@@ -766,16 +806,16 @@ comando_simulacao   ::= "simular" ident "com" cadeia_literal
 \end{frame}
 
 % ----- Proposta e contribuição -------------------------------------------------------------------
-\begin{frame}[label=q-aprendizagem]{Como vocês sabem que a ferramenta ajuda o aluno?\notexto{Seções 4.4 e 8.9}}
+\begin{frame}[label=q-aprendizagem]{Como vocês sabem que a ferramenta ajuda o aluno?\notexto{Seções 4.4, 8.9 e 8.10}}
   \respostacurta{Não afirmamos isso. A validação é \textbf{funcional}: mostra que a retroalimentação
   é \textbf{produzida corretamente}. O efeito sobre a aprendizagem é uma \textbf{hipótese}, a ser
   verificada em estudo com turmas.}
   \begin{itemize}\small
-    \item O recorte está declarado desde os objetivos (Cap. 1) e nas limitações (Seção 8.9).
+    \item O recorte está declarado desde os objetivos (Cap. 1) e nas limitações (Seção 8.10).
     \item Um estudo controlado exigiria turmas comparáveis, pré e pós-teste e um semestre letivo:
           fora do prazo de um TCC.
-    \item O formulário aplicado com estudantes é uma \textbf{percepção preliminar}, fora da
-          monografia: indica aceitação, não aprendizagem.
+    \item O questionário com 11 estudantes (Seção 8.9) mede \textbf{percepção}: indica
+          aceitação, não aprendizagem.
     \item A motivação vem da literatura: falta de retroalimentação imediata (Morazán e Antunez, 2014).
   \end{itemize}
   \voltarperguntas
