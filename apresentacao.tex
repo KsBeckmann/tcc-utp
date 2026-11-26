@@ -5,7 +5,7 @@
 %
 % Compilar: pdflatex apresentacao.tex  (2x)
 %
-% Tempo: cerca de 20 minutos por equipe; o roteiro de fala (roteiro.tex) planeja 16:58.
+% Tempo: cerca de 20 minutos por equipe; o roteiro de fala (roteiro.tex) planeja 17:33.
 % As 9 seções têm os mesmos títulos e a mesma numeração dos capítulos da monografia, e cada uma
 % abre com o slide de Roteiro, para que a banca acompanhe a apresentação junto com o texto.
 %
@@ -221,6 +221,32 @@
       \textcolor{rejeita}{\textbf{rejeita}} \texttt{ba}, \texttt{bbb}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,t]{Linguagem de domínio específico (DSL)\notexto{Seção 2.2.6}}
+  Uma linguagem de \textbf{expressividade limitada}, voltada a \textbf{um único domínio}
+  (Fowler, 2010).
+  \vspace{4pt}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Externa}: sintaxe própria, lida por um analisador próprio.
+\begin{lstlisting}[basicstyle=\ttfamily\normalsize]
+project(jogo C)
+add_executable(jogo main.c)
+\end{lstlisting}
+      CMake; também SQL e \textit{regex}.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Interna}: biblioteca que usa a sintaxe de outra linguagem.
+\begin{lstlisting}[basicstyle=\ttfamily\normalsize]
+(make-dfa '(Q0 Q1) '(a b)
+  'Q0 '(Q1) '((Q0 a Q1) ...))
+\end{lstlisting}
+      FSM, dentro do Racket.
+    \end{column}
+  \end{columns}
+  \vspace{46pt}
+  {\centering A Autosim é uma DSL \textbf{externa}: só a sintaxe dos autômatos.\par}
 \end{frame}
 
 % =================================================================================================
