@@ -44,6 +44,11 @@
 \definecolor{acento}{RGB}{0,90,156}
 \definecolor{aceita}{RGB}{30,120,50}
 \definecolor{rejeita}{RGB}{170,30,30}
+\definecolor{parcial}{RGB}{190,105,0}
+% Células da tabela comparativa: Sim em verde, Não em vermelho, parcial em laranja
+\newcommand{\tsim}{\textcolor{aceita}{\textbf{Sim}}}
+\newcommand{\tnao}{\textcolor{rejeita}{\textbf{Não}}}
+\newcommand{\tparcial}[1]{\textcolor{parcial}{\textbf{#1}}}
 \setbeamercolor{structure}{fg=acento}
 \setbeamercolor{block title}{bg=acento,fg=white}
 \setbeamercolor{block body}{bg=acento!8}
@@ -272,13 +277,13 @@ add_executable(jogo main.c)
       \toprule
       & \textbf{Texto} & \textbf{Git} & \textbf{Diagnóstico} & \textbf{Visual} & \textbf{Ensino} \\
       \midrule
-      JFLAP          & Não & Não & Não & Sim & Sim \\
-      GAM            & Não & Não & Não & Sim & Sim \\
-      Simulador UFSC & Não & Não & Não & Sim & Sim \\
-      AutomatoGraph  & Não & Não & Não & Parcial & Sim \\
-      FSM            & Sim & Sim & Racket & Não & Sim \\
+      JFLAP          & \tnao & \tnao & \tnao & \tsim & \tsim \\
+      GAM            & \tnao & \tnao & \tnao & \tsim & \tsim \\
+      Simulador UFSC & \tnao & \tnao & \tnao & \tsim & \tsim \\
+      AutomatoGraph  & \tnao & \tnao & \tnao & \tparcial{Parcial} & \tsim \\
+      FSM            & \tsim & \tsim & \tparcial{Racket} & \tnao & \tsim \\
       \rowcolor{acento!15}
-      \textbf{Autosim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} \\
+      \textbf{Autosim} & \tsim & \tsim & \tsim & \tsim & \tsim \\
       \bottomrule
     \end{tabular}
   \end{center}
@@ -347,8 +352,8 @@ add_executable(jogo main.c)
       \begin{itemize}
         \item \textbf{Binário nativo}: sem instalar JVM ou interpretador.
         \item \textbf{\texttt{match} exaustivo}: AST e erros tratados por completo.
-        \item \textbf{Bibliotecas} de diagnóstico.
         \item \textbf{Multiplataforma}: Linux, Windows, macOS.
+        \item \textbf{Bibliotecas} de diagnóstico.
       \end{itemize}
     \end{column}
     \begin{column}{0.46\textwidth}
@@ -512,15 +517,17 @@ transicao ::= ident "->" ident "com" (char | "eps")
 \end{frame}
 
 \begin{frame}{Telas: AFN-$\varepsilon$ e diagrama grande\notexto{Seções 6.5 e 7.6.2}}
+  % As duas capturas têm a mesma altura; o AFD de 14 estados aparece inteiro (zoom de 100%,
+  % janela maximizada), recortado em volta do diagrama.
   \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.58\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_afn_epsilon.png}\\[4pt]
+      \includegraphics[height=0.62\textheight,width=\textwidth,keepaspectratio]{img/interface_afn_epsilon.png}\\[4pt]
       AFN-$\varepsilon$ para $a^*b^*$
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.42\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{img/interface_automato_grande.png}\\[4pt]
+      \includegraphics[height=0.62\textheight,width=\textwidth,keepaspectratio]{img/interface_automato_grande_inteiro.png}\\[4pt]
       AFD de 14 estados
     \end{column}
   \end{columns}
