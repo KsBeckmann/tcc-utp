@@ -130,7 +130,7 @@ Autosim (Alt+Tab), mostre e volte para os slides. Se a demonstração ao vivo fa
   23 — Semântica e diagnósticos & \tempo{0:30}{8:53} &
   A semântica verifica duplicatas, referências não declaradas e, no AFD, determinismo, e mostra todos os erros de uma vez. À direita, um diagnóstico real: linha, coluna, trecho e descrição. \\
   24 — Simulador & \tempo{0:35}{9:28} &
-  No AFN, acender todos os estados confundia a leitura. A Autosim mostra um caminho único: o aceitador, se a cadeia é aceita, ou o que chegou mais perto, se é rejeitada. A busca em largura garante que o veredito seja o da definição formal, e o histórico permite voltar. \\
+  No AFN, acender todos os estados confundia a leitura. A Autosim mostra um caminho único: se a cadeia foi aceita, mostra o caminho aceitador; se foi rejeitada, mostra o caminho que chegou mais perto da aceitação. A busca em largura garante que o veredito seja o da definição formal, e o histórico permite voltar. \\
   25 — Interface gráfica & \tempo{0:15}{9:43} &
   A interface desenha o diagrama a partir do texto, com controles de passo, volta e execução. \\
   26 — Aceitação e rejeição & \tempo{0:12}{9:55} &
@@ -162,7 +162,7 @@ Autosim (Alt+Tab), mostre e volte para os slides. Se a demonstração ao vivo fa
   37 — Dificuldades & \tempo{0:35}{14:33} &
   Quatro dificuldades mudaram o projeto: o AFN com vários estados acesos, resolvido pelo caminho único; autômatos grandes que se sobrepunham, resolvidos com \emph{pan} e \emph{zoom}; acentos que deslocavam a coluna dos erros, resolvidos com \emph{bytes}; e o alfabeto vazio, que contrariava a teoria e ganhou uma verificação semântica. \\
   38 — Limitações e trabalhos futuros & \tempo{0:30}{15:03} &
-  Como limitações: um alfabeto por arquivo, sem linha de comando, sem editor embutido e sem conversão de AFN para AFD. Como trabalhos futuros: tratar esses pontos, chegar a autômatos com pilha e máquinas de Turing e fazer estudos com turmas. \\
+  Como limitações: um alfabeto por arquivo, sem editor embutido e sem conversão de AFN para AFD. Como trabalhos futuros: tratar esses pontos, chegar a autômatos com pilha e máquinas de Turing e fazer estudos com turmas. \\
   39 — Demonstração & \tempo{2:15}{17:18} &
   \emph{(Alt+Tab para a Autosim.)} 1) Com \cad{example1.asl} aberto, simular passo a passo uma cadeia aceita e uma rejeitada, mostrando o verde e o vermelho. 2) No terminal, rodar \cad{sema\_nondeterministic.asl} e mostrar o erro que aponta as duas transições. 3) Abrir \cad{afn\_epsilon.asl} e simular uma cadeia. 4) Se sobrar tempo, \cad{grande.asl} com \emph{pan} e \emph{zoom}. \emph{(Alt+Tab de volta e avançar.)} \\
   40 — Obrigado & \tempo{0:15}{17:33} &
